@@ -2,15 +2,59 @@
 title: Lectures
 ---
 
+## Topics 
+
+Week 1
+- Intro
+- LC 
+
+Week 2
+- Haskell 101
+- HOFs
+
+Week 3
+- Type-Classes 
+- Ord, Monoid, Functor
+
+Week 4
+- Applicative
+- Monads (Maybe, Either, State, List)
+
+Week 5
+- Parser combinators
+- Testing
+
+Week 6
+- Parallelism
+- Concurrency 
+
+Week 7
+- Verification & Refinement Types
+
+Week 8
+- Termination
+- Proofs
+
+
+## Assignments 
+
+- TIC-TAC-TOE
+  * AI 
+  
+- SNAKE 
+  * 1-Player (AI)
+  * 2-Player (AI)
+  * Server
+
+
+
 **Date**     **Topic**                                          **Notes**
 --------     ----------------------------------------------     --------------------------
-   *1/5*     Introduction & The Lambda Calculus                 [pdf][pdf-intro] [pdf][pdf-lambda] [notes][notes1]
+   *4/1*     Introduction & The Lambda Calculus                 [pdf][pdf-intro] [pdf][pdf-lambda] [notes][notes1]
    *1/7*     From LC to Haskell                                 [pdf][pdf-haskell]  [hs][hs1]
   *1/14*     Higher-Order Functions                             [html][lec2]  [hs][lhs2]
   *1/21*     Polymorphism & Typeclasses                         [html-A][lec3] [html-B][lec4]  [hs-B][lhs3] [hs-B][lhs4] 
   *1/28*     Functors                                           [html][lec7]  [hs][lhs7]
-
-<!--
   *1/22*     Monads                                             [html][lec7]  [hs][lhs7]
   *2/10*     Parser Combinators                                 [html][lec9]  [hs][lhs9] 
   *2/17*     Testing                                            [html][lec10] [hs][lhs10]
@@ -18,10 +62,6 @@ title: Lectures
   *2/24*     Lambda Calculus                                    [pdf][pdf14]
    *3/3*     Hindley-Milner                                     [html][lec15] [hs][lhs15]
    *3/5*     Refinement Types                                   [html][lecLH] [pdf][pdfLH] [VM](https://piazza.com/class/i4kkvjdaoqj7aj?cid=11)
-  *3/10*     (contd.)
-  *3/12*     (contd.)
-
--->
 
 ----------------------------------------------------------------------------------
 
