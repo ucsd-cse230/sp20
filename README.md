@@ -1,53 +1,122 @@
-Website for CSE230
-==================
+# CSE 230: Web Page
 
+Public course materials for [UCSD CSE 230: Spring 2020](https://ucsd-cse230.github.io/sp20/)
 
-To build, make sure you install [stack](https://github.com/commercialhaskell/stack/blob/master/doc/install_and_upgrade.md)
+## Install
 
+You too, can build this webpage locally, like so:
 
-Build the site
---------------
-
-To *build* the site locally into `_site/`:
-
-```
-make 
+```bash
+git clone git@github.com:ucsd-cse230/sp20.git
+cd sp20
+make
 ```
 
-To *delete* all temporary files:
+To then update the webpage after editing stuff, do:
 
-```
-make clean
-```
-
-To *update* the webpage remotely (FIXME):
-
-```
-make update
+```bash
+make upload
 ```
 
+The website will live in `_site/`.
 
+## Customize
 
-Add new lectures or homeworks
------------------------------
+By editing the parameters in `siteCtx` in `Site.hs`
 
-To add a new lecture, create the new file
+## View
 
-	lectures/lec-XXX.lhs
+You can view it by running
 
-then add a link to it in 
+```bash
+make server
+```
 
-	lectures.markdown 
+## Update
 
-and then do
+Either do
 
-	make && make update
+```bash
+make upload
+```
 
-The analogous instructions apply to create a new homework.
+or, if you prefer
 
-Todo
-----
+```bash
+make
+cp -r _site/* docs/
+git commit -a -m "update webpage"
+git push origin master
+```
 
-Auto-generate Lectures and Homeworks (and the links) 
-from directories.
+## To build Lecture Versions
 
+To build the "lecture" version of all the html i.e. *without*
+the answers to quizzes and other questions, replace the
+following in `Site.hs`
+
+```haskell
+    crunchWithCtxCustom "final" postCtx
+```
+
+with
+
+```haskell
+    crunchWithCtxCustom "lecture" postCtx
+```
+
+Then, as you go through the lectures, replace `match "lectures/*"` with
+
+```
+match "lectures/00-*"    $ crunchWithCtxCustom "final" postCtx
+match "lectures/*"       $ crunchWithCtxCustom "lecture" postCtx
+```
+
+(and gradually add more and more lectures to `final` as I go through them)
+
+## Credits
+
+This theme is a fork of [CleanMagicMedium-Jekyll](https://github.com/SpaceG/CleanMagicMedium-Jekyll)
+originally published by Lucas Gatsas.
+
+## New Class Checklist
+
+- [x] site.hs
+- [x] index.md
+- [x] links.md
+- [x] contact.md
+- [x] calendar.md
+- [x] grades.md
+- [x] assignments.md
+- [x] lectures.md
+- [ ] 00-lambda
+
+## Spring 2020
+
+- [Roster](https://docs.google.com/spreadsheets/d/1DqB98XNyDpqsL1FWyReTOecj8GFD6KXVnkjM6iI2Lrs/edit?usp=sharing)
+
+## ieng6 Setup
+
+1. Set the `stack-root`
+
+```
+stack setup --stack-root=/software/CSE/cse130/.stack
+```
+
+2. Create a shell script
+
+```
+cat > fixpaths.sh
+
+cd ~/../public/bin && chmod -R a+rx *
+cd /software/CSE/cse130/.stack && chmod -R a+rx *
+```
+
+3. For each assignment,
+
+	- `git clone` it to download assignment as instructor
+	- `stack test` it to get the relevant libs added to the stack-path
+	- `./fixpaths.sh` to allow everyone else to read the libraries
+
+4. For each assignment,
+	- login as student to make sure that you can `git clone` and then run `stack test`

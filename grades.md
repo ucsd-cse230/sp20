@@ -1,16 +1,11 @@
 ---
-title: Grading 
+title: Grading
+headerImg: beach.jpg
 ---
 
-- *Clicker-Based Class Exercises (10%)* : 
-  Will occur regularly, and will be **group** work. 
-  They will typically be pencil-and-paper exercises 
-  that must be completed without the use of a computer. 
-  **You need to acquire a** [clicker](http://acms.ucsd.edu/faculty/clickers/)
-  clicker for this. 
 
-- *Homework Assignments (60%)* : 
-  About 5 mainly programming, done in groups of 2-3.
+- **Homework Assignments (70%)** : 
+  About 4-5 mainly programming, done in groups of 2-3.
   Will be assigned approximately every two weeks, 
   and instructions on turning them in will be posted with 
   each assignment. You have a total of *four late days* 
@@ -18,4 +13,8 @@ title: Grading
   where a late day means anything between 1 second and 23 
   hours 59 minutes and 59 seconds past a deadline.
 
-- *Final (30%)* : Take home, do alone.
+- **Final (30%)** : 
+  Online exam, to be done **alone**.
+
+- **Piazza (5%)** :
+  Extra credit for top-15 best participants on Piazza.

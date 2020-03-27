@@ -1,10 +1,22 @@
---------------------------------------------------------------------------------
+
 {-# LANGUAGE OverloadedStrings #-}
+
 import Data.Monoid (mappend)
 import Data.List
 import Hakyll
 import Text.Pandoc
 import Text.Pandoc.Walk (walk)
+
+--------------------------------------------------------------------------------
+main :: IO ()
+main = hakyll $ do
+  match "static/*/*"       $ do route idRoute
+                                compile copyFileCompiler
+  match (fromList tops)    $ crunchWithCtx siteCtx
+  match "lectures/*"       $ crunchWithCtxCustom "lecture" postCtx
+  match "assignments/*"    $ crunchWithCtx postCtx
+  match "templates/*"      $ compile templateCompiler
+
 
 crunchWithCtx ctx = do
   route   $ setExtension "html"
@@ -43,17 +55,6 @@ haskellizeInline i = i
 haskellizeBlock :: Block -> Block
 haskellizeBlock (CodeBlock (ident, [], kvs) str) = CodeBlock (ident, ["haskell"], kvs) str
 haskellizeBlock b = b
-
---------------------------------------------------------------------------------
-main :: IO ()
-main = hakyll $ do
-  match "static/*/*"       $ do route idRoute
-                                compile copyFileCompiler
-  match (fromList tops)    $ crunchWithCtx siteCtx
-  match "lectures/*"       $ crunchWithCtxCustom "lecture" postCtx
-  match "assignments/*"    $ crunchWithCtx postCtx
-  match "templates/*"      $ compile templateCompiler
-
 --------------------------------------------------------------------------------
 postCtx :: Context String
 postCtx =
@@ -63,15 +64,15 @@ postCtx =
 
 siteCtx :: Context String
 siteCtx =
-    constField "baseUrl"            "https://ucsd-cse130.github.io/wi20"      `mappend`
-    constField "site_name"          "cse130"                                  `mappend`
-    constField "site_description"   "UCSD CSE 130"                            `mappend`
+    constField "baseUrl"            "https://ucsd-cse230.github.io/sp20"      `mappend`
+    constField "site_name"          "cse230"                                  `mappend`
+    constField "site_description"   "UCSD CSE 230"                            `mappend`
     constField "site_username"      "Ranjit Jhala"                            `mappend`
     constField "twitter_username"   "ranjitjhala"                             `mappend`
     constField "github_username"    "ranjitjhala"                             `mappend`
     constField "google_username"    "rjhala@eng.ucsd.edu"                     `mappend`
     constField "google_userid"      "u/0/104385825850161331469"               `mappend`
-    constField "piazza_classid"     "class/k51a7s2xjuy736"                    `mappend`
+    constField "piazza_classid"     "class/k8anl5ns5bldp"                     `mappend`
     defaultContext
 
 

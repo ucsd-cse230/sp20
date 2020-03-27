@@ -1,6 +1,6 @@
--
 ---
-title: Links 
+title: Resources
+headerImg: sea.jpg
 ---
 
 The below is a tiny fraction of what is available online;
@@ -9,11 +9,15 @@ for more, start at [haskell.org](http://haskell.org).
 ## Cheat Sheet
 
 - [Getting Started With Haskell](http://bob.ippoli.to/archives/2013/01/11/getting-started-with-haskell/)
-
 - [Haskell Cheat Sheet](http://cheatsheet.codeslower.com/CheatSheet.pdf)
-
 - [What I Wish I Knew When Learning Haskell](http://dev.stephendiehl.com/hask/)
--
+
+## Editor Plugins 
+
+- [VSCode](https://marketplace.visualstudio.com/items?itemName=dramforever.vscode-ghc-simple)
+- [Vim](https://wiki.haskell.org/Vim)
+- [Emacs](https://wiki.haskell.org/Emacs)
+
 ## Books 
 
 - [Haskell Wiki Book](http://en.wikibooks.org/wiki/Haskell) 
@@ -33,15 +37,19 @@ for more, start at [haskell.org](http://haskell.org).
 
 - [Monad Tutorial](http://www.cs.nott.ac.uk/~gmh/monads) by Graham Hutton
 
+## Fancy Types and Verification
+
+- [Liquid Types](https://ucsd-progsys.github.io/liquidhaskell-blog/)
+- [Software Foundations](https://softwarefoundations.cis.upenn.edu/)
+- [PL Foundations in AGDA](https://plfa.github.io/)
+- [Dafny](https://github.com/dafny-lang/dafny)
 
 ## Courses
 
 - Dartmouth [Problem Solving with Computer Science](http://www.cs.dartmouth.edu/~cs8/F2011/haskell.php)
-
 - UPenn [Advanced Programming](http://www.cis.upenn.edu/~bcpierce/courses/552-2008/index.html)
 - Stanford [Programming Languages](https://courseware.stanford.edu/pg/courses/lectures/96023)
 - Princeton [Programming Languages](https://http://www.cs.princeton.edu/~dpw/cos441-11/)
-
 
 ## Miscellaneous
 

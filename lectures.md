@@ -1,7 +1,28 @@
 ---
-title: Lectures
+title: Lecture Notes
+headerImg: books.jpg
 ---
 
+
+| **Date**   | **Topic**                       | **Notes**                 | **Code**      |
+|:----------:|:--------------------------------|:--------------------------|:--------------|
+| *3/30*     | Intro                           | [html][00-intro]          |               |
+|            |  Lambda Calculus                | [html][00-lambda]         |               |
+|            | From LC to Haskell              | [html][01-haskell]        |               |
+|            | Higher-Order Functions          | [html][02-hofs]           |               | 
+|            | Polymorphism & Typeclasses      | [html][03-classes]        |               |
+|            | Functors & Applicatives         | [html][04-functors]       |               | 
+|            | Monads                          | [html][05-monads]         |               |
+|            | Parser Combinators              | [html][06-parsers]        |               |
+|            | Testing                         | [html][07-testing]        |               | 
+|            | Concurrency & Parallelism       | [html][08-parconc]        |               | 
+|            | Types & Inference               | [html][09-types]          |               |            
+|            | Refinement Types                | [html][10-refinements]    |               |          
+|            | Proofs as Programs              | [html][11-proofs]         |               | 
+
+
+
+<!-- 
 ## Topics 
 
 Week 1
@@ -47,6 +68,25 @@ Week 8
   * Server
 
 
+00 - (elsa from CSE 130)
+01 - Haskell (shapes, fractal-gloss, recursion, file-find-IO)
+02 - (from wi16 - skip BST)
+03 - (from wi16 + full BST - circuit)
+04 - (from wi16 + BST-BAL? + get-set-kv-list-proof?)
+
+TODO
+   - snake AI in 01?
+
+projects
+   - yesod/grader
+   - yesod/photo-share
+   - ghcjs/invaders
+   - ghcjs/pong
+   - brick/invaders
+   - brick/pong
+   - ???
+
+
 
 **Date**     **Topic**                                          **Notes**
 --------     ----------------------------------------------     --------------------------
@@ -64,6 +104,7 @@ Week 8
    *3/5*     Refinement Types                                   [html][lecLH] [pdf][pdfLH] [VM](https://piazza.com/class/i4kkvjdaoqj7aj?cid=11)
 
 ----------------------------------------------------------------------------------
+-->
 
 [pdf-intro]: static/lec-intro-2x2.pdf 
 [pdf-lambda]: static/lec-lambda-2x2.pdf
