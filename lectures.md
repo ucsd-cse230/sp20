@@ -106,19 +106,19 @@ projects
 ----------------------------------------------------------------------------------
 -->
 
-[00-intro]       : lectures/00-intro.html 
-[00-lambda]      : lectures/00-intro.html
-[01-haskell]     : lectures/00-intro.html 
-[02-hofs]        : lectures/00-intro.html
-[03-classes]     : lectures/00-intro.html
-[04-functors]    : lectures/00-intro.html
-[05-monads]      : lectures/00-intro.html
-[06-parsers]     : lectures/00-intro.html
-[07-testing]     : lectures/00-intro.html
-[08-parconc]     : lectures/00-intro.html
-[09-types]       : lectures/00-intro.html
-[10-refinements] : lectures/00-intro.html
-[11-proofs]      : lectures/00-intro.html 
+[00-intro]: lectures/00-intro.html 
+[00-lambda]: lectures/00-intro.html
+[01-haskell]: lectures/00-intro.html 
+[02-hofs]: lectures/00-intro.html
+[03-classes]: lectures/00-intro.html
+[04-functors]: lectures/00-intro.html
+[05-monads]: lectures/00-intro.html
+[06-parsers]: lectures/00-intro.html
+[07-testing]: lectures/00-intro.html
+[08-parconc]: lectures/00-intro.html
+[09-types]: lectures/00-intro.html
+[10-refinements]: lectures/00-intro.html
+[11-proofs]: lectures/00-intro.html 
 
 
 [pdf-intro]: static/lec-intro-2x2.pdf 
