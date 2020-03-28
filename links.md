@@ -53,6 +53,8 @@ for more, start at [haskell.org](http://haskell.org).
 
 ## Miscellaneous
 
+- [Neural Networks and FP](http://colah.github.io/posts/2015-09-NN-Types-FP/)
+
 - [Haskell](http://haskell.org)
 
 - API Search Engines: 
