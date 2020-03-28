@@ -111,9 +111,10 @@ projects
 ----------------------------------------------------------------------------------
 -->
 
-[00-intro]: lectures/00-intro.html 
-[00-lambda]: lectures/00-intro.html
-[01-haskell]: lectures/00-intro.html 
+[00-intro]: static/raw/00-intro.pdf
+[00-lambda]: lectures/01-lambda.html
+[01-haskell]: static/raw/01-haskell.pdf
+
 [02-hofs]: lectures/00-intro.html
 [03-classes]: lectures/00-intro.html
 [04-functors]: lectures/00-intro.html
