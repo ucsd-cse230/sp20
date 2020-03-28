@@ -111,9 +111,9 @@ projects
 ----------------------------------------------------------------------------------
 -->
 
-[00-intro]: static/raw/00-intro.pdf
+[00-intro]: static/raw/lec-intro.pdf
 [00-lambda]: lectures/01-lambda.html
-[01-haskell]: static/raw/01-haskell.pdf
+[01-haskell]: static/raw/lec-haskell.pdf
 
 [02-hofs]: lectures/00-intro.html
 [03-classes]: lectures/00-intro.html
