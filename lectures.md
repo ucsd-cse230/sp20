@@ -3,11 +3,13 @@ title: Lecture Notes
 headerImg: books.jpg
 ---
 
-This class will have zoom lectures with live coding etc. 
-that will be recorded and available on CANVAS and you can 
-find links to the lecture notes and code developed in class
-below.
+## Videos
 
+This class will have zoom lectures with live coding. 
+
+The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/courses/12823). 
+
+## Topics, Notes and Code
 
 | **Date**   | **Topic**                       | **Notes**                 | **Code**      |
 |:----------:|:--------------------------------|:--------------------------|:--------------|
