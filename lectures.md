@@ -14,7 +14,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | **Date**   | **Topic**                       | **Notes**                 | **Code**      |
 |:----------:|:--------------------------------|:--------------------------|:--------------|
 | *3/30*     | Intro                           | [pdf][00-intro]           |               |
-|            | Lambda Calculus                 | [html][00-lambda]         |               |
+| *3/30*     | Lambda Calculus                 | [html][00-lambda]         |               |
 |            | From LC to Haskell              | [pdf][01-haskell]         |               |
 |            | Higher-Order Functions          | [html][02-hofs]           |               | 
 |            | Polymorphism & Typeclasses      | [html][03-classes]        |               |
