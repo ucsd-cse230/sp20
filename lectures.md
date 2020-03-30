@@ -74,7 +74,16 @@ Week 8
   * 2-Player (AI)
   * Server
 
+230-sp20-00-lambda
+230-sp20-01-shapes
+230-sp20-02-while 
+230-sp20-03-bst
+230-sp20-04-liquid
 
+
+
+
+00-lambda 
 00 - (elsa from CSE 130)
 01 - Haskell (shapes, fractal-gloss, recursion, file-find-IO)
 02 - (from wi16 - skip BST)

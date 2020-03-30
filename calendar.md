@@ -12,7 +12,6 @@ headerImg: road.jpg
 | **Event** | **Day**    | **Time**      | **Location**     |
 |:----------|:-----------|:--------------|:-----------------|
 | *Lectures* |  MWF      | 11:00-11:50am | [zoom][zoom-lec] |
-| *Section*  |  W        | 05:00-06:00pm | [zoom][zoom-sec] |
 
 
 <iframe src="https://calendar.google.com/calendar/embed?src=eng.ucsd.edu_k432eefluhun97rf058rpp3kvc%40group.calendar.google.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
