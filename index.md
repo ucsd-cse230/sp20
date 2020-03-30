@@ -13,7 +13,7 @@ headerImg: angles.jpg
 ## Co-ordinates
 
 + *Lectures:* MWF 11:00pm to 11:50pm
-+ *Location:* [Zoom](https://ucsd.zoom.us/j/259201241) 
++ *Location:* Zoom (see links on [CANVAS](https://canvas.ucsd.edu/courses/12823))
 
 ## Description
 
