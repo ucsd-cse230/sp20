@@ -11,10 +11,10 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 
 ## Topics, Notes and Code
 
-| **Date**   | **Topic**                       | **Notes**                 | **Code**      |
-|:----------:|:--------------------------------|:--------------------------|:--------------|
-| *3/30*     | Intro                           | [pdf][00-intro]           |               |
-| *3/30*     | Lambda Calculus                 | [html][00-lambda]         |               |
+| **Date**   | **Topic**                       | **Notes**                 | **Nodes**          |
+|:----------:|:--------------------------------|:--------------------------|:-------------------|
+| *3/30*     | Intro                           | [pdf][00-intro]           |                    |
+| *3/30*     | Lambda Calculus                 | [html][00-lambda]         | [pdf][01-lambda-A] |
 |            | From LC to Haskell              | [pdf][01-haskell]         |               |
 |            | Higher-Order Functions          | [html][02-hofs]           |               | 
 |            | Polymorphism & Typeclasses      | [html][03-classes]        |               |
@@ -125,6 +125,7 @@ projects
 [00-intro]: static/raw/lec-intro.pdf
 [00-lambda]: lectures/01-lambda.html
 [01-haskell]: static/raw/lec-haskell.pdf
+[01-lambda-A]: static/raw/01-lambda-A.pdf
 
 [02-hofs]: lectures/00-intro.html
 [03-classes]: lectures/00-intro.html
