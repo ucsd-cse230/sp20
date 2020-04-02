@@ -587,9 +587,10 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <div class="sourceCode" id="cb19"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb19-1" data-line-number="1">(\x <span class="ot">-&gt;</span> (\y <span class="ot">-&gt;</span> x)) y</a>
 <a class="sourceLine" id="cb19-2" data-line-number="2"><span class="fu">=</span>b<span class="fu">&gt;</span> \y <span class="ot">-&gt;</span> y</a></code></pre></div>
 <p>Is this right?</p>
-<p><strong>Problem</strong>: the <em>free</em> <code class="sourceCode haskell">y</code> in the argument has been <strong>captured</strong> by <code class="sourceCode haskell">\y</code>!</p>
-<p><strong>Solution</strong>: make sure that all <em>free variables</em> of the argument are different from the binders in the body.</p>
-<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<p><strong>Problem</strong>: The <em>free</em> <code class="sourceCode haskell">y</code> in the argument has been <strong>captured</strong> by <code class="sourceCode haskell">\y</code> in <em>body</em>!</p>
+<p><br></p>
+<p><strong>Solution</strong>: Ensure that <em>formals</em> in the body are <strong>different from</strong> <em>free-variables</em> of argument!</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="capture-avoiding-substitution">Capture-Avoiding Substitution</h2>
 <p>We have to fix our definition of <span class="math inline"><em>β</em></span>-reduction:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb20-1" data-line-number="1">  (\x <span class="ot">-&gt;</span> e1) e2   <span class="fu">=</span>b<span class="fu">&gt;</span>   e1[x <span class="fu">:=</span> e2]</a></code></pre></div>
