@@ -1,4 +1,3 @@
-
 ---
 title: A Crash Course in Haskell
 headerImg: sea.jpg
