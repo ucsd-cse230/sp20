@@ -2130,6 +2130,7 @@ eval two_times_three :
 - **Booleans** \[done\]
 - **Records** (structs, tuples) \[done\]
 - **Numbers** \[done\]
+- **Lists** 
 - **Functions** \[we got those\]
 - Recursion
 
@@ -2146,15 +2147,128 @@ eval two_times_three :
 <br>
 <br>
 
+## $\lambda$-calculus: Lists
+
+Lets define an API to build lists in the $\lambda$-calculus.
+
+**An Empty List**
+
+```
+NIL
+```
+
+**Constructing a list**
+
+A list with 4 elements
+
+```
+CONS apple (CONS banana (CONS cantaloupe (CONS dragonfruit NIL)))
+```
+
+intuitively `CONS h t` creates a *new* list with 
+
+- *head* `h`
+- *tail* `t`
+
+**Destructing a list**
+
+- `HEAD l` returns the _first_ element of the list
+- `TAIL l` returns the _rest_ of the list
+
+```haskell
+HEAD (CONS apple (CONS banana (CONS cantaloupe (CONS dragonfruit NIL))))
+=~> apple
+
+TAIL (CONS apple (CONS banana (CONS cantaloupe (CONS dragonfruit NIL))))
+=~> CONS banana (CONS cantaloupe (CONS dragonfruit NIL)))
+```
+
+## $\lambda$-calculus: Lists
+
+```haskell
+let NIL  = ???
+let CONS = ???
+let HEAD = ???
+let TAIL = ???
+
+eval exHd:
+  HEAD (CONS apple (CONS banana (CONS cantaloupe (CONS dragonfruit NIL))))
+  =~> apple
+
+eval exTl 
+  TAIL (CONS apple (CONS banana (CONS cantaloupe (CONS dragonfruit NIL))))
+  =~> CONS banana (CONS cantaloupe (CONS dragonfruit NIL)))
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+## EXERCISE: Nth
+
+Write an implementation of `GetNth` such that `GetNth n l` returns the n-th element of the list `l` 
+
+*assume that `l` has n or more elements*
+
+```haskell
+let GetNth = ???
+
+eval nth1 :
+  GetNth ZERO (CONS apple (CONS banana (CONS cantaloupe NIL)))
+  =~> apple 
+
+eval nth1 :
+  GetNth ONE (CONS apple (CONS banana (CONS cantaloupe NIL)))
+  =~> banana
+
+eval nth2 :
+  GetNth TWO (CONS apple (CONS banana (CONS cantaloupe NIL)))
+  =~> cantaloupe
+```
+
+[Click here to try this in elsa](https://goto.ucsd.edu/elsa/index.html#?demo=permalink%2F1586466816_52273.lc) 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
 ## $\lambda$-calculus: Recursion
 
 <br>
 
 I want to write a function that sums up natural numbers up to `n`:
 
+```haskell
+let SUM = \n -> ...  -- 0 + 1 + 2 + ... + n
 ```
-\n -> ...          -- 1 + 2 + ... + n
+
+such that we get the following behavior
+
+```haskell
+eval exSum0: SUM ZERO  =~> ZERO
+eval exSum1: SUM ONE   =~> ONE
+eval exSum2: SUM TWO   =~> THREE
+eval exSum3: SUM THREE =~> SIX
 ```
+
+[Click here to try this in Elsa](https://goto.ucsd.edu/elsa/index.html#?demo=permalink%2F1586465192_52175.lc)
+
 
 <br>
 <br>
@@ -2265,28 +2379,21 @@ itself becomes
 ```
 \n -> ITE (ISZ n) ZERO (ADD n (rec (DEC n)))
 ```
- 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
- 
+
+That is, obtain a term `MAGIC` such that 
+
+```
+MAGIC =*> STEP MAGIC 
+```
+
 ## $\lambda$-calculus: Fixpoint Combinator 
+
 
 **Wanted:** a combinator `FIX` such that `FIX STEP`
 calls `STEP` with itself as the first argument:
 
 ```
-FIX STEP
-=*> STEP (FIX STEP)
+(FIX STEP) =*> STEP (FIX STEP)
 ```
 
 <br>
@@ -2309,25 +2416,23 @@ Then by property of `FIX` we have:
 SUM =*> STEP SUM -- (1)
 ```
 
+and so now we compute:
 
 ```
-eval sum_one:
-  SUM ONE
-  =*> STEP SUM ONE                 -- (1)
-  =d> (\rec n -> ITE (ISZ n) ZERO (ADD n (rec (DEC n)))) SUM ONE
-  =b> (\n -> ITE (ISZ n) ZERO (ADD n (SUM (DEC n)))) ONE 
-                                   -- ^^^ the magic happened!
-  =b> ITE (ISZ ONE) ZERO (ADD ONE (SUM (DEC ONE)))
-  =*> ADD ONE (SUM ZERO)           -- def of ISZ, ITE, DEC, ...
-  =*> ADD ONE (STEP SUM ZERO)      -- (1)
-  =d> ADD ONE 
-        ((\rec n -> ITE (ISZ n) ZERO (ADD n (rec (DEC n)))) SUM ZERO)
-  =b> ADD ONE ((\n -> ITE (ISZ n) ZERO (ADD n (SUM (DEC n)))) ZERO)
-  =b> ADD ONE (ITE (ISZ ZERO) ZERO (ADD ZERO (SUM (DEC ZERO))))
-  =b> ADD ONE ZERO
-  =~> ONE
+eval sum_two:
+  SUM TWO
+  =*> STEP SUM TWO
+  =*> ITE (ISZ TWO) ZERO (ADD TWO (SUM (DEC TWO)))
+  =*> ADD TWO (SUM (DEC TWO))
+  =*> ADD TWO (SUM ONE)
+  =*> ADD TWO (STEP SUM ONE)
+  =*> ADD TWO (ITE (ISZ ONE) ZERO (ADD ONE (SUM (DEC ONE))))
+  =*> ADD TWO (ADD ONE (SUM (DEC ONE)))
+  =*> ADD TWO (ADD ONE (SUM ZERO))
+  =*> ADD TWO (ADD ONE (ITE (ISZ ZERO) ZERO (ADD ZERO (SUM DEC ZERO)))
+  =*> ADD TWO (ADD ONE (ZERO)) 
+  =*> THREE
 ```
-
 
 How should we define `FIX`???
 

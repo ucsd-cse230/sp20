@@ -1038,20 +1038,81 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <li><strong>Booleans</strong> [done]</li>
 <li><strong>Records</strong> (structs, tuples) [done]</li>
 <li><strong>Numbers</strong> [done]</li>
+<li><strong>Lists</strong></li>
 <li><strong>Functions</strong> [we got those]</li>
 <li>Recursion</li>
 </ul>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="lambda-calculus-lists"><span class="math inline"><em>λ</em></span>-calculus: Lists</h2>
+<p>Lets define an API to build lists in the <span class="math inline"><em>λ</em></span>-calculus.</p>
+<p><strong>An Empty List</strong></p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb56-1" data-line-number="1"><span class="dt">NIL</span></a></code></pre></div>
+<p><strong>Constructing a list</strong></p>
+<p>A list with 4 elements</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="dt">CONS</span> apple (<span class="dt">CONS</span> banana (<span class="dt">CONS</span> cantaloupe (<span class="dt">CONS</span> dragonfruit <span class="dt">NIL</span>)))</a></code></pre></div>
+<p>intuitively <code class="sourceCode haskell"><span class="dt">CONS</span> h t</code> creates a <em>new</em> list with</p>
+<ul>
+<li><em>head</em> <code class="sourceCode haskell">h</code></li>
+<li><em>tail</em> <code class="sourceCode haskell">t</code></li>
+</ul>
+<p><strong>Destructing a list</strong></p>
+<ul>
+<li><code class="sourceCode haskell"><span class="dt">HEAD</span> l</code> returns the <em>first</em> element of the list</li>
+<li><code class="sourceCode haskell"><span class="dt">TAIL</span> l</code> returns the <em>rest</em> of the list</li>
+</ul>
+<div class="sourceCode" id="cb58"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb58-1" data-line-number="1"><span class="dt">HEAD</span> (<span class="dt">CONS</span> apple (<span class="dt">CONS</span> banana (<span class="dt">CONS</span> cantaloupe (<span class="dt">CONS</span> dragonfruit <span class="dt">NIL</span>))))</a>
+<a class="sourceLine" id="cb58-2" data-line-number="2"><span class="fu">=~&gt;</span> apple</a>
+<a class="sourceLine" id="cb58-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb58-4" data-line-number="4"><span class="dt">TAIL</span> (<span class="dt">CONS</span> apple (<span class="dt">CONS</span> banana (<span class="dt">CONS</span> cantaloupe (<span class="dt">CONS</span> dragonfruit <span class="dt">NIL</span>))))</a>
+<a class="sourceLine" id="cb58-5" data-line-number="5"><span class="fu">=~&gt;</span> <span class="dt">CONS</span> banana (<span class="dt">CONS</span> cantaloupe (<span class="dt">CONS</span> dragonfruit <span class="dt">NIL</span>)))</a></code></pre></div>
+<h2 id="lambda-calculus-lists-1"><span class="math inline"><em>λ</em></span>-calculus: Lists</h2>
+<div class="sourceCode" id="cb59"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb59-1" data-line-number="1"><span class="kw">let</span> <span class="dt">NIL</span>  <span class="fu">=</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb59-2" data-line-number="2"><span class="kw">let</span> <span class="dt">CONS</span> <span class="fu">=</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb59-3" data-line-number="3"><span class="kw">let</span> <span class="dt">HEAD</span> <span class="fu">=</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb59-4" data-line-number="4"><span class="kw">let</span> <span class="dt">TAIL</span> <span class="fu">=</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb59-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb59-6" data-line-number="6">eval exHd<span class="fu">:</span></a>
+<a class="sourceLine" id="cb59-7" data-line-number="7">  <span class="dt">HEAD</span> (<span class="dt">CONS</span> apple (<span class="dt">CONS</span> banana (<span class="dt">CONS</span> cantaloupe (<span class="dt">CONS</span> dragonfruit <span class="dt">NIL</span>))))</a>
+<a class="sourceLine" id="cb59-8" data-line-number="8">  <span class="fu">=~&gt;</span> apple</a>
+<a class="sourceLine" id="cb59-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb59-10" data-line-number="10">eval exTl </a>
+<a class="sourceLine" id="cb59-11" data-line-number="11">  <span class="dt">TAIL</span> (<span class="dt">CONS</span> apple (<span class="dt">CONS</span> banana (<span class="dt">CONS</span> cantaloupe (<span class="dt">CONS</span> dragonfruit <span class="dt">NIL</span>))))</a>
+<a class="sourceLine" id="cb59-12" data-line-number="12">  <span class="fu">=~&gt;</span> <span class="dt">CONS</span> banana (<span class="dt">CONS</span> cantaloupe (<span class="dt">CONS</span> dragonfruit <span class="dt">NIL</span>)))</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="exercise-nth">EXERCISE: Nth</h2>
+<p>Write an implementation of <code class="sourceCode haskell"><span class="dt">GetNth</span></code> such that <code class="sourceCode haskell"><span class="dt">GetNth</span> n l</code> returns the n-th element of the list <code class="sourceCode haskell">l</code></p>
+<p><em>assume that <code class="sourceCode haskell">l</code> has n or more elements</em></p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb60-1" data-line-number="1"><span class="kw">let</span> <span class="dt">GetNth</span> <span class="fu">=</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb60-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb60-3" data-line-number="3">eval nth1 <span class="fu">:</span></a>
+<a class="sourceLine" id="cb60-4" data-line-number="4">  <span class="dt">GetNth</span> <span class="dt">ZERO</span> (<span class="dt">CONS</span> apple (<span class="dt">CONS</span> banana (<span class="dt">CONS</span> cantaloupe <span class="dt">NIL</span>)))</a>
+<a class="sourceLine" id="cb60-5" data-line-number="5">  <span class="fu">=~&gt;</span> apple </a>
+<a class="sourceLine" id="cb60-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb60-7" data-line-number="7">eval nth1 <span class="fu">:</span></a>
+<a class="sourceLine" id="cb60-8" data-line-number="8">  <span class="dt">GetNth</span> <span class="dt">ONE</span> (<span class="dt">CONS</span> apple (<span class="dt">CONS</span> banana (<span class="dt">CONS</span> cantaloupe <span class="dt">NIL</span>)))</a>
+<a class="sourceLine" id="cb60-9" data-line-number="9">  <span class="fu">=~&gt;</span> banana</a>
+<a class="sourceLine" id="cb60-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb60-11" data-line-number="11">eval nth2 <span class="fu">:</span></a>
+<a class="sourceLine" id="cb60-12" data-line-number="12">  <span class="dt">GetNth</span> <span class="dt">TWO</span> (<span class="dt">CONS</span> apple (<span class="dt">CONS</span> banana (<span class="dt">CONS</span> cantaloupe <span class="dt">NIL</span>)))</a>
+<a class="sourceLine" id="cb60-13" data-line-number="13">  <span class="fu">=~&gt;</span> cantaloupe</a></code></pre></div>
+<p><a href="https://goto.ucsd.edu/elsa/index.html#?demo=permalink%2F1586466816_52273.lc">Click here to try this in elsa</a></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="lambda-calculus-recursion"><span class="math inline"><em>λ</em></span>-calculus: Recursion</h2>
 <p><br></p>
 <p>I want to write a function that sums up natural numbers up to <code class="sourceCode haskell">n</code>:</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb56-1" data-line-number="1">\n <span class="ot">-&gt;</span> <span class="fu">...</span>          <span class="co">-- 1 + 2 + ... + n</span></a></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="kw">let</span> <span class="dt">SUM</span> <span class="fu">=</span> \n <span class="ot">-&gt;</span> <span class="fu">...</span>  <span class="co">-- 0 + 1 + 2 + ... + n</span></a></code></pre></div>
+<p>such that we get the following behavior</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb62-1" data-line-number="1">eval exSum0<span class="fu">:</span> <span class="dt">SUM</span> <span class="dt">ZERO</span>  <span class="fu">=~&gt;</span> <span class="dt">ZERO</span></a>
+<a class="sourceLine" id="cb62-2" data-line-number="2">eval exSum1<span class="fu">:</span> <span class="dt">SUM</span> <span class="dt">ONE</span>   <span class="fu">=~&gt;</span> <span class="dt">ONE</span></a>
+<a class="sourceLine" id="cb62-3" data-line-number="3">eval exSum2<span class="fu">:</span> <span class="dt">SUM</span> <span class="dt">TWO</span>   <span class="fu">=~&gt;</span> <span class="dt">THREE</span></a>
+<a class="sourceLine" id="cb62-4" data-line-number="4">eval exSum3<span class="fu">:</span> <span class="dt">SUM</span> <span class="dt">THREE</span> <span class="fu">=~&gt;</span> <span class="dt">SIX</span></a></code></pre></div>
+<p><a href="https://goto.ucsd.edu/elsa/index.html#?demo=permalink%2F1586465192_52175.lc">Click here to try this in Elsa</a></p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="quiz-8">QUIZ</h2>
 <p>Is this a correct implementation of <code class="sourceCode haskell"><span class="dt">SUM</span></code>?</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="kw">let</span> <span class="dt">SUM</span> <span class="fu">=</span> \n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) </a>
-<a class="sourceLine" id="cb57-2" data-line-number="2">            <span class="dt">ZERO</span> </a>
-<a class="sourceLine" id="cb57-3" data-line-number="3">            (<span class="dt">ADD</span> n (<span class="dt">SUM</span> (<span class="dt">DEC</span> n)))</a></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="kw">let</span> <span class="dt">SUM</span> <span class="fu">=</span> \n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) </a>
+<a class="sourceLine" id="cb63-2" data-line-number="2">            <span class="dt">ZERO</span> </a>
+<a class="sourceLine" id="cb63-3" data-line-number="3">            (<span class="dt">ADD</span> n (<span class="dt">SUM</span> (<span class="dt">DEC</span> n)))</a></code></pre></div>
 <p><strong>A.</strong> Yes</p>
 <p><strong>B.</strong> No</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
@@ -1060,9 +1121,9 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <li>Named terms in Elsa are just syntactic sugar</li>
 <li>To translate an Elsa term to <span class="math inline"><em>λ</em></span>-calculus: replace each name with its definition</li>
 </ul>
-<div class="sourceCode" id="cb58"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb58-1" data-line-number="1">\n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) </a>
-<a class="sourceLine" id="cb58-2" data-line-number="2">        <span class="dt">ZERO</span> </a>
-<a class="sourceLine" id="cb58-3" data-line-number="3">        (<span class="dt">ADD</span> n (<span class="dt">SUM</span> (<span class="dt">DEC</span> n))) <span class="co">-- But SUM is not a thing!</span></a></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb64-1" data-line-number="1">\n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) </a>
+<a class="sourceLine" id="cb64-2" data-line-number="2">        <span class="dt">ZERO</span> </a>
+<a class="sourceLine" id="cb64-3" data-line-number="3">        (<span class="dt">ADD</span> n (<span class="dt">SUM</span> (<span class="dt">DEC</span> n))) <span class="co">-- But SUM is not a thing!</span></a></code></pre></div>
 <p><br> <br></p>
 <p><strong>Recursion:</strong></p>
 <ul>
@@ -1083,58 +1144,57 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 </ul>
 <p><br> <br></p>
 <p><strong>Step 1:</strong> Pass in the function to call “recursively”</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb59-1" data-line-number="1"><span class="kw">let</span> <span class="dt">STEP</span> <span class="fu">=</span> </a>
-<a class="sourceLine" id="cb59-2" data-line-number="2">  \rec <span class="ot">-&gt;</span> \n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) </a>
-<a class="sourceLine" id="cb59-3" data-line-number="3">                  <span class="dt">ZERO</span> </a>
-<a class="sourceLine" id="cb59-4" data-line-number="4">                  (<span class="dt">ADD</span> n (rec (<span class="dt">DEC</span> n))) <span class="co">-- Call some rec</span></a></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb65-1" data-line-number="1"><span class="kw">let</span> <span class="dt">STEP</span> <span class="fu">=</span> </a>
+<a class="sourceLine" id="cb65-2" data-line-number="2">  \rec <span class="ot">-&gt;</span> \n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) </a>
+<a class="sourceLine" id="cb65-3" data-line-number="3">                  <span class="dt">ZERO</span> </a>
+<a class="sourceLine" id="cb65-4" data-line-number="4">                  (<span class="dt">ADD</span> n (rec (<span class="dt">DEC</span> n))) <span class="co">-- Call some rec</span></a></code></pre></div>
 <p><br> <br></p>
 <p><strong>Step 2:</strong> Do something clever to <code class="sourceCode haskell"><span class="dt">STEP</span></code>, so that the function passed as <code class="sourceCode haskell">rec</code> itself becomes</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb60-1" data-line-number="1">\n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) <span class="dt">ZERO</span> (<span class="dt">ADD</span> n (rec (<span class="dt">DEC</span> n)))</a></code></pre></div>
-<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb66-1" data-line-number="1">\n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) <span class="dt">ZERO</span> (<span class="dt">ADD</span> n (rec (<span class="dt">DEC</span> n)))</a></code></pre></div>
+<p>That is, obtain a term <code class="sourceCode haskell"><span class="dt">MAGIC</span></code> such that</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb67-1" data-line-number="1"><span class="dt">MAGIC</span> <span class="fu">=*&gt;</span> <span class="dt">STEP</span> <span class="dt">MAGIC</span> </a></code></pre></div>
 <h2 id="lambda-calculus-fixpoint-combinator"><span class="math inline"><em>λ</em></span>-calculus: Fixpoint Combinator</h2>
 <p><strong>Wanted:</strong> a combinator <code class="sourceCode haskell"><span class="dt">FIX</span></code> such that <code class="sourceCode haskell"><span class="dt">FIX</span> <span class="dt">STEP</span></code> calls <code class="sourceCode haskell"><span class="dt">STEP</span></code> with itself as the first argument:</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="dt">FIX</span> <span class="dt">STEP</span></a>
-<a class="sourceLine" id="cb61-2" data-line-number="2"><span class="fu">=*&gt;</span> <span class="dt">STEP</span> (<span class="dt">FIX</span> <span class="dt">STEP</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb68-1" data-line-number="1">(<span class="dt">FIX</span> <span class="dt">STEP</span>) <span class="fu">=*&gt;</span> <span class="dt">STEP</span> (<span class="dt">FIX</span> <span class="dt">STEP</span>)</a></code></pre></div>
 <p><br></p>
 <p>(In math: a <em>fixpoint</em> of a function <span class="math inline"><em>f</em>(<em>x</em>)</span> is a point <span class="math inline"><em>x</em></span>, such that <span class="math inline"><em>f</em>(<em>x</em>) = <em>x</em></span>)</p>
 <p><br> <br> <br> <br></p>
 <p>Once we have it, we can define:</p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb62-1" data-line-number="1"><span class="kw">let</span> <span class="dt">SUM</span> <span class="fu">=</span> <span class="dt">FIX</span> <span class="dt">STEP</span></a></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb69-1" data-line-number="1"><span class="kw">let</span> <span class="dt">SUM</span> <span class="fu">=</span> <span class="dt">FIX</span> <span class="dt">STEP</span></a></code></pre></div>
 <p>Then by property of <code class="sourceCode haskell"><span class="dt">FIX</span></code> we have:</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="dt">SUM</span> <span class="fu">=*&gt;</span> <span class="dt">STEP</span> <span class="dt">SUM</span> <span class="co">-- (1)</span></a></code></pre></div>
-<div class="sourceCode" id="cb64"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb64-1" data-line-number="1">eval sum_one<span class="fu">:</span></a>
-<a class="sourceLine" id="cb64-2" data-line-number="2">  <span class="dt">SUM</span> <span class="dt">ONE</span></a>
-<a class="sourceLine" id="cb64-3" data-line-number="3">  <span class="fu">=*&gt;</span> <span class="dt">STEP</span> <span class="dt">SUM</span> <span class="dt">ONE</span>                 <span class="co">-- (1)</span></a>
-<a class="sourceLine" id="cb64-4" data-line-number="4">  <span class="fu">=</span>d<span class="fu">&gt;</span> (\rec n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) <span class="dt">ZERO</span> (<span class="dt">ADD</span> n (rec (<span class="dt">DEC</span> n)))) <span class="dt">SUM</span> <span class="dt">ONE</span></a>
-<a class="sourceLine" id="cb64-5" data-line-number="5">  <span class="fu">=</span>b<span class="fu">&gt;</span> (\n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) <span class="dt">ZERO</span> (<span class="dt">ADD</span> n (<span class="dt">SUM</span> (<span class="dt">DEC</span> n)))) <span class="dt">ONE</span> </a>
-<a class="sourceLine" id="cb64-6" data-line-number="6">                                   <span class="co">-- ^^^ the magic happened!</span></a>
-<a class="sourceLine" id="cb64-7" data-line-number="7">  <span class="fu">=</span>b<span class="fu">&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> <span class="dt">ONE</span>) <span class="dt">ZERO</span> (<span class="dt">ADD</span> <span class="dt">ONE</span> (<span class="dt">SUM</span> (<span class="dt">DEC</span> <span class="dt">ONE</span>)))</a>
-<a class="sourceLine" id="cb64-8" data-line-number="8">  <span class="fu">=*&gt;</span> <span class="dt">ADD</span> <span class="dt">ONE</span> (<span class="dt">SUM</span> <span class="dt">ZERO</span>)           <span class="co">-- def of ISZ, ITE, DEC, ...</span></a>
-<a class="sourceLine" id="cb64-9" data-line-number="9">  <span class="fu">=*&gt;</span> <span class="dt">ADD</span> <span class="dt">ONE</span> (<span class="dt">STEP</span> <span class="dt">SUM</span> <span class="dt">ZERO</span>)      <span class="co">-- (1)</span></a>
-<a class="sourceLine" id="cb64-10" data-line-number="10">  <span class="fu">=</span>d<span class="fu">&gt;</span> <span class="dt">ADD</span> <span class="dt">ONE</span> </a>
-<a class="sourceLine" id="cb64-11" data-line-number="11">        ((\rec n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) <span class="dt">ZERO</span> (<span class="dt">ADD</span> n (rec (<span class="dt">DEC</span> n)))) <span class="dt">SUM</span> <span class="dt">ZERO</span>)</a>
-<a class="sourceLine" id="cb64-12" data-line-number="12">  <span class="fu">=</span>b<span class="fu">&gt;</span> <span class="dt">ADD</span> <span class="dt">ONE</span> ((\n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) <span class="dt">ZERO</span> (<span class="dt">ADD</span> n (<span class="dt">SUM</span> (<span class="dt">DEC</span> n)))) <span class="dt">ZERO</span>)</a>
-<a class="sourceLine" id="cb64-13" data-line-number="13">  <span class="fu">=</span>b<span class="fu">&gt;</span> <span class="dt">ADD</span> <span class="dt">ONE</span> (<span class="dt">ITE</span> (<span class="dt">ISZ</span> <span class="dt">ZERO</span>) <span class="dt">ZERO</span> (<span class="dt">ADD</span> <span class="dt">ZERO</span> (<span class="dt">SUM</span> (<span class="dt">DEC</span> <span class="dt">ZERO</span>))))</a>
-<a class="sourceLine" id="cb64-14" data-line-number="14">  <span class="fu">=</span>b<span class="fu">&gt;</span> <span class="dt">ADD</span> <span class="dt">ONE</span> <span class="dt">ZERO</span></a>
-<a class="sourceLine" id="cb64-15" data-line-number="15">  <span class="fu">=~&gt;</span> <span class="dt">ONE</span></a></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb70-1" data-line-number="1"><span class="dt">SUM</span> <span class="fu">=*&gt;</span> <span class="dt">STEP</span> <span class="dt">SUM</span> <span class="co">-- (1)</span></a></code></pre></div>
+<p>and so now we compute:</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb71-1" data-line-number="1">eval sum_two<span class="fu">:</span></a>
+<a class="sourceLine" id="cb71-2" data-line-number="2">  <span class="dt">SUM</span> <span class="dt">TWO</span></a>
+<a class="sourceLine" id="cb71-3" data-line-number="3">  <span class="fu">=*&gt;</span> <span class="dt">STEP</span> <span class="dt">SUM</span> <span class="dt">TWO</span></a>
+<a class="sourceLine" id="cb71-4" data-line-number="4">  <span class="fu">=*&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> <span class="dt">TWO</span>) <span class="dt">ZERO</span> (<span class="dt">ADD</span> <span class="dt">TWO</span> (<span class="dt">SUM</span> (<span class="dt">DEC</span> <span class="dt">TWO</span>)))</a>
+<a class="sourceLine" id="cb71-5" data-line-number="5">  <span class="fu">=*&gt;</span> <span class="dt">ADD</span> <span class="dt">TWO</span> (<span class="dt">SUM</span> (<span class="dt">DEC</span> <span class="dt">TWO</span>))</a>
+<a class="sourceLine" id="cb71-6" data-line-number="6">  <span class="fu">=*&gt;</span> <span class="dt">ADD</span> <span class="dt">TWO</span> (<span class="dt">SUM</span> <span class="dt">ONE</span>)</a>
+<a class="sourceLine" id="cb71-7" data-line-number="7">  <span class="fu">=*&gt;</span> <span class="dt">ADD</span> <span class="dt">TWO</span> (<span class="dt">STEP</span> <span class="dt">SUM</span> <span class="dt">ONE</span>)</a>
+<a class="sourceLine" id="cb71-8" data-line-number="8">  <span class="fu">=*&gt;</span> <span class="dt">ADD</span> <span class="dt">TWO</span> (<span class="dt">ITE</span> (<span class="dt">ISZ</span> <span class="dt">ONE</span>) <span class="dt">ZERO</span> (<span class="dt">ADD</span> <span class="dt">ONE</span> (<span class="dt">SUM</span> (<span class="dt">DEC</span> <span class="dt">ONE</span>))))</a>
+<a class="sourceLine" id="cb71-9" data-line-number="9">  <span class="fu">=*&gt;</span> <span class="dt">ADD</span> <span class="dt">TWO</span> (<span class="dt">ADD</span> <span class="dt">ONE</span> (<span class="dt">SUM</span> (<span class="dt">DEC</span> <span class="dt">ONE</span>)))</a>
+<a class="sourceLine" id="cb71-10" data-line-number="10">  <span class="fu">=*&gt;</span> <span class="dt">ADD</span> <span class="dt">TWO</span> (<span class="dt">ADD</span> <span class="dt">ONE</span> (<span class="dt">SUM</span> <span class="dt">ZERO</span>))</a>
+<a class="sourceLine" id="cb71-11" data-line-number="11">  <span class="fu">=*&gt;</span> <span class="dt">ADD</span> <span class="dt">TWO</span> (<span class="dt">ADD</span> <span class="dt">ONE</span> (<span class="dt">ITE</span> (<span class="dt">ISZ</span> <span class="dt">ZERO</span>) <span class="dt">ZERO</span> (<span class="dt">ADD</span> <span class="dt">ZERO</span> (<span class="dt">SUM</span> <span class="dt">DEC</span> <span class="dt">ZERO</span>)))</a>
+<a class="sourceLine" id="cb71-12" data-line-number="12">  <span class="fu">=*&gt;</span> <span class="dt">ADD</span> <span class="dt">TWO</span> (<span class="dt">ADD</span> <span class="dt">ONE</span> (<span class="dt">ZERO</span>)) </a>
+<a class="sourceLine" id="cb71-13" data-line-number="13">  <span class="fu">=*&gt;</span> <span class="dt">THREE</span></a></code></pre></div>
 <p>How should we define <code class="sourceCode haskell"><span class="dt">FIX</span></code>???</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="the-y-combinator">The Y combinator</h2>
 <p>Remember <span class="math inline"><em>Ω</em></span>?</p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb65-1" data-line-number="1">(\x <span class="ot">-&gt;</span> x x) (\x <span class="ot">-&gt;</span> x x)</a>
-<a class="sourceLine" id="cb65-2" data-line-number="2"><span class="fu">=</span>b<span class="fu">&gt;</span> (\x <span class="ot">-&gt;</span> x x) (\x <span class="ot">-&gt;</span> x x)</a></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb72-1" data-line-number="1">(\x <span class="ot">-&gt;</span> x x) (\x <span class="ot">-&gt;</span> x x)</a>
+<a class="sourceLine" id="cb72-2" data-line-number="2"><span class="fu">=</span>b<span class="fu">&gt;</span> (\x <span class="ot">-&gt;</span> x x) (\x <span class="ot">-&gt;</span> x x)</a></code></pre></div>
 <p>This is <em>self-replcating code</em>! We need something like this but a bit more involved…</p>
 <p><br> <br> <br> <br></p>
 <p>The Y combinator discovered by Haskell Curry:</p>
-<div class="sourceCode" id="cb66"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb66-1" data-line-number="1"><span class="kw">let</span> <span class="dt">FIX</span>   <span class="fu">=</span> \stp <span class="ot">-&gt;</span> (\x <span class="ot">-&gt;</span> stp (x x)) (\x <span class="ot">-&gt;</span> stp (x x))</a></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb73-1" data-line-number="1"><span class="kw">let</span> <span class="dt">FIX</span>   <span class="fu">=</span> \stp <span class="ot">-&gt;</span> (\x <span class="ot">-&gt;</span> stp (x x)) (\x <span class="ot">-&gt;</span> stp (x x))</a></code></pre></div>
 <p><br> <br></p>
 <p>How does it work?</p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb67-1" data-line-number="1">eval fix_step<span class="fu">:</span></a>
-<a class="sourceLine" id="cb67-2" data-line-number="2">  <span class="dt">FIX</span> <span class="dt">STEP</span></a>
-<a class="sourceLine" id="cb67-3" data-line-number="3">  <span class="fu">=</span>d<span class="fu">&gt;</span> (\stp <span class="ot">-&gt;</span> (\x <span class="ot">-&gt;</span> stp (x x)) (\x <span class="ot">-&gt;</span> stp (x x))) <span class="dt">STEP</span></a>
-<a class="sourceLine" id="cb67-4" data-line-number="4">  <span class="fu">=</span>b<span class="fu">&gt;</span> (\x <span class="ot">-&gt;</span> <span class="dt">STEP</span> (x x)) (\x <span class="ot">-&gt;</span> <span class="dt">STEP</span> (x x))</a>
-<a class="sourceLine" id="cb67-5" data-line-number="5">  <span class="fu">=</span>b<span class="fu">&gt;</span> <span class="dt">STEP</span> ((\x <span class="ot">-&gt;</span> <span class="dt">STEP</span> (x x)) (\x <span class="ot">-&gt;</span> <span class="dt">STEP</span> (x x)))</a>
-<a class="sourceLine" id="cb67-6" data-line-number="6">  <span class="co">--       ^^^^^^^^^^ this is FIX STEP ^^^^^^^^^^^</span></a></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb74-1" data-line-number="1">eval fix_step<span class="fu">:</span></a>
+<a class="sourceLine" id="cb74-2" data-line-number="2">  <span class="dt">FIX</span> <span class="dt">STEP</span></a>
+<a class="sourceLine" id="cb74-3" data-line-number="3">  <span class="fu">=</span>d<span class="fu">&gt;</span> (\stp <span class="ot">-&gt;</span> (\x <span class="ot">-&gt;</span> stp (x x)) (\x <span class="ot">-&gt;</span> stp (x x))) <span class="dt">STEP</span></a>
+<a class="sourceLine" id="cb74-4" data-line-number="4">  <span class="fu">=</span>b<span class="fu">&gt;</span> (\x <span class="ot">-&gt;</span> <span class="dt">STEP</span> (x x)) (\x <span class="ot">-&gt;</span> <span class="dt">STEP</span> (x x))</a>
+<a class="sourceLine" id="cb74-5" data-line-number="5">  <span class="fu">=</span>b<span class="fu">&gt;</span> <span class="dt">STEP</span> ((\x <span class="ot">-&gt;</span> <span class="dt">STEP</span> (x x)) (\x <span class="ot">-&gt;</span> <span class="dt">STEP</span> (x x)))</a>
+<a class="sourceLine" id="cb74-6" data-line-number="6">  <span class="co">--       ^^^^^^^^^^ this is FIX STEP ^^^^^^^^^^^</span></a></code></pre></div>
 <p><br> <br> <br> <br> <br></p>
 <p>That’s all folks!</p>
 <p><strong>Next stop: Haskell …</strong></p>
