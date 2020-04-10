@@ -2286,7 +2286,6 @@ Can we write sum **using Church Numerals**?
 
 [Click here to try this in Elsa](https://goto.ucsd.edu/elsa/index.html#?demo=permalink%2F1586465192_52175.lc)
 
-
 <br>
 <br>
 <br>

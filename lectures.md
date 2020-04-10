@@ -18,6 +18,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/3*      | ""                              |                           | [pdf][01-lambda-B] |
 | *4/6*      | ""                              |                           | [pdf][01-lambda-C] |
 | *4/8*      | ""                              |                           | [pdf][01-lambda-D] |
+| *4/10*     | ""                              |                           | [pdf][01-lambda-E] |
 |            | From LC to Haskell              | [pdf][01-haskell]         |               |
 |            | Higher-Order Functions          | [html][02-hofs]           |               | 
 |            | Polymorphism & Typeclasses      | [html][03-classes]        |               |
@@ -39,6 +40,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 [01-lambda-B]: static/raw/01-lambda-B.pdf
 [01-lambda-C]: static/raw/01-lambda-C.pdf
 [01-lambda-D]: static/raw/01-lambda-D.pdf
+[01-lambda-E]: static/raw/01-lambda-E.pdf
 
 [02-hofs]: lectures/00-intro.html
 [03-classes]: lectures/00-intro.html
