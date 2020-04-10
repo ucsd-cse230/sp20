@@ -2282,6 +2282,8 @@ eval exSum2: SUM TWO   =~> THREE
 eval exSum3: SUM THREE =~> SIX
 ```
 
+Can we write sum **using Church Numerals**?
+
 [Click here to try this in Elsa](https://goto.ucsd.edu/elsa/index.html#?demo=permalink%2F1586465192_52175.lc)
 
 
@@ -2298,9 +2300,11 @@ eval exSum3: SUM THREE =~> SIX
 
 ## QUIZ
 
+You *can* write `SUM` using numerals but its *tedious*.
+
 Is this a correct implementation of `SUM`?
 
-```
+```haskell
 let SUM = \n -> ITE (ISZ n) 
             ZERO 
             (ADD n (SUM (DEC n)))
@@ -2326,10 +2330,10 @@ No!
   * Named terms in Elsa are just syntactic sugar
   * To translate an Elsa term to $\lambda$-calculus: replace each name with its definition
 
-```
+```haskell
 \n -> ITE (ISZ n) 
         ZERO 
-        (ADD n (SUM (DEC n))) -- But SUM is not a thing!
+        (ADD n (SUM (DEC n))) -- But SUM is not yet defined!
 ```
 
 <br>
@@ -2337,14 +2341,16 @@ No!
 
 **Recursion:** 
 
- - Inside this function I want to call *the same function* on `DEC n`
+- Inside *this* function 
+- Want to call the *same* function on `DEC n`
 
 <br>
 <br>
 
-Looks like we can't do recursion,
-because it requires being able to refer to functions *by name*,
-but in $\lambda$-calculus functions are *anonymous*.
+Looks like we can't do recursion!
+
+- Requires being able to refer to functions *by name*,
+- But $\lambda$-calculus functions are *anonymous*.
 
 Right?
 
@@ -2370,16 +2376,21 @@ Think again!
 
 **Recursion:** 
 
- - ~~Inside this function I want to call *the same function* on `DEC n`~~
- - Inside this function I want to call *a function* on `DEC n`
- - *And BTW,* I want it to be the same function 
+Instead of
+
+- ~~Inside *this* function I want to call the *same* function on `DEC n`~~
+
+Lets try
+
+- Inside *this* function I want to call *some* function `rec` on `DEC n`
+- And BTW, I want `rec` to be the *same* function 
  
 <br>
 <br>
 
 **Step 1:** Pass in the function to call "recursively"
  
-```
+```haskell
 let STEP = 
   \rec -> \n -> ITE (ISZ n) 
                   ZERO 
@@ -2388,24 +2399,37 @@ let STEP =
 <br>
 <br>
 
-**Step 2:** Do something clever to `STEP`, so that the function passed as `rec`
-itself becomes
+**Step 2:** Do some magic to `STEP`, so `rec` is itself
 
-```
+```haskell
 \n -> ITE (ISZ n) ZERO (ADD n (rec (DEC n)))
 ```
 
 That is, obtain a term `MAGIC` such that 
 
-```
+```haskell
 MAGIC =*> STEP MAGIC 
 ```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## $\lambda$-calculus: Fixpoint Combinator 
 
 
-**Wanted:** a combinator `FIX` such that `FIX STEP`
-calls `STEP` with itself as the first argument:
+**Wanted:** a $\lambda$-term `FIX` such that 
+
+- `FIX STEP` calls `STEP` with `FIX STEP` as the first argument:
 
 ```
 (FIX STEP) =*> STEP (FIX STEP)
@@ -2427,8 +2451,9 @@ let SUM = FIX STEP
 ```
 
 Then by property of `FIX` we have:
-```
-SUM =*> STEP SUM -- (1)
+
+```haskell
+SUM   =*>   FIX STEP  =*>   STEP (FIX STEP)   =*>   STEP SUM
 ```
 
 and so now we compute:
@@ -2505,9 +2530,9 @@ eval fix_step:
 <br>
 <br>
 
-That's all folks! 
+That's all folks, Haskell Curry was very clever.
 
-**Next stop: Haskell ...**
+**Next week:** We'll look at the language named after him (`Haskell`)
 
 [elsa-ite]: http://goto.ucsd.edu:8095/index.html#?demo=ite.lc
 

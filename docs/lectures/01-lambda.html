@@ -1110,9 +1110,11 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb62-2" data-line-number="2">eval exSum1<span class="fu">:</span> <span class="dt">SUM</span> <span class="dt">ONE</span>   <span class="fu">=~&gt;</span> <span class="dt">ONE</span></a>
 <a class="sourceLine" id="cb62-3" data-line-number="3">eval exSum2<span class="fu">:</span> <span class="dt">SUM</span> <span class="dt">TWO</span>   <span class="fu">=~&gt;</span> <span class="dt">THREE</span></a>
 <a class="sourceLine" id="cb62-4" data-line-number="4">eval exSum3<span class="fu">:</span> <span class="dt">SUM</span> <span class="dt">THREE</span> <span class="fu">=~&gt;</span> <span class="dt">SIX</span></a></code></pre></div>
+<p>Can we write sum <strong>using Church Numerals</strong>?</p>
 <p><a href="https://goto.ucsd.edu/elsa/index.html#?demo=permalink%2F1586465192_52175.lc">Click here to try this in Elsa</a></p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="quiz-8">QUIZ</h2>
+<p>You <em>can</em> write <code class="sourceCode haskell"><span class="dt">SUM</span></code> using numerals but its <em>tedious</em>.</p>
 <p>Is this a correct implementation of <code class="sourceCode haskell"><span class="dt">SUM</span></code>?</p>
 <div class="sourceCode" id="cb63"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="kw">let</span> <span class="dt">SUM</span> <span class="fu">=</span> \n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) </a>
 <a class="sourceLine" id="cb63-2" data-line-number="2">            <span class="dt">ZERO</span> </a>
@@ -1127,24 +1129,33 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 </ul>
 <div class="sourceCode" id="cb64"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb64-1" data-line-number="1">\n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) </a>
 <a class="sourceLine" id="cb64-2" data-line-number="2">        <span class="dt">ZERO</span> </a>
-<a class="sourceLine" id="cb64-3" data-line-number="3">        (<span class="dt">ADD</span> n (<span class="dt">SUM</span> (<span class="dt">DEC</span> n))) <span class="co">-- But SUM is not a thing!</span></a></code></pre></div>
+<a class="sourceLine" id="cb64-3" data-line-number="3">        (<span class="dt">ADD</span> n (<span class="dt">SUM</span> (<span class="dt">DEC</span> n))) <span class="co">-- But SUM is not yet defined!</span></a></code></pre></div>
 <p><br> <br></p>
 <p><strong>Recursion:</strong></p>
 <ul>
-<li>Inside this function I want to call <em>the same function</em> on <code class="sourceCode haskell"><span class="dt">DEC</span> n</code></li>
+<li>Inside <em>this</em> function</li>
+<li>Want to call the <em>same</em> function on <code class="sourceCode haskell"><span class="dt">DEC</span> n</code></li>
 </ul>
 <p><br> <br></p>
-<p>Looks like we can’t do recursion, because it requires being able to refer to functions <em>by name</em>, but in <span class="math inline"><em>λ</em></span>-calculus functions are <em>anonymous</em>.</p>
+<p>Looks like we can’t do recursion!</p>
+<ul>
+<li>Requires being able to refer to functions <em>by name</em>,</li>
+<li>But <span class="math inline"><em>λ</em></span>-calculus functions are <em>anonymous</em>.</li>
+</ul>
 <p>Right?</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="lambda-calculus-recursion-1"><span class="math inline"><em>λ</em></span>-calculus: Recursion</h2>
 <p>Think again!</p>
 <p><br> <br></p>
 <p><strong>Recursion:</strong></p>
+<p>Instead of</p>
 <ul>
-<li><del>Inside this function I want to call <em>the same function</em> on <code class="sourceCode haskell"><span class="dt">DEC</span> n</code></del></li>
-<li>Inside this function I want to call <em>a function</em> on <code class="sourceCode haskell"><span class="dt">DEC</span> n</code></li>
-<li><em>And BTW,</em> I want it to be the same function</li>
+<li><del>Inside <em>this</em> function I want to call the <em>same</em> function on <code class="sourceCode haskell"><span class="dt">DEC</span> n</code></del></li>
+</ul>
+<p>Lets try</p>
+<ul>
+<li>Inside <em>this</em> function I want to call <em>some</em> function <code class="sourceCode haskell">rec</code> on <code class="sourceCode haskell"><span class="dt">DEC</span> n</code></li>
+<li>And BTW, I want <code class="sourceCode haskell">rec</code> to be the <em>same</em> function</li>
 </ul>
 <p><br> <br></p>
 <p><strong>Step 1:</strong> Pass in the function to call “recursively”</p>
@@ -1153,12 +1164,16 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb65-3" data-line-number="3">                  <span class="dt">ZERO</span> </a>
 <a class="sourceLine" id="cb65-4" data-line-number="4">                  (<span class="dt">ADD</span> n (rec (<span class="dt">DEC</span> n))) <span class="co">-- Call some rec</span></a></code></pre></div>
 <p><br> <br></p>
-<p><strong>Step 2:</strong> Do something clever to <code class="sourceCode haskell"><span class="dt">STEP</span></code>, so that the function passed as <code class="sourceCode haskell">rec</code> itself becomes</p>
+<p><strong>Step 2:</strong> Do some magic to <code class="sourceCode haskell"><span class="dt">STEP</span></code>, so <code class="sourceCode haskell">rec</code> is itself</p>
 <div class="sourceCode" id="cb66"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb66-1" data-line-number="1">\n <span class="ot">-&gt;</span> <span class="dt">ITE</span> (<span class="dt">ISZ</span> n) <span class="dt">ZERO</span> (<span class="dt">ADD</span> n (rec (<span class="dt">DEC</span> n)))</a></code></pre></div>
 <p>That is, obtain a term <code class="sourceCode haskell"><span class="dt">MAGIC</span></code> such that</p>
 <div class="sourceCode" id="cb67"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb67-1" data-line-number="1"><span class="dt">MAGIC</span> <span class="fu">=*&gt;</span> <span class="dt">STEP</span> <span class="dt">MAGIC</span> </a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="lambda-calculus-fixpoint-combinator"><span class="math inline"><em>λ</em></span>-calculus: Fixpoint Combinator</h2>
-<p><strong>Wanted:</strong> a combinator <code class="sourceCode haskell"><span class="dt">FIX</span></code> such that <code class="sourceCode haskell"><span class="dt">FIX</span> <span class="dt">STEP</span></code> calls <code class="sourceCode haskell"><span class="dt">STEP</span></code> with itself as the first argument:</p>
+<p><strong>Wanted:</strong> a <span class="math inline"><em>λ</em></span>-term <code class="sourceCode haskell"><span class="dt">FIX</span></code> such that</p>
+<ul>
+<li><code class="sourceCode haskell"><span class="dt">FIX</span> <span class="dt">STEP</span></code> calls <code class="sourceCode haskell"><span class="dt">STEP</span></code> with <code class="sourceCode haskell"><span class="dt">FIX</span> <span class="dt">STEP</span></code> as the first argument:</li>
+</ul>
 <div class="sourceCode" id="cb68"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb68-1" data-line-number="1">(<span class="dt">FIX</span> <span class="dt">STEP</span>) <span class="fu">=*&gt;</span> <span class="dt">STEP</span> (<span class="dt">FIX</span> <span class="dt">STEP</span>)</a></code></pre></div>
 <p><br></p>
 <p>(In math: a <em>fixpoint</em> of a function <span class="math inline"><em>f</em>(<em>x</em>)</span> is a point <span class="math inline"><em>x</em></span>, such that <span class="math inline"><em>f</em>(<em>x</em>) = <em>x</em></span>)</p>
@@ -1166,7 +1181,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p>Once we have it, we can define:</p>
 <div class="sourceCode" id="cb69"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb69-1" data-line-number="1"><span class="kw">let</span> <span class="dt">SUM</span> <span class="fu">=</span> <span class="dt">FIX</span> <span class="dt">STEP</span></a></code></pre></div>
 <p>Then by property of <code class="sourceCode haskell"><span class="dt">FIX</span></code> we have:</p>
-<div class="sourceCode" id="cb70"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb70-1" data-line-number="1"><span class="dt">SUM</span> <span class="fu">=*&gt;</span> <span class="dt">STEP</span> <span class="dt">SUM</span> <span class="co">-- (1)</span></a></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb70-1" data-line-number="1"><span class="dt">SUM</span>   <span class="fu">=*&gt;</span>   <span class="dt">FIX</span> <span class="dt">STEP</span>  <span class="fu">=*&gt;</span>   <span class="dt">STEP</span> (<span class="dt">FIX</span> <span class="dt">STEP</span>)   <span class="fu">=*&gt;</span>   <span class="dt">STEP</span> <span class="dt">SUM</span></a></code></pre></div>
 <p>and so now we compute:</p>
 <div class="sourceCode" id="cb71"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb71-1" data-line-number="1">eval sum_two<span class="fu">:</span></a>
 <a class="sourceLine" id="cb71-2" data-line-number="2">  <span class="dt">SUM</span> <span class="dt">TWO</span></a>
@@ -1200,8 +1215,8 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb74-5" data-line-number="5">  <span class="fu">=</span>b<span class="fu">&gt;</span> <span class="dt">STEP</span> ((\x <span class="ot">-&gt;</span> <span class="dt">STEP</span> (x x)) (\x <span class="ot">-&gt;</span> <span class="dt">STEP</span> (x x)))</a>
 <a class="sourceLine" id="cb74-6" data-line-number="6">  <span class="co">--       ^^^^^^^^^^ this is FIX STEP ^^^^^^^^^^^</span></a></code></pre></div>
 <p><br> <br> <br> <br> <br></p>
-<p>That’s all folks!</p>
-<p><strong>Next stop: Haskell …</strong></p>
+<p>That’s all folks, Haskell Curry was very clever.</p>
+<p><strong>Next week:</strong> We’ll look at the language named after him (<code class="sourceCode haskell"><span class="dt">Haskell</span></code>)</p>
                 <hr>
             </div>
         </div>
