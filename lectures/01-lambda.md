@@ -2162,7 +2162,7 @@ NIL
 A list with 4 elements
 
 ```
-CONS apple (CONS banana (CONS cantaloupe (CONS dragonfruit NIL)))
+CONS apple (CONS banana (CONS cantaloupe (CONS dragon NIL)))
 ```
 
 intuitively `CONS h t` creates a *new* list with 
@@ -2176,12 +2176,25 @@ intuitively `CONS h t` creates a *new* list with
 - `TAIL l` returns the _rest_ of the list
 
 ```haskell
-HEAD (CONS apple (CONS banana (CONS cantaloupe (CONS dragonfruit NIL))))
+HEAD (CONS apple (CONS banana (CONS cantaloupe (CONS dragon NIL))))
 =~> apple
 
-TAIL (CONS apple (CONS banana (CONS cantaloupe (CONS dragonfruit NIL))))
-=~> CONS banana (CONS cantaloupe (CONS dragonfruit NIL)))
+TAIL (CONS apple (CONS banana (CONS cantaloupe (CONS dragon NIL))))
+=~> CONS banana (CONS cantaloupe (CONS dragon NIL)))
 ```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## $\lambda$-calculus: Lists
 
@@ -2192,12 +2205,12 @@ let HEAD = ???
 let TAIL = ???
 
 eval exHd:
-  HEAD (CONS apple (CONS banana (CONS cantaloupe (CONS dragonfruit NIL))))
+  HEAD (CONS apple (CONS banana (CONS cantaloupe (CONS dragon NIL))))
   =~> apple
 
 eval exTl 
-  TAIL (CONS apple (CONS banana (CONS cantaloupe (CONS dragonfruit NIL))))
-  =~> CONS banana (CONS cantaloupe (CONS dragonfruit NIL)))
+  TAIL (CONS apple (CONS banana (CONS cantaloupe (CONS dragon NIL))))
+  =~> CONS banana (CONS cantaloupe (CONS dragon NIL)))
 ```
 
 <br>
@@ -2216,9 +2229,11 @@ eval exTl
 
 ## EXERCISE: Nth
 
-Write an implementation of `GetNth` such that `GetNth n l` returns the n-th element of the list `l` 
+Write an implementation of `GetNth` such that
 
-*assume that `l` has n or more elements*
+-  `GetNth n l` returns the n-th element of the list `l` 
+
+*Assume that `l` has n or more elements*
 
 ```haskell
 let GetNth = ???
