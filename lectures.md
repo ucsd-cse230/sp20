@@ -11,30 +11,32 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 
 ## Topics, Notes and Code
 
-| **Date**   | **Topic**                       | **Notes**                 | **Nodes**          |
+| **Date**   | **Topic**                       | **Notes**                 | **Annotated**      |
 |:----------:|:--------------------------------|:--------------------------|:-------------------|
 | *3/30*     | Intro                           | [pdf][00-intro]           |                    |
-| *3/30*     | Lambda Calculus                 | [html][00-lambda]         | [pdf][01-lambda-A] |
+| *3/30*     | Lambda Calculus                 | [html][01-lambda]         | [pdf][01-lambda-A] |
 | *4/3*      | ""                              |                           | [pdf][01-lambda-B] |
 | *4/6*      | ""                              |                           | [pdf][01-lambda-C] |
 | *4/8*      | ""                              |                           | [pdf][01-lambda-D] |
 | *4/10*     | ""                              |                           | [pdf][01-lambda-E] |
-|            | From LC to Haskell              | [pdf][01-haskell]         |               |
-|            | Higher-Order Functions          | [html][02-hofs]           |               | 
-|            | Polymorphism & Typeclasses      | [html][03-classes]        |               |
-|            | Functors & Applicatives         | [html][04-functors]       |               | 
-|            | Monads                          | [html][05-monads]         |               |
-|            | Parser Combinators              | [html][06-parsers]        |               |
-|            | Testing                         | [html][07-testing]        |               | 
-|            | Concurrency & Parallelism       | [html][08-parconc]        |               | 
-|            | Types & Inference               | [html][09-types]          |               |            
-|            | Refinement Types                | [html][10-refinements]    |               |          
-|            | Proofs as Programs              | [html][11-proofs]         |               | 
+| *4/13*     | Haskell - Basic        	       | [html][02-haskell-basic]  |                    |
+|            | Haskell - Types      	       | [html][03-haskell-types]  |                    |
+|            | Haskell - IO                    | [html][04-haskell-io]     |                    |
+|            | Higher-Order Functions          |                           |                    | 
+|            | Polymorphism & Typeclasses      |                           |                    |
+|            | Functors & Applicatives         |                           |                    | 
+|            | Monads                          |                           |                    |
+|            | Parser Combinators              |                           |                    |
+|            | Testing                         |                           |                    | 
+|            | Concurrency & Parallelism       |                           |                    | 
+|            | Types & Inference               |                           |                    |            
+|            | Refinement Types                |                           |                    |          
+|            | Proofs as Programs              |                           |                    | 
 
 
 
 [00-intro]: static/raw/lec-intro.pdf
-[00-lambda]: lectures/01-lambda.html
+[01-lambda]: lectures/01-lambda.html
 [01-haskell]: static/raw/lec-haskell.pdf
 [01-lambda-A]: static/raw/01-lambda-A.pdf
 [01-lambda-B]: static/raw/01-lambda-B.pdf
@@ -42,7 +44,10 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 [01-lambda-D]: static/raw/01-lambda-D.pdf
 [01-lambda-E]: static/raw/01-lambda-E.pdf
 
-[02-hofs]: lectures/00-intro.html
+[02-haskell-basic]: lectures/02-haskell-basic.html
+[03-haskell-types]: lectures/03-haskell-types.html
+[04-haskell-io]: lectures/04-haskell-io.html
+
 [03-classes]: lectures/00-intro.html
 [04-functors]: lectures/00-intro.html
 [05-monads]: lectures/00-intro.html
