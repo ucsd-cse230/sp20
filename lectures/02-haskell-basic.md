@@ -79,7 +79,7 @@ headerImg: sea.jpg
 <br>
 <br>
 
-## Equality Enables Abstraction via Pattern Recognition
+## Abstraction via Pattern Recognition
 
 **Repeated Expressions**
 
