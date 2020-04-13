@@ -19,9 +19,9 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/6*      | ""                              |                           | [pdf][01-lambda-C] |
 | *4/8*      | ""                              |                           | [pdf][01-lambda-D] |
 | *4/10*     | ""                              |                           | [pdf][01-lambda-E] |
-| *4/13*     | Haskell - Basic        	       | [html][02-haskell-basic]  |                    |
-|            | Haskell - Types      	       | [html][03-haskell-types]  |                    |
-|            | Haskell - IO                    | [html][04-haskell-io]     |                    |
+| *4/13*     | Haskell: Basics        	       | [html][02-haskell-basic]  |                    |
+|            | Haskell: Types      	           | [html][03-haskell-types]  |                    |
+|            | Haskell: IO                     | [html][04-haskell-io]     |                    |
 |            | Higher-Order Functions          |                           |                    | 
 |            | Polymorphism & Typeclasses      |                           |                    |
 |            | Functors & Applicatives         |                           |                    | 
