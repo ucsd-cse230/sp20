@@ -540,6 +540,15 @@ tup2 :: (Char, Double, Int)
 tup2 = ('a', 5.2, 7) 
 ``` 
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 ## QUIZ
 
 What is the type `???` of `tup3`?
@@ -593,6 +602,15 @@ thd3 :: (t1, t2, t3) -> t1
 thd3 (x1, x2, x3) = x3
 ```
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 ## QUIZ
 
 What is the value of `quiz` defined as
@@ -600,6 +618,9 @@ What is the value of `quiz` defined as
 ```haskell
 tup2 :: (Char, Double, Int)
 tup2 = ('a', 5.2, 7) 
+
+snd3 :: (t1, t2, t3) -> t1
+snd3 (x1, x2, x3) = x2
 
 quiz = snd3 tup2
 ```

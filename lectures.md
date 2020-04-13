@@ -11,27 +11,27 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 
 ## Topics, Notes and Code
 
-| **Date**   | **Topic**                       | **Notes**                 | **Annotated**      |
-|:----------:|:--------------------------------|:--------------------------|:-------------------|
-| *3/30*     | Intro                           | [pdf][00-intro]           |                    |
-| *3/30*     | Lambda Calculus                 | [html][01-lambda]         | [pdf][01-lambda-A] |
-| *4/3*      | ""                              |                           | [pdf][01-lambda-B] |
-| *4/6*      | ""                              |                           | [pdf][01-lambda-C] |
-| *4/8*      | ""                              |                           | [pdf][01-lambda-D] |
-| *4/10*     | ""                              |                           | [pdf][01-lambda-E] |
-| *4/13*     | Haskell: Basics        	       | [html][02-haskell-basic]  |                    |
-|            | Haskell: Types      	           | [html][03-haskell-types]  |                    |
-|            | Haskell: IO                     | [html][04-haskell-io]     |                    |
-|            | Higher-Order Functions          |                           |                    | 
-|            | Polymorphism & Typeclasses      |                           |                    |
-|            | Functors & Applicatives         |                           |                    | 
-|            | Monads                          |                           |                    |
-|            | Parser Combinators              |                           |                    |
-|            | Testing                         |                           |                    | 
-|            | Concurrency & Parallelism       |                           |                    | 
-|            | Types & Inference               |                           |                    |            
-|            | Refinement Types                |                           |                    |          
-|            | Proofs as Programs              |                           |                    | 
+| **Date**   | **Topic**                       | **Notes**                 | **Markup**        | **Code**         |
+|:----------:|:--------------------------------|:--------------------------|:---------------------|:-----------------|
+| *3/30*     | Intro                           | [pdf][00-intro]           |                      |                  | 
+| *3/30*     | Lambda Calculus                 | [html][01-lambda]         | [pdf][01-lambda-A]   |                  | 
+| *4/3*      | ""                              |                           | [pdf][01-lambda-B]   |                  | 
+| *4/6*      | ""                              |                           | [pdf][01-lambda-C]   |                  | 
+| *4/8*      | ""                              |                           | [pdf][01-lambda-D]   |                  | 
+| *4/10*     | ""                              |                           | [pdf][01-lambda-E]   |                  | 
+| *4/13*     | Haskell: Basics        	       | [html][02-hs-basic]       | [pdf][02-hs-basic-A] | [code][lec_4_13] |
+|            | Haskell: Types                  | [html][03-hs-types]       |                      |                  |
+|            | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
+|            | Higher-Order Functions          |                           |                      |                  | 
+|            | Polymorphism & Typeclasses      |                           |                      |                  |
+|            | Functors & Applicatives         |                           |                      |                  | 
+|            | Monads                          |                           |                      |                  |
+|            | Parser Combinators              |                           |                      |                  |
+|            | Testing                         |                           |                      |                  | 
+|            | Concurrency & Parallelism       |                           |                      |                  | 
+|            | Types & Inference               |                           |                      |                  |            
+|            | Refinement Types                |                           |                      |                  |          
+|            | Proofs as Programs              |                           |                      |                  | 
 
 
 
@@ -44,9 +44,12 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 [01-lambda-D]: static/raw/01-lambda-D.pdf
 [01-lambda-E]: static/raw/01-lambda-E.pdf
 
-[02-haskell-basic]: lectures/02-haskell-basic.html
-[03-haskell-types]: lectures/03-haskell-types.html
-[04-haskell-io]: lectures/04-haskell-io.html
+[02-hs-basic]: lectures/02-haskell-basic.html
+[03-hs-types]: lectures/03-haskell-types.html
+[04-hs-io]: lectures/04-haskell-io.html
+
+[02-hs-basic-A]: static/raw/02-hs-basics-A.pdf
+[lec_4_13]: static/raw/lec_4_13_20.hs
 
 [03-classes]: lectures/00-intro.html
 [04-functors]: lectures/00-intro.html
