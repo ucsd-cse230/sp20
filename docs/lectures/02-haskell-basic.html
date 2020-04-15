@@ -455,7 +455,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p><strong>A.</strong> <code class="sourceCode haskell">(<span class="dt">Int</span>, <span class="dt">Bool</span>)</code></p>
 <p><strong>B.</strong> <code class="sourceCode haskell">(<span class="dt">Int</span>, <span class="dt">Double</span>, <span class="dt">Bool</span>)</code></p>
 <p><strong>C.</strong> <code class="sourceCode haskell">(<span class="dt">Int</span>, (<span class="dt">Double</span>, <span class="dt">Bool</span>))</code></p>
-<p><strong>D.</strong> <code class="sourceCode haskell">(<span class="dt">Double</span>, <span class="dt">Bool</span>)</code></p>
+<p><strong>D.</strong> <code class="sourceCode haskell">((<span class="dt">Int</span>, <span class="dt">Double</span>), <span class="dt">Bool</span>)</code></p>
 <p><strong>E.</strong> <code class="sourceCode haskell">(<span class="dt">Tuple</span>, <span class="dt">Bool</span>)</code></p>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="extracting-values-from-tuples">Extracting Values from Tuples</h2>
@@ -466,10 +466,10 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <div class="sourceCode" id="cb28"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="ot">fst3 ::</span> (t1, t2, t3) <span class="ot">-&gt;</span> t1</a>
 <a class="sourceLine" id="cb28-2" data-line-number="2">fst3 (x1, x2, x3) <span class="fu">=</span> x1</a>
 <a class="sourceLine" id="cb28-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="ot">snd3 ::</span> (t1, t2, t3) <span class="ot">-&gt;</span> t1</a>
+<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="ot">snd3 ::</span> (t1, t2, t3) <span class="ot">-&gt;</span> t2</a>
 <a class="sourceLine" id="cb28-5" data-line-number="5">snd3 (x1, x2, x3) <span class="fu">=</span> x2</a>
 <a class="sourceLine" id="cb28-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb28-7" data-line-number="7"><span class="ot">thd3 ::</span> (t1, t2, t3) <span class="ot">-&gt;</span> t1</a>
+<a class="sourceLine" id="cb28-7" data-line-number="7"><span class="ot">thd3 ::</span> (t1, t2, t3) <span class="ot">-&gt;</span> t3</a>
 <a class="sourceLine" id="cb28-8" data-line-number="8">thd3 (x1, x2, x3) <span class="fu">=</span> x3</a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="quiz-2">QUIZ</h2>
@@ -477,7 +477,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <div class="sourceCode" id="cb29"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="ot">tup2 ::</span> (<span class="dt">Char</span>, <span class="dt">Double</span>, <span class="dt">Int</span>)</a>
 <a class="sourceLine" id="cb29-2" data-line-number="2">tup2 <span class="fu">=</span> (<span class="ch">'a'</span>, <span class="fl">5.2</span>, <span class="dv">7</span>) </a>
 <a class="sourceLine" id="cb29-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="ot">snd3 ::</span> (t1, t2, t3) <span class="ot">-&gt;</span> t1</a>
+<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="ot">snd3 ::</span> (t1, t2, t3) <span class="ot">-&gt;</span> t2</a>
 <a class="sourceLine" id="cb29-5" data-line-number="5">snd3 (x1, x2, x3) <span class="fu">=</span> x2</a>
 <a class="sourceLine" id="cb29-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb29-7" data-line-number="7">quiz <span class="fu">=</span> snd3 tup2</a></code></pre></div>

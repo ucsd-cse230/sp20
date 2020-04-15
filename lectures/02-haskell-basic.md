@@ -565,7 +565,7 @@ tup3 = ((7, 5.2), True)
 
 **C.** `(Int, (Double, Bool))`
 
-**D.** `(Double, Bool)`
+**D.** `((Int, Double), Bool)`
 
 **E.** `(Tuple, Bool)`
 
@@ -595,10 +595,10 @@ tup = (e1, e2, e3)
 fst3 :: (t1, t2, t3) -> t1
 fst3 (x1, x2, x3) = x1
 
-snd3 :: (t1, t2, t3) -> t1
+snd3 :: (t1, t2, t3) -> t2
 snd3 (x1, x2, x3) = x2
 
-thd3 :: (t1, t2, t3) -> t1
+thd3 :: (t1, t2, t3) -> t3
 thd3 (x1, x2, x3) = x3
 ```
 
@@ -619,7 +619,7 @@ What is the value of `quiz` defined as
 tup2 :: (Char, Double, Int)
 tup2 = ('a', 5.2, 7) 
 
-snd3 :: (t1, t2, t3) -> t1
+snd3 :: (t1, t2, t3) -> t2
 snd3 (x1, x2, x3) = x2
 
 quiz = snd3 tup2
