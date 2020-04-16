@@ -49,10 +49,10 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 [03-hs-types]: lectures/03-haskell-types.html
 [04-hs-io]: lectures/04-haskell-io.html
 
-[02-hs-basic-A]: static/raw/02-hs-basics-A.pdf
+[02-hs-basic-A]: static/raw/02-haskell-basics-A.pdf
 [lec_4_13]: static/raw/lec_4_13_20.hs
 
-[02-hs-basic-B]: static/raw/02-hs-basics-B.pdf
+[02-hs-basic-B]: static/raw/02-haskell-basics-B.pdf
 [lec_4_15]: static/raw/lec_4_15_20.hs
 
 
