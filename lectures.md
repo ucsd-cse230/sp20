@@ -21,6 +21,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/10*     | ""                              |                           | [pdf][01-lambda-E]   |                  | 
 | *4/13*     | Haskell: Basics        	       | [html][02-hs-basic]       | [pdf][02-hs-basic-A] | [code][lec_4_13] |
 | *4/15*     | ""                              |                           | [pdf][02-hs-basic-B] | [code][lec_4_15] |
+| *4/20*     | ""                              |                           | [pdf][02-hs-basic-C] | [code][lec_4_20] |
 |            | Haskell: Types                  | [html][03-hs-types]       |                      |                  |
 |            | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
 |            | Higher-Order Functions          |                           |                      |                  | 
@@ -54,6 +55,9 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 
 [02-hs-basic-B]: static/raw/02-haskell-basics-B.pdf
 [lec_4_15]: static/raw/lec_4_15_20.hs
+
+[02-hs-basic-C]: static/raw/02-haskell-basics-C.pdf
+[lec_4_20]: static/raw/lec_4_20_20.hs
 
 
 

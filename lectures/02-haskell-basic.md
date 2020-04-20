@@ -880,17 +880,20 @@ range i j = ???
 When we are done you should get the behavior
 
 ```haskell
->>> range 3 3 
+>>> range 4 3 
 []
 
+>>> range 3 3 
+[3]
+
 >>> range 2 3 
-[2]
+[2, 3]
 
 >>> range 1 3 
-[1, 2]
+[1, 2, 3]
 
 >>> range 0 3 
-[1, 2, 3]
+[0, 1, 2, 3]
 ```
 
 <br>
