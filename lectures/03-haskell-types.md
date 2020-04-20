@@ -21,7 +21,6 @@ headerImg: sea.jpg
 <br>
 <br>
 
-
 ## Recap: Haskell 
 
 Basic values & operators 
@@ -549,6 +548,10 @@ Write a function to compute the `area` of a `Shape2D`
 area2D :: Shape2D -> Double
 area2D s = ???
 ```
+
+**HINT**
+
+![Area of a polygon](/static/img/area-polygon.png){#fig:polygon .align-center width=60%}
 
 You may want to use this helper that computes the area of a triangle at `v1`, `v2`, `v3`
 

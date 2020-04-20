@@ -800,7 +800,7 @@ When you are done, you should see the following
 <br>
 <br>
 
-## EXERCISE: Clone
+## PRACTICE: Clone
 
 Write a function `clone` such that 
 `clone n x` returns a list with `n` copies of `x`. 
@@ -837,14 +837,12 @@ When you are done you should see the following behavior
 <br>
 <br>
 <br>
-
-## Defining functions with Multiple Equations
-
-```haskell
-clone :: ???
-clone 0 x = ???
-clone n x = ???
-```
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## How does `clone` execute?
 
@@ -855,6 +853,11 @@ clone 3 100
   =*> ???
 ```
 
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>
@@ -904,6 +907,14 @@ When we are done you should get the behavior
 So far: how to *produce* lists.
 
 **Next** how to *consume* lists!
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 
 <br>

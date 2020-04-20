@@ -470,6 +470,10 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p>Write a function to compute the <code class="sourceCode haskell">area</code> of a <code class="sourceCode haskell"><span class="dt">Shape2D</span></code></p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="ot">area2D ::</span> <span class="dt">Shape2D</span> <span class="ot">-&gt;</span> <span class="dt">Double</span></a>
 <a class="sourceLine" id="cb26-2" data-line-number="2">area2D s <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p><strong>HINT</strong></p>
+<figure>
+<img src="../static/img/area-polygon.png" alt="Area of a polygon" id="fig:polygon" class="align-center" style="width:60.0%" /><figcaption>Area of a polygon</figcaption>
+</figure>
 <p>You may want to use this helper that computes the area of a triangle at <code class="sourceCode haskell">v1</code>, <code class="sourceCode haskell">v2</code>, <code class="sourceCode haskell">v3</code></p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="ot">areaTriangle ::</span> <span class="dt">Vertex</span> <span class="ot">-&gt;</span> <span class="dt">Vertex</span> <span class="ot">-&gt;</span> <span class="dt">Vertex</span> <span class="ot">-&gt;</span> <span class="dt">Double</span></a>
 <a class="sourceLine" id="cb27-2" data-line-number="2">areaTriangle v1 v2 v3 <span class="fu">=</span> sqrt (s <span class="fu">*</span> (s <span class="fu">-</span> s1) <span class="fu">*</span> (s <span class="fu">-</span> s2) <span class="fu">*</span> (s <span class="fu">-</span> s3))</a>

@@ -555,7 +555,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb37-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span> copy3 <span class="st">&quot;cat&quot;</span></a>
 <a class="sourceLine" id="cb37-5" data-line-number="5">[<span class="st">&quot;cat&quot;</span>, <span class="st">&quot;cat&quot;</span>, <span class="st">&quot;cat&quot;</span>]</a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
-<h2 id="exercise-clone">EXERCISE: Clone</h2>
+<h2 id="practice-clone">PRACTICE: Clone</h2>
 <p>Write a function <code class="sourceCode haskell">clone</code> such that <code class="sourceCode haskell">clone n x</code> returns a list with <code class="sourceCode haskell">n</code> copies of <code class="sourceCode haskell">x</code>.</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="ot">clone ::</span> <span class="fu">???</span></a>
 <a class="sourceLine" id="cb38-2" data-line-number="2">clone n x <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
@@ -574,56 +574,53 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb39-12" data-line-number="12"></a>
 <a class="sourceLine" id="cb39-13" data-line-number="13"><span class="fu">&gt;&gt;&gt;</span> clone <span class="dv">3</span> <span class="dv">100</span></a>
 <a class="sourceLine" id="cb39-14" data-line-number="14">[<span class="dv">100</span>, <span class="dv">100</span>, <span class="dv">100</span>]</a></code></pre></div>
-<p><br> <br> <br> <br> <br> <br> <br> <br></p>
-<h2 id="defining-functions-with-multiple-equations">Defining functions with Multiple Equations</h2>
-<div class="sourceCode" id="cb40"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="ot">clone ::</span> <span class="fu">???</span></a>
-<a class="sourceLine" id="cb40-2" data-line-number="2">clone <span class="dv">0</span> x <span class="fu">=</span> <span class="fu">???</span></a>
-<a class="sourceLine" id="cb40-3" data-line-number="3">clone n x <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="how-does-clone-execute">How does <code class="sourceCode haskell">clone</code> execute?</h2>
 <p>(Substituting equals-by-equals!)</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb41-1" data-line-number="1">clone <span class="dv">3</span> <span class="dv">100</span></a>
-<a class="sourceLine" id="cb41-2" data-line-number="2">  <span class="fu">=*&gt;</span> <span class="fu">???</span></a></code></pre></div>
-<p><br> <br> <br> <br> <br> <br> <br> <br></p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb40-1" data-line-number="1">clone <span class="dv">3</span> <span class="dv">100</span></a>
+<a class="sourceLine" id="cb40-2" data-line-number="2">  <span class="fu">=*&gt;</span> <span class="fu">???</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="exercise-range">EXERCISE: Range</h2>
 <p>Write a function <code class="sourceCode haskell">range</code> such that <code class="sourceCode haskell">range i j</code> returns the list of values <code class="sourceCode haskell">[i, i<span class="fu">+</span><span class="dv">1</span>, <span class="fu">...</span>, j]</code></p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb42-1" data-line-number="1">range<span class="ot"> ::</span> <span class="fu">???</span></a>
-<a class="sourceLine" id="cb42-2" data-line-number="2">range i j <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb41-1" data-line-number="1">range<span class="ot"> ::</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb41-2" data-line-number="2">range i j <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
 <p>When we are done you should get the behavior</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> range <span class="dv">3</span> <span class="dv">3</span> </a>
-<a class="sourceLine" id="cb43-2" data-line-number="2">[]</a>
-<a class="sourceLine" id="cb43-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb43-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span> range <span class="dv">2</span> <span class="dv">3</span> </a>
-<a class="sourceLine" id="cb43-5" data-line-number="5">[<span class="dv">2</span>]</a>
-<a class="sourceLine" id="cb43-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb43-7" data-line-number="7"><span class="fu">&gt;&gt;&gt;</span> range <span class="dv">1</span> <span class="dv">3</span> </a>
-<a class="sourceLine" id="cb43-8" data-line-number="8">[<span class="dv">1</span>, <span class="dv">2</span>]</a>
-<a class="sourceLine" id="cb43-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb43-10" data-line-number="10"><span class="fu">&gt;&gt;&gt;</span> range <span class="dv">0</span> <span class="dv">3</span> </a>
-<a class="sourceLine" id="cb43-11" data-line-number="11">[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> range <span class="dv">3</span> <span class="dv">3</span> </a>
+<a class="sourceLine" id="cb42-2" data-line-number="2">[]</a>
+<a class="sourceLine" id="cb42-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb42-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span> range <span class="dv">2</span> <span class="dv">3</span> </a>
+<a class="sourceLine" id="cb42-5" data-line-number="5">[<span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb42-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb42-7" data-line-number="7"><span class="fu">&gt;&gt;&gt;</span> range <span class="dv">1</span> <span class="dv">3</span> </a>
+<a class="sourceLine" id="cb42-8" data-line-number="8">[<span class="dv">1</span>, <span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb42-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb42-10" data-line-number="10"><span class="fu">&gt;&gt;&gt;</span> range <span class="dv">0</span> <span class="dv">3</span> </a>
+<a class="sourceLine" id="cb42-11" data-line-number="11">[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="functions-consuming-lists">Functions Consuming Lists</h2>
 <p>So far: how to <em>produce</em> lists.</p>
 <p><strong>Next</strong> how to <em>consume</em> lists!</p>
+<p><br> <br> <br> <br> <br> <br> <br></p>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="example">Example</h2>
 <p>Lets write a function <code class="sourceCode haskell">firstElem</code> such that <code class="sourceCode haskell">firstElem xs</code> returns the <em>first</em> element <code class="sourceCode haskell">xs</code> if it is a non-empty list, and <code class="sourceCode haskell"><span class="dv">0</span></code> otherwise.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="ot">firstElem ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
-<a class="sourceLine" id="cb44-2" data-line-number="2">firstElem xs <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="ot">firstElem ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb43-2" data-line-number="2">firstElem xs <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
 <p>When you are done you should see the following behavior:</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> firstElem []</a>
-<a class="sourceLine" id="cb45-2" data-line-number="2"><span class="dv">0</span></a>
-<a class="sourceLine" id="cb45-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb45-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span> firstElem [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>]</a>
-<a class="sourceLine" id="cb45-5" data-line-number="5"><span class="dv">10</span></a>
-<a class="sourceLine" id="cb45-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb45-7" data-line-number="7"><span class="fu">&gt;&gt;&gt;</span> firstElem [<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>] </a>
-<a class="sourceLine" id="cb45-8" data-line-number="8"><span class="dv">5</span></a></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> firstElem []</a>
+<a class="sourceLine" id="cb44-2" data-line-number="2"><span class="dv">0</span></a>
+<a class="sourceLine" id="cb44-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb44-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span> firstElem [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>]</a>
+<a class="sourceLine" id="cb44-5" data-line-number="5"><span class="dv">10</span></a>
+<a class="sourceLine" id="cb44-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb44-7" data-line-number="7"><span class="fu">&gt;&gt;&gt;</span> firstElem [<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>] </a>
+<a class="sourceLine" id="cb44-8" data-line-number="8"><span class="dv">5</span></a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="quiz-4">QUIZ</h2>
 <p>Suppose we have the following <code class="sourceCode haskell">mystery</code> function</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="ot">mystery ::</span> [a] <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
-<a class="sourceLine" id="cb46-2" data-line-number="2">mystery []     <span class="fu">=</span> <span class="dv">0</span></a>
-<a class="sourceLine" id="cb46-3" data-line-number="3">mystery (x<span class="fu">:</span>xs) <span class="fu">=</span> <span class="dv">1</span> <span class="fu">+</span> mystery xs</a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="ot">mystery ::</span> [a] <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb45-2" data-line-number="2">mystery []     <span class="fu">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb45-3" data-line-number="3">mystery (x<span class="fu">:</span>xs) <span class="fu">=</span> <span class="dv">1</span> <span class="fu">+</span> mystery xs</a></code></pre></div>
 <p>What does <code class="sourceCode haskell">mystery [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>]</code> evaluate to?</p>
 <p><strong>A.</strong> <code class="sourceCode haskell"><span class="dv">10</span></code></p>
 <p><strong>B.</strong> <code class="sourceCode haskell"><span class="dv">20</span></code></p>
@@ -633,20 +630,20 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="exercise-summing-a-list">EXERCISE: Summing a List</h2>
 <p>Write a function <code class="sourceCode haskell">sumList</code> such that <code class="sourceCode haskell">sumList [x1, <span class="fu">...</span>, xn]</code> returns <code class="sourceCode haskell">x1 <span class="fu">+</span> <span class="fu">...</span> <span class="fu">+</span> xn</code></p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="ot">sumList ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
-<a class="sourceLine" id="cb47-2" data-line-number="2">sumList <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="ot">sumList ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb46-2" data-line-number="2">sumList <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
 <p>When you are done you should get the following behavior:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> sumList []</a>
-<a class="sourceLine" id="cb48-2" data-line-number="2"><span class="dv">0</span></a>
-<a class="sourceLine" id="cb48-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb48-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span> sumlist [<span class="dv">3</span>]</a>
-<a class="sourceLine" id="cb48-5" data-line-number="5"><span class="dv">3</span></a>
-<a class="sourceLine" id="cb48-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb48-7" data-line-number="7"><span class="fu">&gt;&gt;&gt;</span> sumlist [<span class="dv">2</span>, <span class="dv">3</span>]</a>
-<a class="sourceLine" id="cb48-8" data-line-number="8"><span class="dv">5</span></a>
-<a class="sourceLine" id="cb48-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb48-10" data-line-number="10"><span class="fu">&gt;&gt;&gt;</span> sumlist [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</a>
-<a class="sourceLine" id="cb48-11" data-line-number="11"><span class="dv">6</span></a></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> sumList []</a>
+<a class="sourceLine" id="cb47-2" data-line-number="2"><span class="dv">0</span></a>
+<a class="sourceLine" id="cb47-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb47-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span> sumlist [<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb47-5" data-line-number="5"><span class="dv">3</span></a>
+<a class="sourceLine" id="cb47-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb47-7" data-line-number="7"><span class="fu">&gt;&gt;&gt;</span> sumlist [<span class="dv">2</span>, <span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb47-8" data-line-number="8"><span class="dv">5</span></a>
+<a class="sourceLine" id="cb47-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb47-10" data-line-number="10"><span class="fu">&gt;&gt;&gt;</span> sumlist [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb47-11" data-line-number="11"><span class="dv">6</span></a></code></pre></div>
 <h2 id="recap">Recap</h2>
 <p><img src="../static/img/trinity.png" id="fig:types" class="align-center" style="width:60.0%" /></p>
 <ul>
