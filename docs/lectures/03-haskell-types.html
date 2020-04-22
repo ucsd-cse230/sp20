@@ -243,20 +243,20 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 </ul>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="recap-haskell">Recap: Haskell</h2>
-<p>Basic values &amp; operators</p>
+<p><strong>Basic values &amp; operators</strong></p>
 <ul>
 <li><code class="sourceCode haskell"><span class="dt">Int</span></code>, <code class="sourceCode haskell"><span class="dt">Bool</span></code>, <code class="sourceCode haskell"><span class="dt">Char</span></code>, <code class="sourceCode haskell"><span class="dt">Double</span></code></li>
 <li><code class="sourceCode haskell"><span class="fu">+</span></code>, <code class="sourceCode haskell"><span class="fu">-</span></code>, <code class="sourceCode haskell"><span class="fu">==</span></code>, <code class="sourceCode haskell"><span class="fu">/=</span></code></li>
 </ul>
-<p>Execution / Function Calls</p>
+<p><strong>Execution / Function Calls</strong></p>
 <ul>
 <li>Just <em>substitute equals by equals</em></li>
 </ul>
-<p>Producing Collections</p>
+<p><strong>Producing Collections</strong></p>
 <ul>
 <li>Pack data into <em>tuples</em> &amp; <em>lists</em></li>
 </ul>
-<p>Consuming Collections</p>
+<p><strong>Consuming Collections</strong></p>
 <ul>
 <li>Unpack data via <em>pattern-matching</em></li>
 </ul>
@@ -264,7 +264,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <h2 id="next-creating-and-using-new-data-types">Next: Creating and Using New Data Types</h2>
 <ol type="1">
 <li><p><code class="sourceCode haskell"><span class="kw">type</span></code> Synonyms: <em>Naming</em> existing types</p></li>
-<li><p><code class="sourceCode haskell"><span class="kw">data</span></code> types: <em>Constructing</em> new types</p></li>
+<li><p><code class="sourceCode haskell"><span class="kw">data</span></code> types: <em>Creating</em> new types</p></li>
 </ol>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="type-synonyms">Type Synonyms</h2>
@@ -272,10 +272,12 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <ul>
 <li>think <code class="sourceCode haskell">typedef</code> in <code class="sourceCode haskell"><span class="dt">C</span></code></li>
 </ul>
-<p><strong>A type to represent</strong> <code class="sourceCode haskell"><span class="dt">Circle</span></code></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="a-type-to-represent-circle">A type to represent <code class="sourceCode haskell"><span class="dt">Circle</span></code></h2>
 <p>A tuple <code class="sourceCode haskell">(x, y, r)</code> is a <em>circle</em> with center at <code class="sourceCode haskell">(x, y)</code> and radius <code class="sourceCode haskell">r</code></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">type</span> <span class="dt">Circle</span> <span class="fu">=</span> (<span class="dt">Double</span>, <span class="dt">Double</span>, <span class="dt">Double</span>)</a></code></pre></div>
-<p><strong>A type to represent</strong> <code class="sourceCode haskell"><span class="dt">Cuboid</span></code></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="a-type-to-represent-cuboid">A type to represent <code class="sourceCode haskell"><span class="dt">Cuboid</span></code></h2>
 <p>A tuple <code class="sourceCode haskell">(length, depth, height)</code> is a <em>cuboid</em></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">type</span> <span class="dt">Cuboid</span> <span class="fu">=</span> (<span class="dt">Double</span>, <span class="dt">Double</span>, <span class="dt">Double</span>)</a></code></pre></div>
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Cuboid.png" id="fig:cuboid" class="align-center" style="width:60.0%" /></p>
@@ -322,10 +324,14 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p><strong>B.</strong> Type error</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="beware">Beware!</h2>
+<p>Type Synonyms</p>
 <ul>
-<li><p>Type Synonyms do not create <em>new</em> types</p></li>
-<li><p>Synonyms are just name for <em>existing</em> types</p></li>
-<li><p>Do not prevent <em>confusing</em> different kinds of values</p></li>
+<li><p>Do not <em>create</em> new types</p></li>
+<li><p>Just <em>name</em> existing types</p></li>
+</ul>
+<p>And hence, synonyms</p>
+<ul>
+<li>Do not prevent <em>confusing</em> different values</li>
 </ul>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="creating-new-data-types">Creating <em>New</em> Data Types</h2>
@@ -335,17 +341,17 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb8-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">-- | A new type `CuboidT` with constructor `MkCuboid`</span></a>
 <a class="sourceLine" id="cb8-5" data-line-number="5"><span class="kw">data</span> <span class="dt">CuboidT</span> <span class="fu">=</span> <span class="dt">MkCuboid</span> <span class="dt">Double</span> <span class="dt">Double</span> <span class="dt">Double</span></a></code></pre></div>
-<p><strong>Constructors: Only way to Create Values of Type</strong></p>
+<h3 id="constructors-are-the-only-way-to-create-values">Constructors are the <strong>only way</strong> to create values</h3>
 <ul>
-<li><code class="sourceCode haskell"><span class="dt">MkCircle</span></code> creates <code class="sourceCode haskell"><span class="dt">CircleT</span></code></li>
-<li><code class="sourceCode haskell"><span class="dt">MkCuboid</span></code> creates <code class="sourceCode haskell"><span class="dt">CuboidT</span></code></li>
+<li><p><code class="sourceCode haskell"><span class="dt">MkCircle</span></code> creates <code class="sourceCode haskell"><span class="dt">CircleT</span></code></p></li>
+<li><p><code class="sourceCode haskell"><span class="dt">MkCuboid</span></code> creates <code class="sourceCode haskell"><span class="dt">CuboidT</span></code></p></li>
 </ul>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="quiz-1">QUIZ</h2>
 <p>Suppose we create a new type with a <code class="sourceCode haskell"><span class="kw">data</span></code> definition</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co">-- | A new type `CircleT` with constructor `MkCircle`</span></a>
 <a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw">data</span> <span class="dt">CircleT</span> <span class="fu">=</span> <span class="dt">MkCircle</span> <span class="dt">Double</span> <span class="dt">Double</span> <span class="dt">Double</span>     </a></code></pre></div>
-<p>What is the type of the <code class="sourceCode haskell"><span class="dt">MkCircle</span></code> <em>constructor</em> function?</p>
+<p>What is the <strong>type of</strong> the <code class="sourceCode haskell"><span class="dt">MkCircle</span></code> <em>constructor</em>?</p>
 <p><strong>A.</strong> <code class="sourceCode haskell"><span class="dt">MkCircle</span><span class="ot"> ::</span> <span class="dt">CircleT</span></code></p>
 <p><strong>B.</strong> <code class="sourceCode haskell"><span class="dt">MkCircle</span><span class="ot"> ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">CircleT</span></code></p>
 <p><strong>C.</strong> <code class="sourceCode haskell"><span class="dt">MkCircle</span><span class="ot"> ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">CircleT</span></code></p>
@@ -353,12 +359,12 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p><strong>E.</strong> <code class="sourceCode haskell"><span class="dt">MkCircle</span><span class="ot"> ::</span> (<span class="dt">Double</span>, <span class="dt">Double</span>, <span class="dt">Double</span>) <span class="ot">-&gt;</span> <span class="dt">CircleT</span></code></p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="constructing-data">Constructing Data</h2>
-<p>Constructors let us <em>build</em> values of the new type e.g.</p>
+<p>Constructors let us <em>build</em> values of the new type</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="ot">circ1 ::</span> <span class="dt">CircleT</span> </a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">circ1 <span class="fu">=</span> <span class="dt">MkCircle</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">100</span>  <span class="co">-- ^ circle at &quot;origin&quot; with radius 100</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">circ1 <span class="fu">=</span> <span class="dt">MkCircle</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">100</span>  <span class="co">-- ^ circle at &quot;origin&quot; w/ radius 100</span></a>
 <a class="sourceLine" id="cb10-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb10-4" data-line-number="4"><span class="ot">cub1 ::</span> <span class="dt">Cuboid</span></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">cub1 <span class="fu">=</span> <span class="dt">MkCuboid</span> <span class="dv">10</span> <span class="dv">20</span> <span class="dv">30</span>  <span class="co">-- ^ cuboid with length=10, depth=20, height=30 </span></a></code></pre></div>
+<a class="sourceLine" id="cb10-5" data-line-number="5">cub1 <span class="fu">=</span> <span class="dt">MkCuboid</span> <span class="dv">10</span> <span class="dv">20</span> <span class="dv">30</span>  <span class="co">-- ^ cuboid w/ len=10, dep=20, ht=30 </span></a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="quiz-2">QUIZ</h2>
 <p>Suppose we have the definitions</p>
@@ -387,14 +393,12 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="ot">volume ::</span> <span class="dt">Cuboid</span> <span class="ot">-&gt;</span> <span class="dt">Double</span></a>
 <a class="sourceLine" id="cb15-2" data-line-number="2">volume c <span class="fu">=</span> <span class="kw">case</span> c <span class="kw">of</span></a>
 <a class="sourceLine" id="cb15-3" data-line-number="3">             <span class="dt">MkCuboid</span> l d h <span class="ot">-&gt;</span> l <span class="fu">*</span> d <span class="fu">*</span> h</a></code></pre></div>
-<p>Read <code class="sourceCode haskell"><span class="kw">case</span> e <span class="kw">of</span> <span class="dt">Ctor</span> x y z <span class="ot">-&gt;</span> e1</code> as</p>
-<ul>
-<li>IF <code class="sourceCode haskell">e</code> evaluates to a value that <em>matches the pattern</em> <code class="sourceCode haskell"><span class="dt">Ctor</span> vx vy vz</code></li>
-<li>THEN evaluate <code class="sourceCode haskell">e1</code> after naming <code class="sourceCode haskell">x <span class="fu">:=</span> vx</code>, <code class="sourceCode haskell">y <span class="fu">:=</span> vy</code>, <code class="sourceCode haskell">z <span class="fu">:=</span> vz</code></li>
-</ul>
+<p><code class="sourceCode haskell"><span class="kw">case</span> e <span class="kw">of</span> <span class="dt">Ctor</span> x y z <span class="ot">-&gt;</span> e1</code> is read as as</p>
+<p><strong>IF</strong> - <code class="sourceCode haskell">e</code> evaluates to a value that <em>matches the pattern</em> <code class="sourceCode haskell"><span class="dt">Ctor</span> vx vy vz</code></p>
+<p><strong>THEN</strong> - evaluate <code class="sourceCode haskell">e1</code> after naming <code class="sourceCode haskell">x <span class="fu">:=</span> vx</code>, <code class="sourceCode haskell">y <span class="fu">:=</span> vy</code>, <code class="sourceCode haskell">z <span class="fu">:=</span> vz</code></p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="pattern-matching-on-function-inputs">Pattern matching on Function Inputs</h2>
-<p>Very common to do matching on function inputs e.g.</p>
+<p>Very common to do matching on function inputs</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="ot">volume ::</span> <span class="dt">Cuboid</span> <span class="ot">-&gt;</span> <span class="dt">Double</span></a>
 <a class="sourceLine" id="cb16-2" data-line-number="2">volume c <span class="fu">=</span> <span class="kw">case</span> c <span class="kw">of</span> </a>
 <a class="sourceLine" id="cb16-3" data-line-number="3">            <span class="dt">MkCuboid</span> l d h <span class="ot">-&gt;</span> l <span class="fu">*</span> d <span class="fu">*</span> h</a>
@@ -408,7 +412,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb17-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb17-4" data-line-number="4"><span class="ot">area ::</span> <span class="dt">Circle</span> <span class="ot">-&gt;</span> <span class="dt">Double</span></a>
 <a class="sourceLine" id="cb17-5" data-line-number="5">area (<span class="dt">MkCircle</span> x y r) <span class="fu">=</span> pi <span class="fu">*</span> r <span class="fu">*</span> r</a></code></pre></div>
-<p>Nice syntax <em>plus</em> the compiler will save us from <em>mixing up</em> values!</p>
+<p>Nice syntax <em>plus</em> the compiler saves us from <em>mixing up</em> values!</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="but-what-if-we-need-to-mix-up-values">But … what if we <em>need</em> to mix up values?</h2>
 <p>Suppose I need to represent a <em>list of shapes</em></p>
@@ -432,8 +436,8 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p>Lets create a <em>single</em> type that can represent <em>both</em> kinds of shapes!</p>
 <p><br></p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Shape</span> </a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">  <span class="fu">=</span> <span class="dt">MkCircle</span> <span class="dt">Double</span> <span class="dt">Double</span> <span class="dt">Double</span>   <span class="co">-- ^ Construct a Circle at x, y with radius r </span></a>
-<a class="sourceLine" id="cb20-3" data-line-number="3">  <span class="fu">|</span> <span class="dt">MkCuboid</span> <span class="dt">Double</span> <span class="dt">Double</span> <span class="dt">Double</span>   <span class="co">-- ^ Construct a Cuboid with length, depth, height</span></a></code></pre></div>
+<a class="sourceLine" id="cb20-2" data-line-number="2">  <span class="fu">=</span> <span class="dt">MkCircle</span> <span class="dt">Double</span> <span class="dt">Double</span> <span class="dt">Double</span>   <span class="co">-- ^ Circle at x, y with radius r </span></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">  <span class="fu">|</span> <span class="dt">MkCuboid</span> <span class="dt">Double</span> <span class="dt">Double</span> <span class="dt">Double</span>   <span class="co">-- ^ Cuboid with length, depth, height</span></a></code></pre></div>
 <p><br></p>
 <p>What is the type of <code class="sourceCode haskell"><span class="dt">MkCircle</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">100</span></code> ?</p>
 <p><strong>A.</strong> <code class="sourceCode haskell"><span class="dt">Shape</span></code></p>
@@ -443,8 +447,8 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <h2 id="each-data-constructor-of-shape-has-a-different-type">Each <em>Data Constructor</em> of <code class="sourceCode haskell"><span class="dt">Shape</span></code> has a different type</h2>
 <p>When we define a data type like the below</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Shape</span> </a>
-<a class="sourceLine" id="cb21-2" data-line-number="2">  <span class="fu">=</span> <span class="dt">MkCircle</span>  <span class="dt">Double</span> <span class="dt">Double</span> <span class="dt">Double</span>   <span class="co">-- ^ Construct a Circle at x, y with radius r </span></a>
-<a class="sourceLine" id="cb21-3" data-line-number="3">  <span class="fu">|</span> <span class="dt">MkCuboid</span>  <span class="dt">Double</span> <span class="dt">Double</span> <span class="dt">Double</span>   <span class="co">-- ^ Construct a Cuboid with length, depth, height</span></a></code></pre></div>
+<a class="sourceLine" id="cb21-2" data-line-number="2">  <span class="fu">=</span> <span class="dt">MkCircle</span>  <span class="dt">Double</span> <span class="dt">Double</span> <span class="dt">Double</span>   <span class="co">-- ^ Circle at x, y with radius r </span></a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">  <span class="fu">|</span> <span class="dt">MkCuboid</span>  <span class="dt">Double</span> <span class="dt">Double</span> <span class="dt">Double</span>   <span class="co">-- ^ Cuboid with length, depth, height</span></a></code></pre></div>
 <p>We get <em>multiple constructors</em> for <code class="sourceCode haskell"><span class="dt">Shape</span></code></p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="dt">MkCircle</span><span class="ot"> ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Shape</span></a>
 <a class="sourceLine" id="cb22-2" data-line-number="2"><span class="dt">MkCuboid</span><span class="ot"> ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Shape</span></a></code></pre></div>

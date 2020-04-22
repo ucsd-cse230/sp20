@@ -23,20 +23,20 @@ headerImg: sea.jpg
 
 ## Recap: Haskell 
 
-Basic values & operators 
+**Basic values & operators**
 
 - `Int`, `Bool`, `Char`, `Double` 
 - `+`, `-`, `==`, `/=`
 
-Execution / Function Calls 
+**Execution / Function Calls**
 
 - Just *substitute equals by equals*
 
-Producing Collections
+**Producing Collections**
 
 - Pack data into *tuples* & *lists*
 
-Consuming Collections
+**Consuming Collections**
 
 - Unpack data via *pattern-matching*
 
@@ -54,7 +54,7 @@ Consuming Collections
 
 1. `type` Synonyms: *Naming* existing types
 
-2. `data` types: *Constructing* new types
+2. `data` types: *Creating* new types
 
 <br>
 <br>
@@ -72,7 +72,17 @@ Synonyms are just names ("aliases") for existing types
 
 - think `typedef` in `C`
 
-**A type to represent** `Circle`
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## A type to represent `Circle`
 
 A tuple `(x, y, r)` is a *circle* with center at `(x, y)` and radius `r`
 
@@ -80,7 +90,18 @@ A tuple `(x, y, r)` is a *circle* with center at `(x, y)` and radius `r`
 type Circle = (Double, Double, Double)
 ```
 
-**A type to represent** `Cuboid`
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## A type to represent `Cuboid`
 
 A tuple `(length, depth, height)` is a *cuboid*
 
@@ -186,11 +207,15 @@ What is the result of
 
 ## Beware!
 
-* Type Synonyms do not create _new_ types
+Type Synonyms 
 
-* Synonyms are just name for _existing_ types
+* Do not _create_ new types
 
-* Do not prevent _confusing_ different kinds of values 
+* Just _name_ existing types
+
+And hence, synonyms 
+
+* Do not prevent _confusing_ different values 
 
 <br>
 <br>
@@ -215,9 +240,10 @@ data CircleT = MkCircle Double Double Double
 data CuboidT = MkCuboid Double Double Double
 ```
 
-**Constructors: Only way to Create Values of Type** 
+### Constructors are the **only way** to create values
 
 - `MkCircle` creates `CircleT`
+
 - `MkCuboid` creates `CuboidT`
 
 <br>
@@ -239,7 +265,7 @@ Suppose we create a new type with a `data` definition
 data CircleT = MkCircle Double Double Double     
 ```
 
-What is the type of the `MkCircle` _constructor_ function?
+What is the **type of** the `MkCircle` _constructor_?
 
 **A.** `MkCircle :: CircleT`
 
@@ -263,14 +289,14 @@ What is the type of the `MkCircle` _constructor_ function?
 
 ## Constructing Data
 
-Constructors let us *build* values of the new type e.g.
+Constructors let us *build* values of the new type 
 
 ```haskell
 circ1 :: CircleT 
-circ1 = MkCircle 0 0 100  -- ^ circle at "origin" with radius 100
+circ1 = MkCircle 0 0 100  -- ^ circle at "origin" w/ radius 100
 
 cub1 :: Cuboid
-cub1 = MkCuboid 10 20 30  -- ^ cuboid with length=10, depth=20, height=30 
+cub1 = MkCuboid 10 20 30  -- ^ cuboid w/ len=10, dep=20, ht=30 
 ```
 
 <br>
@@ -355,10 +381,13 @@ volume c = case c of
              MkCuboid l d h -> l * d * h
 ```
 
-Read `case e of Ctor x y z -> e1` as 
+`case e of Ctor x y z -> e1` is read as as 
 
-- IF `e` evaluates to a value that *matches the pattern* `Ctor vx vy vz` 
-- THEN evaluate `e1` after naming `x := vx`, `y := vy`, `z := vz` 
+**IF** 
+  - `e` evaluates to a value that *matches the pattern* `Ctor vx vy vz` 
+
+**THEN** 
+  - evaluate `e1` after naming `x := vx`, `y := vy`, `z := vz` 
 
 <br>
 <br>
@@ -372,7 +401,7 @@ Read `case e of Ctor x y z -> e1` as
 
 ## Pattern matching on Function Inputs
 
-Very common to do matching on function inputs e.g. 
+Very common to do matching on function inputs
 
 ```haskell
 volume :: Cuboid -> Double
@@ -394,7 +423,7 @@ area :: Circle -> Double
 area (MkCircle x y r) = pi * r * r
 ```
 
-Nice syntax *plus* the compiler will save us from *mixing up* values! 
+Nice syntax *plus* the compiler saves us from *mixing up* values! 
 
 <br>
 <br>
@@ -465,8 +494,8 @@ Lets create a _single_ type that can represent _both_ kinds of shapes!
 
 ```haskell
 data Shape 
-  = MkCircle Double Double Double   -- ^ Construct a Circle at x, y with radius r 
-  | MkCuboid Double Double Double   -- ^ Construct a Cuboid with length, depth, height
+  = MkCircle Double Double Double   -- ^ Circle at x, y with radius r 
+  | MkCuboid Double Double Double   -- ^ Cuboid with length, depth, height
 ```
 
 <br>
@@ -492,8 +521,8 @@ When we define a data type like the below
 
 ```haskell
 data Shape 
-  = MkCircle  Double Double Double   -- ^ Construct a Circle at x, y with radius r 
-  | MkCuboid  Double Double Double   -- ^ Construct a Cuboid with length, depth, height
+  = MkCircle  Double Double Double   -- ^ Circle at x, y with radius r 
+  | MkCuboid  Double Double Double   -- ^ Cuboid with length, depth, height
 ```
 
 We get *multiple constructors* for `Shape`
