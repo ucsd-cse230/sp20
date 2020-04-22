@@ -22,7 +22,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/13*     | Haskell: Basics        	       | [html][02-hs-basic]       | [pdf][02-hs-basic-A] | [code][lec_4_13] |
 | *4/15*     | ""                              |                           | [pdf][02-hs-basic-B] | [code][lec_4_15] |
 | *4/20*     | ""                              |                           | [pdf][02-hs-basic-C] | [code][lec_4_20] |
-| *4/22*     | Haskell: Types                  | [html][03-hs-types]       | [pdf][03-hs-types-A] |                  |
+| *4/22*     | Haskell: Types                  | [html][03-hs-types]       | [pdf][03-hs-types-A] | [code][lec_4_22] |
 |            | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
 |            | Higher-Order Functions          |                           |                      |                  | 
 |            | Polymorphism & Typeclasses      |                           |                      |                  |
@@ -58,6 +58,9 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 
 [02-hs-basic-C]: static/raw/02-haskell-basics-C.pdf
 [lec_4_20]: static/raw/lec_4_20_20.hs
+
+[03-hs-types-A]: static/raw/03-hs-types-A.pdf
+[lec_4_22]: static/raw/lec_4_22_20.hs
 
 
 
