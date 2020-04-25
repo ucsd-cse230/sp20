@@ -11,7 +11,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 
 ## Topics, Notes and Code
 
-| **Date**   | **Topic**                       | **Notes**                 | **Markup**        | **Code**         |
+| **Date**   | **Topic**                       | **Notes**                 | **Markup**           | **Code**         |
 |:----------:|:--------------------------------|:--------------------------|:---------------------|:-----------------|
 | *3/30*     | Intro                           | [pdf][00-intro]           |                      |                  | 
 | *3/30*     | Lambda Calculus                 | [html][01-lambda]         | [pdf][01-lambda-A]   |                  | 
@@ -24,15 +24,15 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/20*     | ""                              |                           | [pdf][02-hs-basic-C] | [code][lec_4_20] |
 | *4/22*     | Haskell: Types                  | [html][03-hs-types]       | [pdf][03-hs-types-A] | [code][lec_4_22] |
 | *4/24*     | ""                              |                           | ""                   | [code][lec_4_24] |
-|            | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
-|            | Higher-Order Functions          |                           |                      |                  | 
-|            | Polymorphism & Typeclasses      |                           |                      |                  |
+| *4/27*     | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
+|            | Higher-Order Functions          | [html][05-higher-order]   |                      |                  | 
+|            | Polymorphic Data                | [html][06-poly-data]      |                      |                  | 
+|            | Spotting Computation Patterns   | [html][07-patterns]       |                      |                  |
+|            | Typeclasses                     | [html][08-typeclasses]    |                      |                  |
 |            | Functors & Applicatives         |                           |                      |                  | 
 |            | Monads                          |                           |                      |                  |
 |            | Parser Combinators              |                           |                      |                  |
 |            | Testing                         |                           |                      |                  | 
-|            | Concurrency & Parallelism       |                           |                      |                  | 
-|            | Types & Inference               |                           |                      |                  |            
 |            | Refinement Types                |                           |                      |                  |          
 |            | Proofs as Programs              |                           |                      |                  | 
 
@@ -66,7 +66,10 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 [03-hs-types-B]: static/raw/03-hs-types-A.pdf
 [lec_4_24]: static/raw/lec_4_24_20.hs
 
-
+[05-higher-order]: lectures/05-higher-order.html 
+[06-poly-data]: lectures/06-poly-data.html    
+[07-patterns]: lectures/07-bottling-patterns.html     
+[08-typeclasses]: lectures/08-typeclasses.html  
 
 [03-classes]: lectures/00-intro.html
 [04-functors]: lectures/00-intro.html
