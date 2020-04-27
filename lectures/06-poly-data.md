@@ -1,5 +1,5 @@
 ---
-title: Polymorphic Data Types
+title: Polymorphism
 headerImg: sea.jpg
 ---
 

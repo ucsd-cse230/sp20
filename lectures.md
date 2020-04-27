@@ -26,7 +26,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/24*     | ""                              |                           | ""                   | [code][lec_4_24] |
 | *4/27*     | Polymorphic Data                | [html][06-poly-data]      |                      |                  | 
 | *4/29*     | Spotting Computation Patterns   | [html][07-patterns]       |                      |                  |
-|            | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
+| *5/1*      | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
 |            | Typeclasses                     | [html][08-typeclasses]    |                      |                  |
 |            | Functors & Applicatives         |                           |                      |                  | 
 |            | Monads                          |                           |                      |                  |
