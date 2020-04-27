@@ -24,10 +24,9 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/20*     | ""                              |                           | [pdf][02-hs-basic-C] | [code][lec_4_20] |
 | *4/22*     | Haskell: Types                  | [html][03-hs-types]       | [pdf][03-hs-types-A] | [code][lec_4_22] |
 | *4/24*     | ""                              |                           | ""                   | [code][lec_4_24] |
-| *4/27*     | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
-|            | Higher-Order Functions          | [html][05-higher-order]   |                      |                  | 
-|            | Polymorphic Data                | [html][06-poly-data]      |                      |                  | 
-|            | Spotting Computation Patterns   | [html][07-patterns]       |                      |                  |
+| *4/27*     | Polymorphic Data                | [html][06-poly-data]      |                      |                  | 
+| *4/29*     | Spotting Computation Patterns   | [html][07-patterns]       |                      |                  |
+|            | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
 |            | Typeclasses                     | [html][08-typeclasses]    |                      |                  |
 |            | Functors & Applicatives         |                           |                      |                  | 
 |            | Monads                          |                           |                      |                  |
