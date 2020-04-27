@@ -25,7 +25,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/22*     | Haskell: Types                  | [html][03-hs-types]       | [pdf][03-hs-types-A] | [code][lec_4_22] |
 | *4/24*     | ""                              |                           | ""                   | [code][lec_4_24] |
 | *4/27*     | Polymorphism                    | [html][06-poly-data]      | [pdf][06-poly-A]     | [code][lec_4_27] | 
-| *4/29*     | Spotting Computation Patterns   | [html][07-patterns]       |                      |                  |
+| *4/29*     | Bottling Patterns               | [html][07-patterns]       |                      |                  |
 | *5/1*      | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
 |            | Typeclasses                     | [html][08-typeclasses]    |                      |                  |
 |            | Functors & Applicatives         |                           |                      |                  | 

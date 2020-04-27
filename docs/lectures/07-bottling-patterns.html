@@ -216,7 +216,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>Spotting Computation Patterns</h1>
+                    <h1>Bottling Computation Patterns</h1>
                     
                     <span class="meta">
 		    
@@ -234,178 +234,365 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-			<p>HEREHEREHEREHERE</p>
-<p>The tag-team of polymorphism and higher-order functions is the secret sauce that makes FP so tasty. It allows us to take arbitrary, <em>patterns of computation</em> that reappear in different guises in different places, and crisply specify them as safely reusable strategies. That sounds very woolly (I hope), lets look at some concrete examples.</p>
-<h2 id="computation-pattern-iteration">Computation Pattern: Iteration</h2>
-<p>Lets write a function that converts a string to uppercase. Recall that in Haskell, a <code class="sourceCode haskell"><span class="dt">String</span></code> is just a list of <code class="sourceCode haskell"><span class="dt">Char</span></code>. We must start with a function that will convert an individual <code class="sourceCode haskell"><span class="dt">Char</span></code> to its uppercase version. Once we find this function, we will simply <em>jog over the list</em>, and apply the function to each <code class="sourceCode haskell"><span class="dt">Char</span></code>.</p>
-<p>How might we find such a transformer? Lets query <a href="http://haskell.org/hoogle" title="Hoogle Query: Char -&gt; Char">Hoogle</a> for a function of the appropriate type! Ah, we see that the module <code class="sourceCode haskell"><span class="dt">Data.Char</span></code> contains a function.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1">toUpper<span class="ot"> ::</span> <span class="dt">Char</span> <span class="ot">-&gt;</span> <span class="dt">Char</span></a></code></pre></div>
-<p>and so now, we can write the simple recursive function</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1">toUpperString []     <span class="fu">=</span> []</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">toUpperString (c<span class="fu">:</span>cs) <span class="fu">=</span> toUpper c <span class="fu">:</span> toUpperString cs</a></code></pre></div>
-<p>As you might imagine, this sort of recursion appears all over the place. For example, suppose I represent a using a pair of <code class="sourceCode haskell"><span class="dt">Double</span></code> (for the x- and y- coordinates.) and I have a list of points that represent a polygon.</p>
-
-<p>Now, its easy to write a function that <em>shifts</em> a point by a specific amount</p>
-
-<p>How would we translate a polygon? Just jog over all the points in the polygon and translate them individually</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ot">shiftPoly ::</span> <span class="dt">XY</span> <span class="ot">-&gt;</span> <span class="dt">Polygon</span> <span class="ot">-&gt;</span> <span class="dt">Polygon</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">shiftPoly d []     <span class="fu">=</span> []</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">shiftPoly d (x<span class="fu">:</span>xs) <span class="fu">=</span> shiftXY d x <span class="fu">:</span> shiftPoly d xs</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">uppercase []       <span class="fu">=</span> []</a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">uppercse (x<span class="fu">:</span>xs)   <span class="fu">=</span> toUpper x <span class="fu">:</span> uppercase xs</a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9">shiftPoly d    <span class="fu">=</span> thing (shiftXY d)</a>
-<a class="sourceLine" id="cb3-10" data-line-number="10">uppercase      <span class="fu">=</span> thing toUpper</a></code></pre></div>
-<p>Now, in a lesser language, you might be quite happy with the above code. But what separates a good programmer from a great one, is the ability to <em>abstract</em>.</p>
-<p>Like humans and monkeys, the functions <code class="sourceCode haskell">toUpperString</code> and <code class="sourceCode haskell">shiftPoly</code> <a href="http://www.livescience.com/health/070412_rhesus_monkeys.html">share 93% of their DNA</a> – the notion of <em>jogging</em> over the list. The common pattern is described by the polymorphic higher-order function <code class="sourceCode haskell">map</code></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1">map f []     <span class="fu">=</span> []</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">map f (x<span class="fu">:</span>xs) <span class="fu">=</span> (f x) <span class="fu">:</span> (map f xs)</a></code></pre></div>
-<p>How did we arrive at this? Well, you find what is enshrine in the function’s body that which is <em>common</em> to the different instances, namely the recursive jogging strategy; and the bits that are different, simply become the function’s parameters! Thus, the <code class="sourceCode haskell">map</code> function abstracts, or if you have a vivid imagination, locks up in a bottle, the extremely common pattern of jogging over the list.</p>
+			<h2 id="polymorphism-hofs">Polymorphism + HOFs</h2>
+<p>Secret sauce that makes FP so tasty!</p>
+<ul>
+<li><p>Refactor <em>any</em> recurring computation pattern</p></li>
+<li><p>Into <em>precisely specified</em> and <em>reusable</em> strategies</p></li>
+</ul>
+<p>Lets see some examples!</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="exercise-iteration">EXERCISE: Iteration</h2>
+<p>Write a function that <em>squares</em> a list of <code class="sourceCode haskell"><span class="dt">Int</span></code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ot">squares ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> [<span class="dt">Int</span>]</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">squares ns <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p>When you are done you should see</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> squares [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">[<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">16</span>,<span class="dv">25</span>]</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="pattern-iteration">Pattern: Iteration</h2>
+<p>Next, lets write a function that converts a <code class="sourceCode haskell"><span class="dt">String</span></code> to uppercase.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> shout <span class="st">&quot;hello&quot;</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="st">&quot;HELLO&quot;</span></a></code></pre></div>
+<p>Recall that in Haskell, a <code class="sourceCode haskell"><span class="dt">String</span></code> is just a <code class="sourceCode haskell">[<span class="dt">Char</span>]</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ot">shout ::</span> [<span class="dt">Char</span>] <span class="ot">-&gt;</span> [<span class="dt">Char</span>]</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">shout <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p><a href="http://haskell.org/hoogle" title="Hoogle Query: Char -&gt; Char">Hoogle</a> to see how to transform an individual <code class="sourceCode haskell"><span class="dt">Char</span></code></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="iteration">Iteration</h2>
+<p>Common strategy: <em>iteratively</em> transform <em>each element</em> of input list</p>
+<p>Like humans and monkeys, <code class="sourceCode haskell">shout</code> and <code class="sourceCode haskell">squares</code> <a href="http://www.livescience.com/health/070412_rhesus_monkeys.html">share 93% of their DNA</a></p>
+<p>Super common <em>computation pattern</em>!</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="abstract-iteration-pattern-into-function">Abstract Iteration “Pattern” into Function</h2>
+<p>Remember D.R.Y. (Don’t repeat yourself)</p>
+<p><strong>Step 1</strong> Rename all variables to remove accidental <em>differences</em></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">-- rename 'squares' to 'foo'</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">foo []     <span class="fu">=</span> [] </a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">foo (x<span class="fu">:</span>xs) <span class="fu">=</span> (x <span class="fu">*</span> x)     <span class="fu">:</span> foo xs</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">-- rename 'shout' to 'foo'</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">foo []     <span class="fu">=</span> [] </a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">foo (x<span class="fu">:</span>xs) <span class="fu">=</span> (toUpper x) <span class="fu">:</span> foo xs</a></code></pre></div>
+<p><strong>Step 2</strong> Identify what is <em>different</em></p>
+<ul>
+<li><p>In <code class="sourceCode haskell">squares</code> we <em>transform</em> <code class="sourceCode haskell">x</code> to <code class="sourceCode haskell">x <span class="fu">*</span> x</code></p></li>
+<li><p>In <code class="sourceCode haskell">shout</code> we <em>transform</em> <code class="sourceCode haskell">x</code> to <code class="sourceCode haskell">Data.Char.toUpper x</code></p></li>
+</ul>
+<p><strong>Step 3</strong> Make <em>differences</em> a parameter</p>
+<ul>
+<li>Make <em>transform</em> a parameter <code class="sourceCode haskell">f</code></li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1">foo f []     <span class="fu">=</span> [] </a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">foo f (x<span class="fu">:</span>xs) <span class="fu">=</span> (f x) <span class="fu">:</span> foo f xs</a></code></pre></div>
+<p><strong>Done</strong> We have <em>bottled</em> the computation pattern as <code class="sourceCode haskell">foo</code> (aka <code class="sourceCode haskell">map</code>)</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1">map f []     <span class="fu">=</span> [] </a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">map f (x<span class="fu">:</span>xs) <span class="fu">=</span> (f x) <span class="fu">:</span> map f xs</a></code></pre></div>
+<p><code class="sourceCode haskell">map</code> bottles the common pattern of iteratively transforming a list:</p>
 <figure>
-<img src="../static/fairy.png" alt="Fairy In a Bottle" /><figcaption>Fairy In a Bottle</figcaption>
+<img src="../static/img/fairy.png" alt="Fairy In a Bottle" /><figcaption>Fairy In a Bottle</figcaption>
 </figure>
-<p>Verily, the type of <code class="sourceCode haskell">map</code> tells us exactly what it does</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1">ghci<span class="fu">&gt;</span> <span class="fu">:</span><span class="kw">type</span> map</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">map<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [b]</a></code></pre></div>
-<p>That is, it takes an <code class="sourceCode haskell">a <span class="ot">-&gt;</span> b</code> transformer and list of <code class="sourceCode haskell">a</code> values, and transforms each value to return a list of <code class="sourceCode haskell">b</code> values. We can now safely reuse the pattern, by <em>instantiating</em> the transformer with different specific operations.</p>
-
-<p>Much better.</p>
-<p>By the way, what happened to the parameters of <code class="sourceCode haskell">toUpperString</code> and <code class="sourceCode haskell">shiftPoly</code>? Two words: <em>partial application</em>. In general, in Haskell, a function definition equation</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1">f x <span class="fu">=</span> e x</a></code></pre></div>
-<p>is identical to</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1">f <span class="fu">=</span> e</a></code></pre></div>
-<p>as long as <code class="sourceCode haskell">x</code> doesn’t appear in <code class="sourceCode haskell">e</code>. Thus, to save ourselves the trouble of typing, and the blight of seeing, the vestigial <code class="sourceCode haskell">x</code> we <em>often</em> prefer to just leave it out altogether.</p>
-<p>As an exercise, to prove to yourself using just equational reasoning (using the different equality laws we have seen) that the above versions of <code class="sourceCode haskell">toUpperString</code> and <code class="sourceCode haskell">shiftPoly</code> are equivalent.</p>
-<h2 id="computation-pattern-folding">Computation Pattern: Folding</h2>
-<p>Once you’ve put on the FP goggles, you start seeing computation patterns everywhere.</p>
-<p>Lets write a function that <em>adds</em> all the elements of a list.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1">listAdd []     <span class="fu">=</span> <span class="dv">0</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">listAdd (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class="fu">+</span> listAdd xs</a></code></pre></div>
-<p>Next, a function that <em>multiplies</em> the elements of a list.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1">listMul []     <span class="fu">=</span> <span class="dv">1</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">listMul (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class="fu">*</span> (listMul xs)</a></code></pre></div>
-<p>Can you see the pattern? Again, the only bits that are different are the <code class="sourceCode haskell">base</code> case value, and the <code class="sourceCode haskell">op</code> being performed at each step. We’ll just turn those into parameters, and lo!</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1">foldr op base []     <span class="fu">=</span> base</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">foldr op base (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class="ot">`op`</span> (foldr op base xs)</a></code></pre></div>
-<p>Now, each of the individual functions are just specific instances of the general <code class="sourceCode haskell">foldr</code> pattern.</p>
-
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="quiz">QUIZ</h2>
+<p>What is the type of <code class="sourceCode haskell">map</code> ?</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1">map<span class="ot"> ::</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">map f []     <span class="fu">=</span> [] </a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">map f (x<span class="fu">:</span>xs) <span class="fu">=</span> (f x) <span class="fu">:</span> map f xs</a></code></pre></div>
+<p><strong>A.</strong> <code class="sourceCode haskell">(<span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span>) <span class="ot">-&gt;</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> [<span class="dt">Int</span>]</code></p>
+<p><strong>B.</strong> <code class="sourceCode haskell">(a <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</code></p>
+<p><strong>C.</strong> <code class="sourceCode haskell">[a] <span class="ot">-&gt;</span> [b]</code></p>
+<p><strong>D.</strong> <code class="sourceCode haskell">(a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [b]</code></p>
+<p><strong>E.</strong> <code class="sourceCode haskell">(a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</code></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="the-type-precisely-describes-map">The type precisely describes <code class="sourceCode haskell">map</code></h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> <span class="fu">:</span><span class="kw">type</span> map</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">map<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [b]</a></code></pre></div>
+<p>That is, <code class="sourceCode haskell">map</code> takes two inputs</p>
+<ul>
+<li>a <em>transformer</em> of type <code class="sourceCode haskell">a <span class="ot">-&gt;</span> b</code></li>
+<li>a <em>list</em> of values <code class="sourceCode haskell">[a]</code></li>
+</ul>
+<p>and it returns as output</p>
+<ul>
+<li>a list of values <code class="sourceCode haskell">[b]</code></li>
+</ul>
+<p>that can only come by applying <code class="sourceCode haskell">f</code> to each element of the input list.</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="reusing-the-pattern">Reusing the Pattern</h2>
+<p>Lets reuse the pattern by <em>instantiating</em> the transformer</p>
+<h3 id="shout"><code class="sourceCode haskell">shout</code></h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co">-- OLD with recursion</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="ot">shout ::</span> [<span class="dt">Char</span>] <span class="ot">-&gt;</span> [<span class="dt">Char</span>]</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">shout []     <span class="fu">=</span> []</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">shout (x<span class="fu">:</span>xs) <span class="fu">=</span> <span class="dt">Char</span><span class="fu">.</span>toUpper x <span class="fu">:</span> shout xs</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">-- NEW with map</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="ot">shout ::</span> [<span class="dt">Char</span>] <span class="ot">-&gt;</span> [<span class="dt">Char</span>]</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">shout xs <span class="fu">=</span> map (<span class="fu">???</span>) xs</a></code></pre></div>
+<h3 id="squares"><code class="sourceCode haskell">squares</code></h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co">-- OLD with recursion</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="ot">squares ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> [<span class="dt">Int</span>]</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">squares []     <span class="fu">=</span> []</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">squares (x<span class="fu">:</span>xs) <span class="fu">=</span> (x <span class="fu">*</span> x) <span class="fu">:</span> squares xs</a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co">-- NEW with map</span></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="ot">squares ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> [<span class="dt">Int</span>]</a>
+<a class="sourceLine" id="cb11-8" data-line-number="8">squares xs <span class="fu">=</span> map (<span class="fu">???</span>) xs </a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="exercise">EXERCISE</h2>
+<p>Suppose I have the following type</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">type</span> <span class="dt">Score</span> <span class="fu">=</span> (<span class="dt">Int</span>, <span class="dt">Int</span>) <span class="co">-- pair of scores for Hw0, Hw1</span></a></code></pre></div>
+<p>Use <code class="sourceCode haskell">map</code> to write a function</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="ot">total ::</span> [<span class="dt">Score</span>] <span class="ot">-&gt;</span> [<span class="dt">Int</span>]</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">total xs <span class="fu">=</span> map (<span class="fu">???</span>) xs </a></code></pre></div>
+<p>such that</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> total [(<span class="dv">10</span>, <span class="dv">20</span>), (<span class="dv">15</span>, <span class="dv">5</span>), (<span class="dv">21</span>, <span class="dv">22</span>), (<span class="dv">14</span>, <span class="dv">16</span>)]</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">[<span class="dv">30</span>, <span class="dv">20</span>, <span class="dv">43</span>, <span class="dv">30</span>]</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="the-case-of-the-missing-parameter">The Case of the Missing Parameter</h2>
+<p>Note that we can write <code class="sourceCode haskell">shout</code> like this</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="ot">shout ::</span> [<span class="dt">Char</span>] <span class="ot">-&gt;</span> [<span class="dt">Char</span>]</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">shout <span class="fu">=</span> map <span class="dt">Char</span><span class="fu">.</span>toUpper</a></code></pre></div>
+<p>Huh. No parameters? Can someone explain?</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="the-case-of-the-missing-parameter-1">The Case of the Missing Parameter</h2>
+<p>In Haskell, the following all mean the same thing</p>
+<p>Suppose we define a function</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="ot">add ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">add x y <span class="fu">=</span> x <span class="fu">+</span> y</a></code></pre></div>
+<p>Now the following all <em>mean the same thing</em></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb17-1" data-line-number="1">plus x y <span class="fu">=</span> add x y</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">plus x   <span class="fu">=</span> add x</a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">plus     <span class="fu">=</span> add </a></code></pre></div>
+<p>Why? <em>equational reasoning!</em> In general</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb18-1" data-line-number="1">foo x <span class="fu">=</span> e x</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="co">-- is equivalent to </span></a>
+<a class="sourceLine" id="cb18-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">foo   <span class="fu">=</span> e</a></code></pre></div>
+<p>as long as <code class="sourceCode haskell">x</code> doesn’t appear in <code class="sourceCode haskell">e</code>.</p>
+<p>Thus, to save some typing, we <em>omit</em> the extra parameter.</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="pattern-reduction">Pattern: Reduction</h2>
+<p>Computation patterns are <em>everywhere</em> lets revisit our old <code class="sourceCode haskell">sumList</code></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="ot">sumList ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">sumList []     <span class="fu">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">sumList (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class="fu">+</span> sumList xs</a></code></pre></div>
+<p>Next, a function that <em>concatenates</em> the <code class="sourceCode haskell"><span class="dt">String</span></code>s in a list</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="ot">catList ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">String</span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">catList []     <span class="fu">=</span> <span class="st">&quot;&quot;</span> </a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">catList (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class="fu">++</span> (catList xs)</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="lets-spot-the-pattern">Lets spot the pattern!</h2>
+<p><strong>Step 1</strong> Rename</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb21-1" data-line-number="1">foo []     <span class="fu">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">foo (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class="fu">+</span> foo xs</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">foo []     <span class="fu">=</span> <span class="st">&quot;&quot;</span> </a>
+<a class="sourceLine" id="cb21-5" data-line-number="5">foo (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class="fu">++</span> foo xs</a></code></pre></div>
+<p><strong>Step 2</strong> Identify what is <em>different</em></p>
+<ol type="1">
+<li><p>???</p></li>
+<li><p>???</p></li>
+</ol>
+<p><strong>Step 3</strong> Make <em>differences</em> a parameter</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb22-1" data-line-number="1">foo p1 p2 []     <span class="fu">=</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">foo p1 p2 (x<span class="fu">:</span>xs) <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="exercise-reductionfolding">EXERCISE: Reduction/Folding</h2>
+<p>This pattern is commonly called <em>reducing</em> or <em>folding</em></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb23-1" data-line-number="1">foldr<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> b</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">foldr op base []     <span class="fu">=</span> base</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">foldr op base (x<span class="fu">:</span>xs) <span class="fu">=</span> op x (foldr op base xs)</a></code></pre></div>
+<p>Can you figure out how <code class="sourceCode haskell">sumList</code> and <code class="sourceCode haskell">catList</code> are just <em>instances</em> of <code class="sourceCode haskell">foldr</code>?</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="ot">sumList ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">sumList xs <span class="fu">=</span> foldr (<span class="fu">?</span>op) (<span class="fu">?</span>base) xs</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="ot">catList ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">String</span> </a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">catList xs <span class="fu">=</span> foldr (<span class="fu">?</span>op) (<span class="fu">?</span>base) xs</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="executing-foldr">Executing <code class="sourceCode haskell">foldr</code></h2>
 <p>To develop some intuition about <code class="sourceCode haskell">foldr</code> lets “run” it a few times by hand.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1">foldr op base [x1,x2,<span class="fu">...</span>,xn]</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">  <span class="fu">==</span> <span class="co">{- unfold -}</span></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">     x1 <span class="ot">`op`</span> (foldr op base [x2,<span class="fu">...</span>,xn])</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4">  <span class="fu">==</span> <span class="co">{- unfold -}</span></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">     x1 <span class="ot">`op`</span> (x2 <span class="ot">`op`</span> (foldr op base [<span class="fu">...</span>,xn]))</a>
-<a class="sourceLine" id="cb11-6" data-line-number="6">  <span class="fu">==</span> <span class="co">{- unfold -}</span></a>
-<a class="sourceLine" id="cb11-7" data-line-number="7">     x1 <span class="ot">`op`</span> (x2 <span class="ot">`op`</span> (<span class="fu">...</span> <span class="ot">`op`</span> (xn <span class="ot">`op`</span> base)))</a></code></pre></div>
-<p>Aha! It has a rather pleasing structure that mirrors that of lists; the <code class="sourceCode haskell"><span class="fu">:</span></code> is replaced by the <code class="sourceCode haskell">op</code> and the <code class="sourceCode haskell">[]</code> is replaced by <code class="sourceCode haskell">base</code>. Thus, can you see how to use it to eliminate recursion from the recursion from</p>
-
-<p><strong>QUIZ</strong></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb25-1" data-line-number="1">foldr op base (x1<span class="fu">:</span>x2<span class="fu">:</span>x3<span class="fu">:</span>x4<span class="fu">:</span>[])</a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="fu">==&gt;</span> </a>
+<a class="sourceLine" id="cb25-3" data-line-number="3">  x1 <span class="ot">`op`</span> (foldr op base (x2<span class="fu">:</span>x3<span class="fu">:</span>x4<span class="fu">:</span>[]))</a>
+<a class="sourceLine" id="cb25-4" data-line-number="4"><span class="fu">==&gt;</span> </a>
+<a class="sourceLine" id="cb25-5" data-line-number="5">  x1 <span class="ot">`op`</span> (x2 <span class="ot">`op`</span> (foldr op base (x3<span class="fu">:</span>x4<span class="fu">:</span>[])))</a>
+<a class="sourceLine" id="cb25-6" data-line-number="6"><span class="fu">==&gt;</span> </a>
+<a class="sourceLine" id="cb25-7" data-line-number="7">  x1 <span class="ot">`op`</span> (x2 <span class="ot">`op`</span> (x3 <span class="ot">`op`</span> (foldr op base (x4<span class="fu">:</span>[]))))</a>
+<a class="sourceLine" id="cb25-8" data-line-number="8"><span class="fu">==&gt;</span> </a>
+<a class="sourceLine" id="cb25-9" data-line-number="9">  x1 <span class="ot">`op`</span> (x2 <span class="ot">`op`</span> (x3 <span class="ot">`op`</span> (x4 <span class="ot">`op`</span> foldr op base [])))</a>
+<a class="sourceLine" id="cb25-10" data-line-number="10"><span class="fu">==&gt;</span> </a>
+<a class="sourceLine" id="cb25-11" data-line-number="11">  x1 <span class="ot">`op`</span> (x2 <span class="ot">`op`</span> (x3 <span class="ot">`op`</span> (x4 <span class="ot">`op`</span> base)))</a></code></pre></div>
+<p>Look how it <em>mirrors</em> the structure of lists!</p>
+<ul>
+<li><code class="sourceCode haskell">(<span class="fu">:</span>)</code> is replaced by <code class="sourceCode haskell">op</code></li>
+<li><code class="sourceCode haskell">[]</code> is replaced by <code class="sourceCode haskell">base</code></li>
+</ul>
+<p>So</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb26-1" data-line-number="1">foldr (<span class="fu">+</span>) <span class="dv">0</span> (x1<span class="fu">:</span>x2<span class="fu">:</span>x3<span class="fu">:</span>x4<span class="fu">:</span>[])</a>
+<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="fu">==&gt;</span> x1 <span class="fu">+</span> (x2 <span class="fu">+</span> (x3 <span class="fu">+</span> (x4 <span class="fu">+</span> <span class="dv">0</span>))</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="typing-foldr">Typing <code class="sourceCode haskell">foldr</code></h2>
+<div class="sourceCode" id="cb27"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb27-1" data-line-number="1">foldr<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> b</a>
+<a class="sourceLine" id="cb27-2" data-line-number="2">foldr op base []     <span class="fu">=</span> base</a>
+<a class="sourceLine" id="cb27-3" data-line-number="3">foldr op base (x<span class="fu">:</span>xs) <span class="fu">=</span> op x (foldr op base xs)</a></code></pre></div>
+<p><code class="sourceCode haskell">foldr</code> takes as input</p>
+<ul>
+<li>a <em>reducer</em> function of type <code class="sourceCode haskell">a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> b</code></li>
+<li>a <em>base</em> value of type <code class="sourceCode haskell">b</code></li>
+<li>a <em>list</em> of values to reduce <code class="sourceCode haskell">[a]</code></li>
+</ul>
+<p>and returns as output</p>
+<ul>
+<li>a <em>reduced</em> value <code class="sourceCode haskell">b</code></li>
+</ul>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="quiz-1">QUIZ</h2>
+<p>Recall the function to compute the <code class="sourceCode haskell">len</code> of a list</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb28-1" data-line-number="1">len []     <span class="fu">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">len (x<span class="fu">:</span>xs) <span class="fu">=</span> <span class="dv">1</span> <span class="fu">+</span> len xs</a></code></pre></div>
 <p>Which of these is a valid implementation of <code class="sourceCode haskell">listLen</code></p>
-<p>A. <code class="sourceCode haskell">listLen <span class="fu">=</span> foldr (\n <span class="ot">-&gt;</span> n <span class="fu">+</span> <span class="dv">1</span>) <span class="dv">0</span></code> B. <code class="sourceCode haskell">listLen <span class="fu">=</span> foldr (<span class="fu">+</span> <span class="dv">1</span>) <span class="dv">0</span></code> C. <code class="sourceCode haskell">listLen <span class="fu">=</span> foldr (\_ n <span class="ot">-&gt;</span> n <span class="fu">+</span> <span class="dv">1</span>) <span class="dv">0</span></code> D. <code class="sourceCode haskell">listLen <span class="fu">=</span> foldr (\x xs <span class="ot">-&gt;</span> <span class="dv">1</span> <span class="fu">+</span> listLen xs) <span class="dv">0</span></code> E. All of the above</p>
-<p>How would you use it to eliminate the recursion from</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" data-line-number="1">factorial <span class="dv">0</span> <span class="fu">=</span> <span class="dv">1</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">factorial n <span class="fu">=</span> n <span class="fu">*</span> factorial (n<span class="fu">-</span><span class="dv">1</span>)</a></code></pre></div>
-
-<p>One last pattern exercise. How about this fellow from last lecture:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="ot">fuseActions ::</span> [<span class="dt">IO</span> ()] <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">fuseActions []        <span class="fu">=</span> return ()</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">fuseActions (a1<span class="fu">:</span>acts) <span class="fu">=</span> <span class="kw">do</span> a1</a>
-<a class="sourceLine" id="cb13-4" data-line-number="4">                           fuseActions acts</a></code></pre></div>
-<p>Can you spot the pattern?</p>
-
-<h1 id="computing-over-trees">Computing Over Trees</h1>
-<p>We have (and will continue) to see that trees are crucial pillar upon which many data structures are built in Haskell. The workhorse, lists, are infact a kind of tree with exactly one child. Lets write some functions over trees.</p>
-<p>First, here is a function that computes the <em>height</em> of a tree.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="ot">height ::</span> <span class="dt">Tree</span> a <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">height (<span class="dt">Leaf</span> _)   <span class="fu">=</span> <span class="dv">0</span></a>
-<a class="sourceLine" id="cb14-3" data-line-number="3">height (<span class="dt">Node</span> l r) <span class="fu">=</span> <span class="dv">1</span> <span class="fu">+</span> max (height l) (height l)</a></code></pre></div>
-<p>The readability of the above, makes an English description redundant! Good old recursion. You have a base case for the <code class="sourceCode haskell"><span class="dt">Leaf</span></code> pattern (namely <code class="sourceCode haskell"><span class="dv">0</span></code>) and a recursive or inductive case for the <code class="sourceCode haskell"><span class="dt">Node</span></code> pattern (namely the larger of the recursively computed heights of the left and right subtrees.) Lets give it a whirl</p>
-
-<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" data-line-number="1">ghci<span class="fu">&gt;</span> height st1</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="dv">1</span></a>
-<a class="sourceLine" id="cb15-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb15-4" data-line-number="4">ghci<span class="fu">&gt;</span> height st3</a>
-<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="dv">2</span></a></code></pre></div>
-<p>How do we compute the <em>number</em> of leaf elements in the tree?</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="ot">size            ::</span> <span class="dt">Tree</span> a <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2">size (<span class="dt">Leaf</span> _)   <span class="fu">=</span> <span class="dv">1</span></a>
-<a class="sourceLine" id="cb16-3" data-line-number="3">size (<span class="dt">Node</span> l r) <span class="fu">=</span> (size l) <span class="fu">+</span> (size l)</a></code></pre></div>
-<p>How about a function that gathers all the elements that occur as leaves of the tree:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="ot">toList ::</span> <span class="dt">Tree</span> a <span class="ot">-&gt;</span> [a] </a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">toList (<span class="dt">Leaf</span> x)   <span class="fu">=</span> [x]</a>
-<a class="sourceLine" id="cb17-3" data-line-number="3">toList (<span class="dt">Node</span> l r) <span class="fu">=</span> (toList l) <span class="fu">++</span> (toList r)</a></code></pre></div>
-<h2 id="computation-pattern-tree-fold">Computation Pattern: Tree Fold</h2>
-<p>Did you spot the pattern? What are the different bits? The base value and the operation? So we can write a tree folding routine as</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb18-1" data-line-number="1">treeFold op b (<span class="dt">Leaf</span> x)   <span class="fu">=</span> b</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">treeFold op b (<span class="dt">Node</span> l r) <span class="fu">=</span> (treeFold op b l) <span class="ot">`op`</span> (treeFold op b r)</a></code></pre></div>
-<p>Does that work? Well, we can easily check that</p>
-<h2 id="quiz">Quiz</h2>
-<p>What does <code class="sourceCode haskell">treeFold (<span class="fu">+</span>) <span class="dv">1</span> t</code> return?</p>
-<ol type="a">
-<li><code class="sourceCode haskell"><span class="dv">0</span></code></li>
-<li>the <em>largest</em> element in the tree</li>
-<li>the <em>height</em> of the tree</li>
-<li>the <em>number-of-leaves</em> of the tree</li>
-<li>type <em>error</em></li>
+<p><strong>A.</strong> <code class="sourceCode haskell">len <span class="fu">=</span> foldr (\n <span class="ot">-&gt;</span> n <span class="fu">+</span> <span class="dv">1</span>) <span class="dv">0</span></code></p>
+<p><strong>B.</strong> <code class="sourceCode haskell">len <span class="fu">=</span> foldr (<span class="fu">+</span> <span class="dv">1</span>) <span class="dv">0</span></code></p>
+<p><strong>C.</strong> <code class="sourceCode haskell">len <span class="fu">=</span> foldr (\_ n <span class="ot">-&gt;</span> n <span class="fu">+</span> <span class="dv">1</span>) <span class="dv">0</span></code></p>
+<p><strong>D.</strong> <code class="sourceCode haskell">len <span class="fu">=</span> foldr (\x xs <span class="ot">-&gt;</span> <span class="dv">1</span> <span class="fu">+</span> len xs) <span class="dv">0</span></code></p>
+<p><strong>E.</strong> All of the above</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="lets-revisit-trees">Lets Revisit Trees</h2>
+<p>Recall the <code class="sourceCode haskell"><span class="dt">Tree</span> a</code> type from last time</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Tree</span> a </a>
+<a class="sourceLine" id="cb29-2" data-line-number="2">  <span class="fu">=</span> <span class="dt">Leaf</span> </a>
+<a class="sourceLine" id="cb29-3" data-line-number="3">  <span class="fu">|</span> <span class="dt">Node</span> a (<span class="dt">Tree</span> a) (<span class="dt">Tree</span> a)</a></code></pre></div>
+<p>For example here’s a tree</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="ot">tree2 ::</span> <span class="dt">Tree</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb30-2" data-line-number="2">tree2 <span class="fu">=</span> <span class="dt">Node</span> <span class="dv">2</span> <span class="dt">Leaf</span> <span class="dt">Leaf</span></a>
+<a class="sourceLine" id="cb30-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb30-4" data-line-number="4"><span class="ot">tree3 ::</span> <span class="dt">Tree</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb30-5" data-line-number="5">tree3 <span class="fu">=</span> <span class="dt">Node</span> <span class="dv">3</span> <span class="dt">Leaf</span> <span class="dt">Leaf</span></a>
+<a class="sourceLine" id="cb30-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb30-7" data-line-number="7"><span class="ot">tree123 ::</span> <span class="dt">Tree</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb30-8" data-line-number="8">tree123 <span class="fu">=</span> <span class="dt">Node</span> <span class="dv">1</span> tree2 tree3 </a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="some-functions-on-trees">Some Functions on Trees</h2>
+<p>Lets write a function to compute the <code class="sourceCode haskell">height</code> of a tree</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="ot">height ::</span> <span class="dt">Tree</span> a <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb31-2" data-line-number="2">height <span class="dt">Leaf</span>         <span class="fu">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb31-3" data-line-number="3">height (<span class="dt">Node</span> x l r) <span class="fu">=</span> <span class="dv">1</span> <span class="fu">+</span> max (height l) (height l)</a></code></pre></div>
+<p>Here’s another to <em>sum</em> the leaves of a tree:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="ot">sumTree ::</span> <span class="dt">Tree</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb32-2" data-line-number="2">sumTree <span class="dt">Leaf</span>         <span class="fu">=</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb32-3" data-line-number="3">sumTree (<span class="dt">Node</span> x l r) <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p>Gathers all the elements that occur as leaves of the tree:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="ot">toList ::</span> <span class="dt">Tree</span> a <span class="ot">-&gt;</span> [a] </a>
+<a class="sourceLine" id="cb33-2" data-line-number="2">toList <span class="dt">Leaf</span>         <span class="fu">=</span> []</a>
+<a class="sourceLine" id="cb33-3" data-line-number="3">toList (<span class="dt">Node</span> x l r) <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p>Lets give it a whirl</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> height tree123</a>
+<a class="sourceLine" id="cb34-2" data-line-number="2"><span class="dv">2</span> </a>
+<a class="sourceLine" id="cb34-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb34-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span> sumTree tree123</a>
+<a class="sourceLine" id="cb34-5" data-line-number="5"><span class="dv">6</span></a>
+<a class="sourceLine" id="cb34-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb34-7" data-line-number="7"><span class="fu">&gt;&gt;&gt;</span> toList tree123</a>
+<a class="sourceLine" id="cb34-8" data-line-number="8">[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="pattern-tree-fold">Pattern: Tree Fold</h2>
+<p>Can you spot the pattern? Those three functions are almost the same!</p>
+<p><strong>Step 1:</strong> Rename to maximize similarity</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="co">-- height</span></a>
+<a class="sourceLine" id="cb35-2" data-line-number="2">foo <span class="dt">Leaf</span>         <span class="fu">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb35-3" data-line-number="3">foo (<span class="dt">Node</span> x l r) <span class="fu">=</span> <span class="dv">1</span> <span class="fu">+</span> max (foo l) (foo l)</a>
+<a class="sourceLine" id="cb35-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb35-5" data-line-number="5"><span class="co">-- sumTree</span></a>
+<a class="sourceLine" id="cb35-6" data-line-number="6">foo <span class="dt">Leaf</span>         <span class="fu">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb35-7" data-line-number="7">foo (<span class="dt">Node</span> x l r) <span class="fu">=</span> foo l <span class="fu">+</span> foo r</a>
+<a class="sourceLine" id="cb35-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb35-9" data-line-number="9"><span class="co">-- toList</span></a>
+<a class="sourceLine" id="cb35-10" data-line-number="10">foo <span class="dt">Leaf</span>         <span class="fu">=</span> []</a>
+<a class="sourceLine" id="cb35-11" data-line-number="11">foo (<span class="dt">Node</span> x l r) <span class="fu">=</span> x <span class="fu">:</span> foo l <span class="fu">++</span> foo r</a></code></pre></div>
+<p><strong>Step 2:</strong> Identify the differences</p>
+<ol type="1">
+<li>???</li>
+<li>???</li>
 </ol>
-<h2 id="quiz-1">Quiz</h2>
-<p>What does <code class="sourceCode haskell">treeFold max <span class="dv">0</span> t</code> return?</p>
-<ol type="a">
-<li><code class="sourceCode haskell"><span class="dv">0</span></code></li>
-<li>the <em>largest</em> element in the tree</li>
-<li>the <em>height</em> of the tree</li>
-<li>the <em>number-of-leaves</em> of the tree</li>
-<li>type <em>error</em></li>
-</ol>
-<p>But what about <code class="sourceCode haskell">toList</code> ? Urgh. Does. Not. Work. We painted ourselves into a corner. For <code class="sourceCode haskell">size</code> and <code class="sourceCode haskell">height</code> the base value is a constant, but for <code class="sourceCode haskell">toList</code> the base value <em>depends on</em> the actual datum at the leaf! Thus, we need <em>two</em> operations: one to combine the results of the left and right subtrees, and another to give us the value at a leaf. In other words, the base <code class="sourceCode haskell">b</code> needs to be a <em>function</em> that takes as input the leaf value and returns as output the result of folding over the leaf.</p>
-
-<p>Now we can write the <code class="sourceCode haskell">size</code> as</p>
-
-<p>How would you write <code class="sourceCode haskell">height</code> ?</p>
-
-<p>where <code class="sourceCode haskell">const <span class="dv">0</span></code> and <code class="sourceCode haskell">const <span class="dv">1</span></code> are the respective base functions that ignore the leaf value and just always return <code class="sourceCode haskell"><span class="dv">0</span></code> and <code class="sourceCode haskell"><span class="dv">1</span></code> respectively.</p>
-<p>Can you guess the definition of <code class="sourceCode haskell">const</code> ?</p>
-<h2 id="quiz-2">Quiz</h2>
-<p>Which of the following implements <code class="sourceCode haskell"><span class="ot">toList ::</span> <span class="dt">Tree</span> a <span class="ot">-&gt;</span> [a]</code></p>
-<ol type="a">
-<li><code class="sourceCode haskell">toList <span class="fu">=</span> treeFold (<span class="fu">:</span>)  []</code></li>
-<li><code class="sourceCode haskell">toList <span class="fu">=</span> treeFold (<span class="fu">++</span>) []</code></li>
-<li><code class="sourceCode haskell">toList <span class="fu">=</span> treeFold (<span class="fu">:</span>)  (\x <span class="ot">-&gt;</span> [x])</code></li>
-<li><code class="sourceCode haskell">toList <span class="fu">=</span> treeFold (<span class="fu">++</span>) (\x <span class="ot">-&gt;</span> [x])</code></li>
-<li>none of the above.</li>
-</ol>
-<p>What about the equivalent of <code class="sourceCode haskell">map</code> for <code class="sourceCode haskell"><span class="dt">Tree</span></code>s ? We could write the recursive definition</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="ot">treeMap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Tree</span> a <span class="ot">-&gt;</span> <span class="dt">Tree</span> b</a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">treeMap f (<span class="dt">Leaf</span> x)   <span class="fu">=</span> <span class="dt">Leaf</span> (f x)</a>
-<a class="sourceLine" id="cb19-3" data-line-number="3">treeMap f (<span class="dt">Node</span> l r) <span class="fu">=</span> <span class="dt">Node</span> (treeMap f l) (treeMap f r)</a></code></pre></div>
-<p>but recursion is <strong>HARD TO READ</strong> do we really have to use it ?</p>
-<p><strong>DO IN CLASS</strong></p>
-<p>Sweet! see how we just used the constructors as functions! Lets take it out for a spin.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb20-1" data-line-number="1">ghci<span class="fu">&gt;</span> st1</a>
-<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="dt">Node</span> (<span class="dt">Leaf</span> <span class="st">&quot;cat&quot;</span>) (<span class="dt">Leaf</span> <span class="st">&quot;doggerel&quot;</span>)</a>
-<a class="sourceLine" id="cb20-3" data-line-number="3">ghci<span class="fu">&gt;</span> treeMap length st1</a>
-<a class="sourceLine" id="cb20-4" data-line-number="4"><span class="dt">Node</span> (<span class="dt">Leaf</span> <span class="dv">3</span>) (<span class="dt">Leaf</span> <span class="dv">8</span>)</a>
-<a class="sourceLine" id="cb20-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb20-6" data-line-number="6">ghci<span class="fu">&gt;</span> st2</a>
-<a class="sourceLine" id="cb20-7" data-line-number="7"><span class="dt">Node</span> (<span class="dt">Leaf</span> <span class="st">&quot;piglet&quot;</span>) (<span class="dt">Leaf</span> <span class="st">&quot;hippopotamus&quot;</span>)</a>
-<a class="sourceLine" id="cb20-8" data-line-number="8">ghci<span class="fu">&gt;</span> treeMap reverse st2</a>
-<a class="sourceLine" id="cb20-9" data-line-number="9"><span class="dt">Node</span> (<span class="dt">Leaf</span> <span class="st">&quot;telgip&quot;</span>) (<span class="dt">Leaf</span> <span class="st">&quot;sumatopoppih&quot;</span>)</a></code></pre></div>
-<h1 id="spotting-patterns-in-the-real-world">Spotting Patterns In The “Real” World</h1>
-<p>It was all well and good to see the patterns in tiny “toy” functions. Needless to say, these patterns appear regularly in “real” code, if only you know to look for them. Next, we will develop a small library that “swizzles” text files.</p>
+<p><strong>Step 3</strong> Make <em>differences</em> a parameter</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb36-1" data-line-number="1">foo p1 p2 <span class="dt">Leaf</span>         <span class="fu">=</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb36-2" data-line-number="2">foo p1 p2 (<span class="dt">Node</span> x l r) <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="pattern-folding-on-trees">Pattern: Folding on Trees</h2>
+<div class="sourceCode" id="cb37"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb37-1" data-line-number="1">tFold op b <span class="dt">Leaf</span>         <span class="fu">=</span> b x</a>
+<a class="sourceLine" id="cb37-2" data-line-number="2">tFold op b (<span class="dt">Node</span> x l r) <span class="fu">=</span> op x (tFold op b l) (tFold op b r)</a></code></pre></div>
+<p>Lets try to work out the type of <code class="sourceCode haskell">tFold</code>!</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="ot">tFold ::</span> t_op <span class="ot">-&gt;</span> t_b <span class="ot">-&gt;</span> <span class="dt">Tree</span> a <span class="ot">-&gt;</span> t_out</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="quiz-2">QUIZ</h2>
+<p>What does <code class="sourceCode haskell">tFold (\x y z <span class="ot">-&gt;</span> y <span class="fu">+</span> z) <span class="dv">1</span> t</code> return?</p>
+<p><strong>a.</strong> <code class="sourceCode haskell"><span class="dv">0</span></code></p>
+<p><strong>b.</strong> the <em>largest</em> element in the tree <code class="sourceCode haskell">t</code></p>
+<p><strong>c.</strong> the <em>height</em> of the tree <code class="sourceCode haskell">t</code></p>
+<p><strong>d.</strong> the <em>number-of-leaves</em> of the tree <code class="sourceCode haskell">t</code></p>
+<p><strong>e.</strong> type <em>error</em></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="exercise-1">EXERCISE</h2>
+<p>Write a function to compute the <em>largest</em> element in a tree or <code class="sourceCode haskell"><span class="dv">0</span></code> if tree is empty or all negative.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="ot">treeMax ::</span> <span class="dt">Tree</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb39-2" data-line-number="2">treeMax t <span class="fu">=</span> tFold f b t </a>
+<a class="sourceLine" id="cb39-3" data-line-number="3">  <span class="kw">where</span> </a>
+<a class="sourceLine" id="cb39-4" data-line-number="4">     f    <span class="fu">=</span> <span class="fu">???</span> </a>
+<a class="sourceLine" id="cb39-5" data-line-number="5">     b    <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="map-over-trees">Map over Trees</h2>
+<p>We can also write a <code class="sourceCode haskell">tmap</code> equivalent of <code class="sourceCode haskell">map</code> for <code class="sourceCode haskell"><span class="dt">Tree</span></code>s</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="ot">treeMap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Tree</span> a <span class="ot">-&gt;</span> <span class="dt">Tree</span> b</a>
+<a class="sourceLine" id="cb40-2" data-line-number="2">treeMap f (<span class="dt">Leaf</span> x)   <span class="fu">=</span> <span class="dt">Leaf</span> (f x)</a>
+<a class="sourceLine" id="cb40-3" data-line-number="3">treeMap f (<span class="dt">Node</span> l r) <span class="fu">=</span> <span class="dt">Node</span> (treeMap f l) (treeMap f r)</a></code></pre></div>
+<p>which gives</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> treeMap (\n <span class="ot">-&gt;</span> n <span class="fu">*</span> n) tree123     <span class="co">-- square all elements of tree</span></a>
+<a class="sourceLine" id="cb41-2" data-line-number="2"><span class="dt">Node</span> <span class="dv">1</span> (<span class="dt">Node</span> <span class="dv">4</span> <span class="dt">Leaf</span> <span class="dt">Leaf</span>) (<span class="dt">Node</span> <span class="dv">9</span> <span class="dt">Leaf</span> <span class="dt">Leaf</span>)</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="exercise-2">EXERCISE</h2>
+<p>Recursion is <strong>HARD TO READ</strong> do we really have to use it ?</p>
+<p>Lets rewrite <code class="sourceCode haskell">treeMap</code> using <code class="sourceCode haskell">tFold</code> !</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="ot">treeMap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Tree</span> a <span class="ot">-&gt;</span> <span class="dt">Tree</span> b</a>
+<a class="sourceLine" id="cb42-2" data-line-number="2">treeMap f t <span class="fu">=</span> tFold op base t </a>
+<a class="sourceLine" id="cb42-3" data-line-number="3">  <span class="kw">where</span> </a>
+<a class="sourceLine" id="cb42-4" data-line-number="4">     op     <span class="fu">=</span> <span class="fu">???</span> </a>
+<a class="sourceLine" id="cb42-5" data-line-number="5">     base   <span class="fu">=</span> <span class="fu">???</span> </a></code></pre></div>
+<p>When you are done, we should get</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> animals <span class="fu">=</span> <span class="dt">Node</span> <span class="st">&quot;cow&quot;</span> (<span class="dt">Node</span> <span class="st">&quot;piglet&quot;</span> <span class="dt">Leaf</span> <span class="dt">Leaf</span>) (<span class="dt">Leaf</span> <span class="st">&quot;hippo&quot;</span> <span class="dt">Leaf</span> <span class="dt">Leaf</span>)</a>
+<a class="sourceLine" id="cb43-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb43-3" data-line-number="3"><span class="fu">&gt;&gt;&gt;</span> treeMap reverse animals</a>
+<a class="sourceLine" id="cb43-4" data-line-number="4"><span class="dt">Node</span> <span class="st">&quot;woc&quot;</span> (<span class="dt">Node</span> <span class="st">&quot;telgip&quot;</span> <span class="dt">Leaf</span> <span class="dt">Leaf</span>) (<span class="dt">Leaf</span> <span class="st">&quot;oppih&quot;</span> <span class="dt">Leaf</span> <span class="dt">Leaf</span>)</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="examples-spotting-patterns-in-the-real-world">Examples: Spotting Patterns In The “Real” World</h2>
+<p>We saw patterns in “toy” functions.</p>
+<p>But these patterns appear regularly in “real” code - look for them!</p>
+<p>For an example, see the below</p>
 <ol type="1">
 <li><p>We will start with a beginner’s version that is riddled with <a href="swizzle-v0.html">explicit recursion</a>.</p></li>
 <li><p>Next, we will try to spot the patterns and eliminate recursion using <a href="swizzle-v1.html">higher-order functions</a>.</p></li>
 <li><p>Finally, we will <a href="swizzle-v2.html">parameterize</a> the code so that we can both “swizzle” and “unswizzle” without duplicate code.</p></li>
 </ol>
-<h2 id="exercise">Exercise</h2>
-<p>Needless to say, the code can be cleaned up even more, and I encourage you to do so. For example, rewrite the code that swizzles <code class="sourceCode haskell"><span class="dt">Char</span></code> so that instead of using association lists, it uses the more efficient <code class="sourceCode haskell"><span class="dt">Map</span> k v</code> (maps from keys <code class="sourceCode haskell">k</code> to values <code class="sourceCode haskell">v</code>) type in the standard library module <code class="sourceCode haskell"><span class="dt">Data.Map</span></code>.</p>
+<p><strong>Try it yourself</strong></p>
+<p>Rewrite the code that swizzles <code class="sourceCode haskell"><span class="dt">Char</span></code> to use the <code class="sourceCode haskell"><span class="dt">Map</span> k v</code> type in <code class="sourceCode haskell"><span class="dt">Data.Map</span></code></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="which-is-more-readable-hofs-or-recursion">Which is more readable? HOFs or Recursion</h2>
-<p>As a beginner, you might think that the recursive versions of <code class="sourceCode haskell">toUpperString</code> and <code class="sourceCode haskell">shiftPoly</code> are easier to follow than the <code class="sourceCode haskell">map</code> versions. Certainly, <code class="sourceCode haskell">fold</code> takes a bit of getting used to.</p>
-<p>However, as you get used to the light, you will find the latter is infact far easier to follow, because once abstraction gets into your bones you’ll know exactly what an instance does at a single glance.</p>
-<p>In contrast, recursion is lower-level, so every time you see a recursive function, you have to understand how the knots are tied, and worse, there is potential for making silly off-by-one type errors if you re-jigger the basic strategy every time.</p>
-<p>As an added bonus, it can be quite useful and profitable to <em>parallelize</em> and <em>distribute</em> the computation patterns (like <code class="sourceCode haskell">map</code> and <code class="sourceCode haskell">fold</code>) in just one place, thereby allowing arbitrary hundreds or thousands of instances to <a href="http://en.wikipedia.org/wiki/MapReduce" title="MapReduce">benefit in a single shot!</a></p>
+<p>At first, <em>recursive</em> versions of <code class="sourceCode haskell">shout</code> and <code class="sourceCode haskell">squares</code> are easier to follow</p>
+<ul>
+<li><code class="sourceCode haskell">fold</code> takes a bit of getting used to!</li>
+</ul>
+<p>With practice, the <em>higher-order</em> versions become easier</p>
+<ul>
+<li><p>only have to understand specific operations</p></li>
+<li><p>recursion is lower-level &amp; have to see “loop” structure</p></li>
+<li><p>worse, potential for making silly off-by-one errors</p></li>
+</ul>
+<p>Indeed, HOFs were the basis of <code class="sourceCode haskell">map<span class="fu">/</span>reduce</code> and the <a href="http://en.wikipedia.org/wiki/MapReduce" title="MapReduce">big-data revolution</a></p>
+<ul>
+<li><p>Can <em>parallelize</em> and <em>distribute</em> computation patterns <a href="https://www.usenix.org/event/osdi04/tech/full_papers/dean/dean.pdf">just once</a></p></li>
+<li><p><a href="http://en.wikipedia.org/wiki/MapReduce" title="MapReduce">Reuse</a> acros hundreds or thousands of instances!</p></li>
+</ul>
                 <hr>
             </div>
         </div>
