@@ -24,7 +24,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/20*     | ""                              |                           | [pdf][02-hs-basic-C] | [code][lec_4_20] |
 | *4/22*     | Haskell: Types                  | [html][03-hs-types]       | [pdf][03-hs-types-A] | [code][lec_4_22] |
 | *4/24*     | ""                              |                           | ""                   | [code][lec_4_24] |
-| *4/27*     | Polymorphic Data                | [html][06-poly-data]      |                      |                  | 
+| *4/27*     | Polymorphism                    | [html][06-poly-data]      | [pdf][06-poly-A]     | [code][lec_4_27] | 
 | *4/29*     | Spotting Computation Patterns   | [html][07-patterns]       |                      |                  |
 | *5/1*      | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
 |            | Typeclasses                     | [html][08-typeclasses]    |                      |                  |
@@ -64,6 +64,10 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 
 [03-hs-types-B]: static/raw/03-hs-types-A.pdf
 [lec_4_24]: static/raw/lec_4_24_20.hs
+
+[06-poly-data]: lectures/06-poly-data.html    
+[06-poly-A]: static/raw/06-poly-data.pdf
+[lec_4_27]: static/raw/lec_4_27_20.hs
 
 [05-higher-order]: lectures/05-higher-order.html 
 [06-poly-data]: lectures/06-poly-data.html    
