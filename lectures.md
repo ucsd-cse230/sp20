@@ -3,6 +3,27 @@ title: Lecture Notes
 headerImg: books.jpg
 ---
 
+User
+  username Text
+  email    Text  
+
+Info
+  user       UserId         -- infoUser :: Info -> UserId
+  UniqueUser user
+  name        Text
+  affiliation Text
+  userEmail   Text    
+
+
+measure user_to_info :: User -> Info
+measure info_to_user :: Info -> User
+
+{-@ invariant {u: User | entityKey u == infoUser (user_to_info u)} @-}
+
+{-@ invariant {i: Info | infoUser i  == entityKey (info_to_user i)} @-}
+
+
+
 ## Videos
 
 This class will have zoom lectures with live coding. 
