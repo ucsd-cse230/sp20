@@ -46,7 +46,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/22*     | Haskell: Types                  | [html][03-hs-types]       | [pdf][03-hs-types-A] | [code][lec_4_22] |
 | *4/24*     | ""                              |                           | ""                   | [code][lec_4_24] |
 | *4/27*     | Polymorphism                    | [html][06-poly-data]      | [pdf][06-poly-A]     | [code][lec_4_27] | 
-| *4/29*     | Bottling Patterns               | [html][07-patterns]       |                      |                  |
+| *4/29*     | Bottling Patterns               | [html][07-patterns]       | [pdf][07-bottling-A] | [code][lec_4_29] |
 | *5/1*      | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
 |            | Typeclasses                     | [html][08-typeclasses]    |                      |                  |
 |            | Functors & Applicatives         |                           |                      |                  | 
@@ -56,7 +56,14 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 |            | Refinement Types                |                           |                      |                  |          
 |            | Proofs as Programs              |                           |                      |                  | 
 
-
+<!--
+TC+monoid = 2
+Func+App  = 2
+Monad     = 3
+Parse     = 2
+QC        = 1
+Liquid    = 3
+-->
 
 [00-intro]: static/raw/lec-intro.pdf
 [01-lambda]: lectures/01-lambda.html
@@ -89,6 +96,10 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 [06-poly-data]: lectures/06-poly-data.html    
 [06-poly-A]: static/raw/06-poly-data.pdf
 [lec_4_27]: static/raw/lec_4_27_20.hs
+
+[07-bottling-A]: static/raw/07-bottling-A.pdf
+[lec_4_29]: static/raw/lec_4_29_20.hs
+
 
 [05-higher-order]: lectures/05-higher-order.html 
 [06-poly-data]: lectures/06-poly-data.html    
