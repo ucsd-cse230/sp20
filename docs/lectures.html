@@ -235,10 +235,11 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 			<p>User username Text email Text</p>
-<p>Info user UserId – infoUser :: Info -&gt; UserId UniqueUser user name Text affiliation Text userEmail Text</p>
+<p>Info user UserId<br />
+UniqueUser user name Text affiliation Text userEmail Text</p>
 <p>measure user_to_info :: User -&gt; Info measure info_to_user :: Info -&gt; User</p>
-<p>{-@ invariant {u: User | entityKey u == infoUser (user_to_info u)} @-}</p>
-<p>{-@ invariant {i: Info | infoUser i == entityKey (info_to_user i)} @-}</p>
+<p>{-@ invariant {u: User | u == info_to_user (user_to_info u)} @-} {-@ invariant {i: Info | i == user_to_info (info_to_user i)} @-}</p>
+<p>infoAffiliation (user_to_info viewer) == “ucsd”</p>
 <h2 id="videos">Videos</h2>
 <p>This class will have zoom lectures with live coding.</p>
 <p>The lectures will be recorded and available on <a href="https://canvas.ucsd.edu/courses/12823">CANVAS</a>.</p>

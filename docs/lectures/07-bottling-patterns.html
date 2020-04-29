@@ -582,9 +582,9 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p>But these patterns appear regularly in “real” code - look for them!</p>
 <p>For an example, see the below</p>
 <ol type="1">
-<li><p>We will start with a beginner’s version that is riddled with <a href="swizzle-v0.html">explicit recursion</a>.</p></li>
-<li><p>Next, we will try to spot the patterns and eliminate recursion using <a href="swizzle-v1.html">higher-order functions</a>.</p></li>
-<li><p>Finally, we will <a href="swizzle-v2.html">parameterize</a> the code so that we can both “swizzle” and “unswizzle” without duplicate code.</p></li>
+<li><p>Start with beginner’s version riddled with <a href="swizzle-v0.html">explicit recursion</a>.</p></li>
+<li><p>Spot the patterns and eliminate recursion using <a href="swizzle-v1.html">HOFs</a>.</p></li>
+<li><p>Finally refactor the code to “swizzle” and “unswizzle” <a href="swizzle-v2.html">without duplication</a>.</p></li>
 </ol>
 <p><strong>Try it yourself</strong></p>
 <p>Rewrite the code that swizzles <code class="sourceCode haskell"><span class="dt">Char</span></code> to use the <code class="sourceCode haskell"><span class="dt">Map</span> k v</code> type in <code class="sourceCode haskell"><span class="dt">Data.Map</span></code></p>
@@ -603,7 +603,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p>Indeed, HOFs were the basis of <code class="sourceCode haskell">map<span class="fu">/</span>reduce</code> and the <a href="http://en.wikipedia.org/wiki/MapReduce" title="MapReduce">big-data revolution</a></p>
 <ul>
 <li><p>Can <em>parallelize</em> and <em>distribute</em> computation patterns <a href="https://www.usenix.org/event/osdi04/tech/full_papers/dean/dean.pdf">just once</a></p></li>
-<li><p><a href="http://en.wikipedia.org/wiki/MapReduce" title="MapReduce">Reuse</a> acros hundreds or thousands of instances!</p></li>
+<li><p><a href="http://en.wikipedia.org/wiki/MapReduce" title="MapReduce">Reuse</a> across hundreds or thousands of instances!</p></li>
 </ul>
                 <hr>
             </div>
