@@ -8,7 +8,7 @@ User
   email    Text  
 
 Info
-  user       UserId         -- infoUser :: Info -> UserId
+  user       UserId         
   UniqueUser user
   name        Text
   affiliation Text
@@ -18,10 +18,10 @@ Info
 measure user_to_info :: User -> Info
 measure info_to_user :: Info -> User
 
-{-@ invariant {u: User | entityKey u == infoUser (user_to_info u)} @-}
+{-@ invariant {u: User | u == info_to_user (user_to_info u)} @-}
+{-@ invariant {i: Info | i == user_to_info (info_to_user i)} @-}
 
-{-@ invariant {i: Info | infoUser i  == entityKey (info_to_user i)} @-}
-
+infoAffiliation (user_to_info viewer) == "ucsd"
 
 
 ## Videos
