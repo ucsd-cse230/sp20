@@ -409,17 +409,17 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="executing-foldr">Executing <code class="sourceCode haskell">foldr</code></h2>
 <p>To develop some intuition about <code class="sourceCode haskell">foldr</code> lets “run” it a few times by hand.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb25-1" data-line-number="1">foldr op base (x1<span class="fu">:</span>x2<span class="fu">:</span>x3<span class="fu">:</span>x4<span class="fu">:</span>[])</a>
+<div class="sourceCode" id="cb25"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb25-1" data-line-number="1">foldr op b (a1<span class="fu">:</span>a2<span class="fu">:</span>a3<span class="fu">:</span>a4<span class="fu">:</span>[])</a>
 <a class="sourceLine" id="cb25-2" data-line-number="2"><span class="fu">==&gt;</span> </a>
-<a class="sourceLine" id="cb25-3" data-line-number="3">  x1 <span class="ot">`op`</span> (foldr op base (x2<span class="fu">:</span>x3<span class="fu">:</span>x4<span class="fu">:</span>[]))</a>
+<a class="sourceLine" id="cb25-3" data-line-number="3">  a1 <span class="ot">`op`</span> (foldr op b (a2<span class="fu">:</span>a3<span class="fu">:</span>a4<span class="fu">:</span>[]))</a>
 <a class="sourceLine" id="cb25-4" data-line-number="4"><span class="fu">==&gt;</span> </a>
-<a class="sourceLine" id="cb25-5" data-line-number="5">  x1 <span class="ot">`op`</span> (x2 <span class="ot">`op`</span> (foldr op base (x3<span class="fu">:</span>x4<span class="fu">:</span>[])))</a>
+<a class="sourceLine" id="cb25-5" data-line-number="5">  a1 <span class="ot">`op`</span> (a2 <span class="ot">`op`</span> (foldr op b (a3<span class="fu">:</span>a4<span class="fu">:</span>[])))</a>
 <a class="sourceLine" id="cb25-6" data-line-number="6"><span class="fu">==&gt;</span> </a>
-<a class="sourceLine" id="cb25-7" data-line-number="7">  x1 <span class="ot">`op`</span> (x2 <span class="ot">`op`</span> (x3 <span class="ot">`op`</span> (foldr op base (x4<span class="fu">:</span>[]))))</a>
+<a class="sourceLine" id="cb25-7" data-line-number="7">  a1 <span class="ot">`op`</span> (a2 <span class="ot">`op`</span> (a3 <span class="ot">`op`</span> (foldr op b (a4<span class="fu">:</span>[]))))</a>
 <a class="sourceLine" id="cb25-8" data-line-number="8"><span class="fu">==&gt;</span> </a>
-<a class="sourceLine" id="cb25-9" data-line-number="9">  x1 <span class="ot">`op`</span> (x2 <span class="ot">`op`</span> (x3 <span class="ot">`op`</span> (x4 <span class="ot">`op`</span> foldr op base [])))</a>
+<a class="sourceLine" id="cb25-9" data-line-number="9">  a1 <span class="ot">`op`</span> (a2 <span class="ot">`op`</span> (a3 <span class="ot">`op`</span> (a4 <span class="ot">`op`</span> foldr op b [])))</a>
 <a class="sourceLine" id="cb25-10" data-line-number="10"><span class="fu">==&gt;</span> </a>
-<a class="sourceLine" id="cb25-11" data-line-number="11">  x1 <span class="ot">`op`</span> (x2 <span class="ot">`op`</span> (x3 <span class="ot">`op`</span> (x4 <span class="ot">`op`</span> base)))</a></code></pre></div>
+<a class="sourceLine" id="cb25-11" data-line-number="11">  a1 <span class="ot">`op`</span> (a2 <span class="ot">`op`</span> (a3 <span class="ot">`op`</span> (a4 <span class="ot">`op`</span> b)))</a></code></pre></div>
 <p>Look how it <em>mirrors</em> the structure of lists!</p>
 <ul>
 <li><code class="sourceCode haskell">(<span class="fu">:</span>)</code> is replaced by <code class="sourceCode haskell">op</code></li>
@@ -446,11 +446,12 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="quiz-1">QUIZ</h2>
 <p>Recall the function to compute the <code class="sourceCode haskell">len</code> of a list</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb28-1" data-line-number="1">len []     <span class="fu">=</span> <span class="dv">0</span></a>
-<a class="sourceLine" id="cb28-2" data-line-number="2">len (x<span class="fu">:</span>xs) <span class="fu">=</span> <span class="dv">1</span> <span class="fu">+</span> len xs</a></code></pre></div>
-<p>Which of these is a valid implementation of <code class="sourceCode haskell">listLen</code></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="ot">len ::</span> [a] <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">len []     <span class="fu">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">len (x<span class="fu">:</span>xs) <span class="fu">=</span> <span class="dv">1</span> <span class="fu">+</span> len xs</a></code></pre></div>
+<p>Which of these is a valid implementation of <code class="sourceCode haskell"><span class="dt">Len</span></code></p>
 <p><strong>A.</strong> <code class="sourceCode haskell">len <span class="fu">=</span> foldr (\n <span class="ot">-&gt;</span> n <span class="fu">+</span> <span class="dv">1</span>) <span class="dv">0</span></code></p>
-<p><strong>B.</strong> <code class="sourceCode haskell">len <span class="fu">=</span> foldr (<span class="fu">+</span> <span class="dv">1</span>) <span class="dv">0</span></code></p>
+<p><strong>B.</strong> <code class="sourceCode haskell">len <span class="fu">=</span> foldr (\n m <span class="ot">-&gt;</span> n <span class="fu">+</span> m) <span class="dv">0</span></code></p>
 <p><strong>C.</strong> <code class="sourceCode haskell">len <span class="fu">=</span> foldr (\_ n <span class="ot">-&gt;</span> n <span class="fu">+</span> <span class="dv">1</span>) <span class="dv">0</span></code></p>
 <p><strong>D.</strong> <code class="sourceCode haskell">len <span class="fu">=</span> foldr (\x xs <span class="ot">-&gt;</span> <span class="dv">1</span> <span class="fu">+</span> len xs) <span class="dv">0</span></code></p>
 <p><strong>E.</strong> All of the above</p>
@@ -494,7 +495,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb34-3" data-line-number="3">sumTree (<span class="dt">Node</span> x l r) <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
 <p>Gathers all the elements that occur as leaves of the tree:</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="ot">toList ::</span> <span class="dt">Tree</span> a <span class="ot">-&gt;</span> [a] </a>
-<a class="sourceLine" id="cb35-2" data-line-number="2">toList <span class="dt">Leaf</span>         <span class="fu">=</span> []</a>
+<a class="sourceLine" id="cb35-2" data-line-number="2">toList <span class="dt">Leaf</span>         <span class="fu">=</span> <span class="fu">???</span> </a>
 <a class="sourceLine" id="cb35-3" data-line-number="3">toList (<span class="dt">Node</span> x l r) <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
 <p>Lets give it a whirl</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> height tree123</a>
@@ -530,12 +531,13 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb38-2" data-line-number="2">foo p1 p2 (<span class="dt">Node</span> x l r) <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="pattern-folding-on-trees">Pattern: Folding on Trees</h2>
-<div class="sourceCode" id="cb39"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb39-1" data-line-number="1">tFold op b <span class="dt">Leaf</span>         <span class="fu">=</span> b x</a>
+<div class="sourceCode" id="cb39"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb39-1" data-line-number="1">tFold op b <span class="dt">Leaf</span>         <span class="fu">=</span> b </a>
 <a class="sourceLine" id="cb39-2" data-line-number="2">tFold op b (<span class="dt">Node</span> x l r) <span class="fu">=</span> op x (tFold op b l) (tFold op b r)</a></code></pre></div>
 <p>Lets try to work out the type of <code class="sourceCode haskell">tFold</code>!</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="ot">tFold ::</span> t_op <span class="ot">-&gt;</span> t_b <span class="ot">-&gt;</span> <span class="dt">Tree</span> a <span class="ot">-&gt;</span> t_out</a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="quiz-2">QUIZ</h2>
+<p>Suppose that <code class="sourceCode haskell"><span class="ot">t ::</span> <span class="dt">Tree</span> <span class="dt">Int</span></code>.</p>
 <p>What does <code class="sourceCode haskell">tFold (\x y z <span class="ot">-&gt;</span> y <span class="fu">+</span> z) <span class="dv">1</span> t</code> return?</p>
 <p><strong>a.</strong> <code class="sourceCode haskell"><span class="dv">0</span></code></p>
 <p><strong>b.</strong> the <em>largest</em> element in the tree <code class="sourceCode haskell">t</code></p>
@@ -573,17 +575,46 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb45-2" data-line-number="2"><span class="fu">&gt;&gt;&gt;</span> treeMap reverse animals</a>
 <a class="sourceLine" id="cb45-3" data-line-number="3"><span class="dt">Node</span> <span class="st">&quot;woc&quot;</span> (<span class="dt">Node</span> <span class="st">&quot;telgip&quot;</span> <span class="dt">Leaf</span> <span class="dt">Leaf</span>) (<span class="dt">Leaf</span> <span class="st">&quot;oppih&quot;</span> <span class="dt">Leaf</span> <span class="dt">Leaf</span>)</a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="examples-folddir">Examples: <code class="sourceCode haskell">foldDir</code></h2>
+<div class="sourceCode" id="cb46"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Dir</span> a </a>
+<a class="sourceLine" id="cb46-2" data-line-number="2">  <span class="fu">=</span> <span class="dt">Fil</span> a             <span class="co">-- ^ A single file named `a`</span></a>
+<a class="sourceLine" id="cb46-3" data-line-number="3">  <span class="fu">|</span> <span class="dt">Sub</span> a [<span class="dt">Dir</span> a]     <span class="co">-- ^ A sub-directory name `a` with contents `[Dir a]`</span></a>
+<a class="sourceLine" id="cb46-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb46-5" data-line-number="5"><span class="kw">data</span> <span class="dt">DirElem</span> a </a>
+<a class="sourceLine" id="cb46-6" data-line-number="6">  <span class="fu">=</span> <span class="dt">SubDir</span> a          <span class="co">-- ^ A single Sub-Directory named `a`</span></a>
+<a class="sourceLine" id="cb46-7" data-line-number="7">  <span class="fu">|</span> <span class="dt">File</span> a            <span class="co">-- ^ A single File named `a` </span></a>
+<a class="sourceLine" id="cb46-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb46-9" data-line-number="9"><span class="ot">foldDir ::</span> ([a] <span class="ot">-&gt;</span> r <span class="ot">-&gt;</span> <span class="dt">DirElem</span> a <span class="ot">-&gt;</span> r) <span class="ot">-&gt;</span> r <span class="ot">-&gt;</span> <span class="dt">Dir</span> a <span class="ot">-&gt;</span> r</a>
+<a class="sourceLine" id="cb46-10" data-line-number="10">foldDir f r0 dir <span class="fu">=</span> go [] r0 dir  </a>
+<a class="sourceLine" id="cb46-11" data-line-number="11">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb46-12" data-line-number="12">      go stk r (<span class="dt">Fil</span> a)    <span class="fu">=</span> f stk r (<span class="dt">File</span> a)  </a>
+<a class="sourceLine" id="cb46-13" data-line-number="13">      go stk r (<span class="dt">Sub</span> a ds) <span class="fu">=</span> L.foldl' (go stk') r' ds                          </a>
+<a class="sourceLine" id="cb46-14" data-line-number="14">        <span class="kw">where</span> </a>
+<a class="sourceLine" id="cb46-15" data-line-number="15">            r'   <span class="fu">=</span> f stk r (<span class="dt">SubDir</span> a)  </a>
+<a class="sourceLine" id="cb46-16" data-line-number="16">            stk' <span class="fu">=</span> a<span class="fu">:</span>stk</a></code></pre></div>
+<p><code class="sourceCode haskell">foldDir</code> takes as input</p>
+<ul>
+<li><p>an <em>accumulator</em> <code class="sourceCode haskell">f</code> of type <code class="sourceCode haskell">[a] <span class="ot">-&gt;</span> r <span class="ot">-&gt;</span> <span class="dt">DirElem</span> a <span class="ot">-&gt;</span> r</code></p>
+<ul>
+<li><p>takes as <em>input</em> the path <code class="sourceCode haskell">[a]</code> , the current result <code class="sourceCode haskell">r</code>, the next <code class="sourceCode haskell"><span class="dt">DirElem</span> [a]</code></p></li>
+<li><p>and returns as <em>output</em> the new result <code class="sourceCode haskell">r</code></p></li>
+</ul></li>
+<li><p>an <em>initial</em> value of the result <code class="sourceCode haskell">r0</code> and</p></li>
+<li><p>directory to fold over <code class="sourceCode haskell">dir</code></p></li>
+</ul>
+<p>And returns the result of running the <em>accumulator</em> over the whole <code class="sourceCode haskell">dir</code>.</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="examples-spotting-patterns-in-the-real-world">Examples: Spotting Patterns In The “Real” World</h2>
-<p>We saw patterns in “toy” functions.</p>
-<p>But these patterns appear regularly in “real” code - look for them!</p>
-<p>For an example, see the below</p>
+<p><strong>These patterns in “toy” functions appear regularly in “real” code</strong></p>
 <ol type="1">
 <li><p>Start with beginner’s version riddled with <a href="swizzle-v0.html">explicit recursion</a>.</p></li>
 <li><p>Spot the patterns and eliminate recursion using <a href="swizzle-v1.html">HOFs</a>.</p></li>
 <li><p>Finally refactor the code to “swizzle” and “unswizzle” <a href="swizzle-v2.html">without duplication</a>.</p></li>
 </ol>
 <p><strong>Try it yourself</strong></p>
-<p>Rewrite the code that swizzles <code class="sourceCode haskell"><span class="dt">Char</span></code> to use the <code class="sourceCode haskell"><span class="dt">Map</span> k v</code> type in <code class="sourceCode haskell"><span class="dt">Data.Map</span></code></p>
+<ul>
+<li>Rewrite the code that swizzles <code class="sourceCode haskell"><span class="dt">Char</span></code> to use the <code class="sourceCode haskell"><span class="dt">Map</span> k v</code> type in <code class="sourceCode haskell"><span class="dt">Data.Map</span></code></li>
+</ul>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="which-is-more-readable-hofs-or-recursion">Which is more readable? HOFs or Recursion</h2>
 <p>At first, <em>recursive</em> versions of <code class="sourceCode haskell">shout</code> and <code class="sourceCode haskell">squares</code> are easier to follow</p>

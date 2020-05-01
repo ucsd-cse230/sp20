@@ -114,4 +114,3 @@ myfoldr op b (x:xs) = op x (myfoldr op b xs)
 
 sumList xs = myfoldr (\x y -> x + y)  0  xs 
 catList xs = myfoldr (\x y -> x ++ y) "" xs 
-
