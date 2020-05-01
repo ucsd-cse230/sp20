@@ -26,7 +26,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/24*     | ""                              |                           | ""                   | [code][lec_4_24] |
 | *4/27*     | Polymorphism                    | [html][06-poly-data]      | [pdf][06-poly-A]     | [code][lec_4_27] | 
 | *4/29*     | Bottling Patterns               | [html][07-patterns]       | [pdf][07-bottling-A] | [code][lec_4_29] |
-| *5/1*      | ""                              |                           |                      |                  |
+| *5/1*      | ""                              |                           | [pdf][07-bottling-B] | [code][lec_5_1]  |
 | *5/4*      | Haskell: IO                     | [html][04-hs-io]          |                      |                  |
 |            | Typeclasses                     | [html][08-typeclasses]    |                      |                  |
 |            | Functors & Applicatives         |                           |                      |                  | 
@@ -79,6 +79,9 @@ Liquid    = 3
 
 [07-bottling-A]: static/raw/07-bottling-A.pdf
 [lec_4_29]: static/raw/lec_4_29_20.hs
+
+[07-bottling-B]: static/raw/07-bottling-B.pdf
+[lec_5_1]: static/raw/lec_5_1_20.hs
 
 [05-higher-order]: lectures/05-higher-order.html 
 [06-poly-data]: lectures/06-poly-data.html    
