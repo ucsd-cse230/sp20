@@ -235,7 +235,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 			<h2 id="writing-applications">Writing Applications</h2>
-<p>In most language related classes, we <em>start</em> with a “Hello world!” program.</p>
+<p>Lets write the classic “Hello world!” program.</p>
 <p>For example, in Python you may write:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">def</span> main():</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">    <span class="bu">print</span> <span class="st">&quot;hello, world!&quot;</span></a>
@@ -244,8 +244,9 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p>and then you can run it:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1">$ <span class="ex">python</span> hello.py</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="ex">hello</span> world!</a></code></pre></div>
-<h2 id="purity-and-the-immutability-principle">Purity and the Immutability Principle</h2>
-<p>Haskell is a <strong>pure</strong> language. Not a <em>value</em> judgment, but a precise <em>technical</em> statement:</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="haskell-is-a-pure-language.">Haskell is a <strong>Pure</strong> language.</h2>
+<p>Not a <em>value</em> judgment, but a precise <em>technical</em> statement:</p>
 <p><strong>The “Immutability Principle”:</strong></p>
 <ul>
 <li><p>A function must <em>always</em> return the same output for a given input</p></li>
@@ -269,11 +270,11 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 </ul>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="but-how-to-write-hello-world">But… how to write “Hello, world!”</h2>
-<p>But, we <em>want</em> to …</p>
+<p>But, we <strong>want</strong> to …</p>
 <ul>
-<li><em>print</em> to screen</li>
-<li><em>read</em> a file</li>
-<li><em>send</em> an email</li>
+<li><strong>print</strong> to screen</li>
+<li><strong>read</strong> a file</li>
+<li><strong>send</strong> an email</li>
 </ul>
 <p>Thankfully, you <em>can</em> do all the above via a very clever idea: <code class="sourceCode haskell"><span class="dt">Recipe</span></code></p>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
@@ -294,7 +295,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <li>A <strong>description</strong> of a computation that can have side-effects</li>
 </ul>
 <figure>
-<img src="../static/img/cake.png" alt="Cake vs. Recipe" id="fig:types" class="align-center" style="width:80.0%" /><figcaption>Cake vs. Recipe</figcaption>
+<img src="../static/img/cake.png" alt="Cake vs. Recipe" id="fig:types" class="align-center" style="width:60.0%" /><figcaption>Cake vs. Recipe</figcaption>
 </figure>
 <p><strong>(L)</strong> chocolate <em>cake</em>, <strong>(R)</strong> a <em>sequence of instructions</em> on how to make a cake.</p>
 <p>They are different (<em>Hint</em>: only one of them is delicious.)</p>
@@ -312,21 +313,22 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <img src="../static/img/baker-aker.jpg" alt="Baker Aker" id="fig:types" class="align-center" style="width:70.0%" /><figcaption>Baker Aker</figcaption>
 </figure>
 <p>The Haskell runtime is a <em>master chef</em> who is the only one allowed to cook!</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="how-to-write-an-app-in-haskell">How to write an App in Haskell</h2>
 <p>Make a <code class="sourceCode haskell"><span class="dt">Recipe</span> ()</code> that is handed off to the master chef <code class="sourceCode haskell">main</code>.</p>
 <ul>
 <li><p><code class="sourceCode haskell">main</code> can be arbitrarily complicated</p></li>
-<li><p>will be composed of <em>many smaller</em> recipes</p></li>
+<li><p>composed of <strong>smaller</strong> sub-recipes</p></li>
 </ul>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
-<h2 id="hello-world">Hello World</h2>
+<h2 id="a-recipe-to-print-to-screen">A Recipe to Print to Screen</h2>
 <div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1">putStrLn<span class="ot"> ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Recipe</span> ()</a></code></pre></div>
 <p>The function <code class="sourceCode haskell">putStrLn</code></p>
 <ul>
 <li>takes as input a <code class="sourceCode haskell"><span class="dt">String</span></code></li>
 <li>returns as output a <code class="sourceCode haskell"><span class="dt">Recipe</span> ()</code></li>
 </ul>
-<p><code class="sourceCode haskell">putStrLn msg</code> is a <code class="sourceCode haskell"><span class="dt">Recipe</span> ()</code> <em>when executed</em> prints out <code class="sourceCode haskell">msg</code> on the screen.</p>
+<p><code class="sourceCode haskell">putStrLn msg</code> is a <code class="sourceCode haskell"><span class="dt">Recipe</span> ()</code> - <em>when executed</em> prints out <code class="sourceCode haskell">msg</code> on the screen.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="ot">main ::</span> <span class="dt">Recipe</span> ()</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">main <span class="fu">=</span> putStrLn <span class="st">&quot;Hello, world!&quot;</span></a></code></pre></div>
 <p>… and we can compile and run it</p>
@@ -334,7 +336,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb7-2" data-line-number="2">$ <span class="ex">./hello</span></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3"><span class="ex">Hello</span>, world!</a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
-<h2 id="how-to-print-multiple-things">How to Print Multiple Things?</h2>
+<h2 id="quiz-how-to-print-multiple-things">QUIZ: How to Print Multiple Things?</h2>
 <p>Suppose I want to print <em>two</em> things e.g.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb8-1" data-line-number="1">$ <span class="ex">ghc</span> --make hello.hs</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">$ <span class="ex">./hello2</span></a>
@@ -346,13 +348,13 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p><strong>B.</strong> No, there is a type error!</p>
 <p><strong>C.</strong> No, it compiles but produces a different result!</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
-<h2 id="a-collection-of-recipes">A Collection of Recipes</h2>
-<p>Is just … a collection of Recipes!</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="ot">rPair ::</span> (<span class="dt">Recipe</span> (), <span class="dt">Recipe</span> ())</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">rPair <span class="fu">=</span> (putStrLn <span class="st">&quot;Hello!&quot;</span>, putStrLn <span class="st">&quot;World!&quot;</span>)</a>
+<h2 id="a-collection-of-recipes">A <em>Collection</em> of Recipes</h2>
+<p>Is just … a <em>collection</em> of Recipes!</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="ot">recPair ::</span> (<span class="dt">Recipe</span> (), <span class="dt">Recipe</span> ())</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">recPair <span class="fu">=</span> (putStrLn <span class="st">&quot;Hello!&quot;</span>, putStrLn <span class="st">&quot;World!&quot;</span>)</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="ot">rList ::</span> [<span class="dt">Recipe</span> ()]</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">rList <span class="fu">=</span> [putStrLn <span class="st">&quot;Hello!&quot;</span>, putStrLn <span class="st">&quot;World!&quot;</span>]</a></code></pre></div>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="ot">recList ::</span> [<span class="dt">Recipe</span> ()]</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">recList <span class="fu">=</span> [putStrLn <span class="st">&quot;Hello!&quot;</span>, putStrLn <span class="st">&quot;World!&quot;</span>]</a></code></pre></div>
 <p>… we need a way to <strong>combine</strong> recipes!</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="combining-just-do-it">Combining? Just <code class="sourceCode haskell"><span class="kw">do</span></code> it!</h2>
@@ -399,15 +401,18 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb17-3" data-line-number="3"><span class="ex">Hello</span>! </a>
 <a class="sourceLine" id="cb17-4" data-line-number="4"><span class="ex">World</span>!</a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
-<h2 id="using-the-results-of-sub-recipes">Using the Results of (Sub)-Recipes</h2>
-<p>Next, suppose I want to write a function that <em>asks</em> for the user’s name</p>
+<h2 id="using-the-results-of-sub--recipes">Using the Results of (Sub-) Recipes</h2>
+<p>Suppose we want a function that <strong>asks</strong> for the user’s name</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb18-1" data-line-number="1">$ <span class="ex">./hello</span></a>
 <a class="sourceLine" id="cb18-2" data-line-number="2"><span class="ex">What</span> is your name? </a>
-<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="ex">Ranjit</span>             # user enters</a>
-<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="ex">Hello</span> Ranjit!</a></code></pre></div>
+<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="ex">Ranjit</span>             # <span class="op">&lt;&lt;&lt;&lt;&lt; user</span> <span class="ex">enters</span></a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">Hello Ranjit!</a></code></pre></div>
 <p>We can use the following sub-recipes</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb19-1" data-line-number="1">getLine<span class="ot">  ::</span> <span class="dt">Recipe</span> <span class="dt">String</span>       <span class="co">-- read and return a line from stdin as String</span></a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">putStrLn<span class="ot"> ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Recipe</span> () <span class="co">-- take a string s, return a recipe that writes s to stdout</span></a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co">-- | read and return a line from stdin as String</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">getLine<span class="ot">  ::</span> <span class="dt">Recipe</span> <span class="dt">String</span>       </a>
+<a class="sourceLine" id="cb19-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb19-4" data-line-number="4"><span class="co">-- take a string s, return a recipe that prints  s </span></a>
+<a class="sourceLine" id="cb19-5" data-line-number="5">putStrLn<span class="ot"> ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Recipe</span> () </a></code></pre></div>
 <p>But how to</p>
 <ul>
 <li><em>Combine</em> the two sub-recipes while</li>
@@ -462,19 +467,33 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb24-12" data-line-number="12"><span class="ex">Hello</span> Ranjit!</a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="exercise-1">EXERCISE</h2>
-<p>Can you modify your code so that instead it <em>also</em> prints out a count in the prompt?</p>
+<p>Modify your code to <em>also</em> print out a <strong>count</strong> in the prompt</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb25-1" data-line-number="1">$ <span class="ex">ghc</span> --make hello.hs</a>
 <a class="sourceLine" id="cb25-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb25-3" data-line-number="3">$ <span class="ex">./hello</span></a>
 <a class="sourceLine" id="cb25-4" data-line-number="4"><span class="kw">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">What</span> is your name? </a>
-<a class="sourceLine" id="cb25-5" data-line-number="5"><span class="co"># user hits return</span></a>
+<a class="sourceLine" id="cb25-5" data-line-number="5">                          <span class="co"># user hits return</span></a>
 <a class="sourceLine" id="cb25-6" data-line-number="6"><span class="kw">(</span><span class="ex">1</span><span class="kw">)</span> <span class="ex">What</span> is your name? </a>
-<a class="sourceLine" id="cb25-7" data-line-number="7"><span class="co"># user hits return</span></a>
+<a class="sourceLine" id="cb25-7" data-line-number="7">                          <span class="co"># user hits return</span></a>
 <a class="sourceLine" id="cb25-8" data-line-number="8"><span class="kw">(</span><span class="ex">2</span><span class="kw">)</span> <span class="ex">What</span> is your name? </a>
-<a class="sourceLine" id="cb25-9" data-line-number="9"><span class="co"># user hits return</span></a>
+<a class="sourceLine" id="cb25-9" data-line-number="9">                          <span class="co"># user hits return</span></a>
 <a class="sourceLine" id="cb25-10" data-line-number="10"><span class="kw">(</span><span class="ex">3</span><span class="kw">)</span> <span class="ex">What</span> is your name? </a>
-<a class="sourceLine" id="cb25-11" data-line-number="11"><span class="ex">Ranjit</span>  # user enters</a>
+<a class="sourceLine" id="cb25-11" data-line-number="11"><span class="ex">Ranjit</span>                    # user enters</a>
 <a class="sourceLine" id="cb25-12" data-line-number="12"><span class="ex">Hello</span> Ranjit!</a></code></pre></div>
+<h2 id="thats-all-about-io">That’s all about IO</h2>
+<p>You should be able to implement <code class="sourceCode haskell">build</code> from <code class="sourceCode haskell">Directory.hs</code></p>
+<p>Using these library functions imported at the top of the file</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">import</span> <span class="dt">System.FilePath</span>   (takeDirectory, takeFileName, (&lt;/&gt;))</a>
+<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="kw">import</span> <span class="dt">System.Directory</span>  (doesFileExist, listDirectory)</a></code></pre></div>
+<p>The functions are</p>
+<ul>
+<li><code class="sourceCode haskell">takeDirectory</code></li>
+<li><code class="sourceCode haskell">takeFileName</code></li>
+<li><code class="sourceCode haskell">(<span class="fu">&lt;/&gt;</span>)</code></li>
+<li><code class="sourceCode haskell">doesFileExist</code></li>
+<li><code class="sourceCode haskell">listDirectory</code></li>
+</ul>
+<p><code class="sourceCode haskell">hoogle</code> the documentation to learn about how to use them.</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <!-- 
 ## QUIZ: Combining Recipes

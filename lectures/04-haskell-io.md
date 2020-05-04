@@ -5,7 +5,7 @@ headerImg: sea.jpg
 
 ## Writing Applications
 
-In most language related classes, we _start_ with a "Hello world!" program.
+Lets write the classic "Hello world!" program.
 
 For example, in Python you may write:
 
@@ -23,9 +23,22 @@ $ python hello.py
 hello world!
 ```
 
-## Purity and the Immutability Principle
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
-Haskell is a **pure** language. Not a _value_ judgment, but a precise _technical_ statement:
+
+## Haskell is a **Pure** language. 
+
+Not a _value_ judgment, but a precise _technical_ statement:
 
 **The "Immutability Principle":**
 
@@ -76,11 +89,11 @@ Specifically, evaluation must not have an **side effects**
 
 ## But... how to write "Hello, world!"
 
-But, we _want_ to ...
+But, we **want** to ...
 
-- *print* to screen
-- *read* a file
-- *send* an email
+- **print** to screen
+- **read** a file
+- **send** an email
 
 Thankfully, you _can_ do all the above via a very clever idea: `Recipe`
 
@@ -127,7 +140,7 @@ A value of type `Recipe a` is
 
 - A **description** of a computation that can have side-effects 
 
-![Cake vs. Recipe](/static/img/cake.png){#fig:types .align-center width=80%}
+![Cake vs. Recipe](/static/img/cake.png){#fig:types .align-center width=60%}
 
 **(L)** chocolate _cake_, **(R)** a _sequence of instructions_ on how to make a cake.
 
@@ -162,13 +175,22 @@ The value associated with `main` is handed to the **runtime system and executed*
 
 The Haskell runtime is a _master chef_ who is the only one allowed to cook!
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 ## How to write an App in Haskell
 
 Make a `Recipe ()` that is handed off to the master chef `main`.
 
 - `main` can be arbitrarily complicated
 
-- will be composed of _many smaller_ recipes
+- composed of **smaller** sub-recipes
 
 <br>
 <br>
@@ -181,8 +203,7 @@ Make a `Recipe ()` that is handed off to the master chef `main`.
 
 
 
-## Hello World
-
+## A Recipe to Print to Screen
 
 ```haskell
 putStrLn :: String -> Recipe ()
@@ -193,7 +214,8 @@ The function `putStrLn`
 - takes as input a `String`
 - returns as output a `Recipe ()`
 
-`putStrLn msg` is a `Recipe ()` _when executed_ prints out `msg` on the screen.
+`putStrLn msg` is a `Recipe ()` 
+- _when executed_ prints out `msg` on the screen.
 
 ```haskell
 main :: Recipe ()
@@ -217,7 +239,7 @@ Hello, world!
 <br>
 <br>
 
-## How to Print Multiple Things?
+## QUIZ: How to Print Multiple Things?
 
 Suppose I want to print _two_ things e.g.
 
@@ -250,16 +272,16 @@ main = (putStLn "Hello!", putStrLn "World!")
 <br>
 <br>
 
-## A Collection of Recipes 
+## A *Collection* of Recipes 
 
-Is just ... a collection of Recipes!
+Is just ... a *collection* of Recipes!
 
 ```haskell
-rPair :: (Recipe (), Recipe ())
-rPair = (putStrLn "Hello!", putStrLn "World!")
+recPair :: (Recipe (), Recipe ())
+recPair = (putStrLn "Hello!", putStrLn "World!")
 
-rList :: [Recipe ()]
-rList = [putStrLn "Hello!", putStrLn "World!"]
+recList :: [Recipe ()]
+recList = [putStrLn "Hello!", putStrLn "World!"]
 ```
 
 ... we need a way to **combine** recipes!
@@ -374,22 +396,25 @@ World!
 <br>
 
 
-## Using the Results of (Sub)-Recipes
+## Using the Results of (Sub-) Recipes
 
-Next, suppose I want to write a function that *asks* for the user's name
+Suppose we want a function that **asks** for the user's name
 
 ```sh
 $ ./hello
 What is your name? 
-Ranjit             # user enters
+Ranjit             # <<<<< user enters
 Hello Ranjit!
 ```
 
 We can use the following sub-recipes
 
 ```haskell
-getLine  :: Recipe String       -- read and return a line from stdin as String
-putStrLn :: String -> Recipe () -- take a string s, return a recipe that writes s to stdout
+-- | read and return a line from stdin as String
+getLine  :: Recipe String       
+
+-- take a string s, return a recipe that prints  s 
+putStrLn :: String -> Recipe () 
 ```
 
 But how to
@@ -503,23 +528,43 @@ Hello Ranjit!
 
 ## EXERCISE 
 
-Can you modify your code so that instead it _also_ prints out a count in the prompt?
+Modify your code to _also_ print out a **count** in the prompt
 
 ```sh
 $ ghc --make hello.hs
 
 $ ./hello
 (0) What is your name? 
-# user hits return
+                          # user hits return
 (1) What is your name? 
-# user hits return
+                          # user hits return
 (2) What is your name? 
-# user hits return
+                          # user hits return
 (3) What is your name? 
-Ranjit  # user enters
+Ranjit                    # user enters
 Hello Ranjit!
 ```
 
+## That's all about IO
+
+You should be able to implement `build` from `Directory.hs`
+
+Using these library functions imported at the top of the file
+
+```haskell
+import System.FilePath   (takeDirectory, takeFileName, (</>))
+import System.Directory  (doesFileExist, listDirectory)
+```
+
+The functions are
+
+- `takeDirectory`
+- `takeFileName` 
+- `(</>)`
+- `doesFileExist`
+- `listDirectory`
+
+`hoogle` the documentation to learn about how to use them.
 
 <br>
 <br>
