@@ -253,7 +253,7 @@ World!
 Can we try to compile and run this:
 
 ```haskell
-main = (putStLn "Hello!", putStrLn "World!")
+main = (putStrLn "Hello!", putStrLn "World!")
 ```
 
 **A.** Yes!
