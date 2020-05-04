@@ -53,44 +53,32 @@ Liquid    = 3
 [01-lambda-C]: static/raw/01-lambda-C.pdf
 [01-lambda-D]: static/raw/01-lambda-D.pdf
 [01-lambda-E]: static/raw/01-lambda-E.pdf
-
 [02-hs-basic]: lectures/02-haskell-basic.html
 [03-hs-types]: lectures/03-haskell-types.html
 [04-hs-io]: lectures/04-haskell-io.html
-
 [02-hs-basic-A]: static/raw/02-haskell-basics-A.pdf
 [lec_4_13]: static/raw/lec_4_13_20.hs
-
 [02-hs-basic-B]: static/raw/02-haskell-basics-B.pdf
 [lec_4_15]: static/raw/lec_4_15_20.hs
-
 [02-hs-basic-C]: static/raw/02-haskell-basics-C.pdf
 [lec_4_20]: static/raw/lec_4_20_20.hs
-
 [03-hs-types-A]: static/raw/03-hs-types-A.pdf
 [lec_4_22]: static/raw/lec_4_22_20.hs
-
 [03-hs-types-B]: static/raw/03-hs-types-A.pdf
 [lec_4_24]: static/raw/lec_4_24_20.hs
-
 [06-poly-data]: lectures/06-poly-data.html    
 [06-poly-A]: static/raw/06-poly-data.pdf
 [lec_4_27]: static/raw/lec_4_27_20.hs
-
 [07-bottling-A]: static/raw/07-bottling-A.pdf
 [lec_4_29]: static/raw/lec_4_29_20.hs
-
 [07-bottling-B]: static/raw/07-bottling-B.pdf
 [lec_5_1]: static/raw/lec_5_1_20.hs
-
 [04-hs-io-A]: static/raw/04-hs-io-A.pdf
 [lec_5_4]: static/raw/lec_5_4_20.hs
-
 [05-higher-order]: lectures/05-higher-order.html 
 [06-poly-data]: lectures/06-poly-data.html    
 [07-patterns]: lectures/07-bottling-patterns.html     
 [08-typeclasses]: lectures/08-typeclasses.html  
-
 [03-classes]: lectures/00-intro.html
 [04-functors]: lectures/00-intro.html
 [05-monads]: lectures/00-intro.html
