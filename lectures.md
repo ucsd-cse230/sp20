@@ -25,16 +25,18 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/22*     | Haskell: Types                  | [html][03-hs-types]       | [pdf][03-hs-types-A] | [code][lec_4_22] |
 | *4/24*     | ""                              |                           | ""                   | [code][lec_4_24] |
 | *4/27*     | Polymorphism                    | [html][06-poly-data]      | [pdf][06-poly-A]     | [code][lec_4_27] | 
-| *4/29*     | Bottling Patterns               | [html][07-patterns]       | [pdf][07-bottling-A] | [code][lec_4_29] |
+| *4/29*     | Higher Order Functions          | [html][07-patterns]       | [pdf][07-bottling-A] | [code][lec_4_29] |
 | *5/1*      | ""                              |                           | [pdf][07-bottling-B] | [code][lec_5_1]  |
 | *5/4*      | Haskell: IO                     | [html][04-hs-io]          | [pdf][04-hs-io-A]    | [code][lec_5_4]  |
-|            | Typeclasses                     | [html][08-typeclasses]    | [pdf][08-typeclasses-A] |               |
-|            | Functors & Applicatives         |                           |                      |                  | 
-|            | Monads                          |                           |                      |                  |
+| *5/6*      | Typeclasses                     | [html][08-typeclasses]    | [pdf][08-classes-A]  | [code][lec_5_6]  |
+|            | ""                              |                           | [pdf][08-classes-B]  | [code][lec_5_8]  |
+|            | Functors & Monads               | [html][09-monads]         |                      |                  | 
+|            | Imperative Programming          | [html][10-state]          |                      |                  |
 |            | Parser Combinators              |                           |                      |                  |
 |            | Testing                         |                           |                      |                  | 
 |            | Refinement Types                |                           |                      |                  |          
 |            | Proofs as Programs              |                           |                      |                  | 
+
 
 <!--
 TC+monoid = 2
@@ -76,26 +78,32 @@ Liquid    = 3
 [04-hs-io-A]: static/raw/04-hs-io-A.pdf
 [lec_5_4]: static/raw/lec_5_4_20.hs
 
-[08-typeclasses-A]: static/raw/08-typeclasses-A.pdf
+[08-classes-A]: static/raw/08-typeclasses-A.pdf
 [lec_5_6]: static/raw/lec_5_6_20.hs
-
-
+[08-classes-B]: static/raw/08-typeclasses-A.pdf
+[lec_5_8]: static/raw/lec_5_6_20.hs
 
 
 [05-higher-order]: lectures/05-higher-order.html 
 [06-poly-data]: lectures/06-poly-data.html    
 [07-patterns]: lectures/07-bottling-patterns.html     
 [08-typeclasses]: lectures/08-typeclasses.html  
-[03-classes]: lectures/00-intro.html
-[04-functors]: lectures/00-intro.html
-[05-monads]: lectures/00-intro.html
+[09-monads]: lectures/09-monads.html
+[10-state]: lectures/10-state.html
+
+
+
+
+
+
+
+<!-- JUNK -->
 [06-parsers]: lectures/00-intro.html
 [07-testing]: lectures/00-intro.html
 [08-parconc]: lectures/00-intro.html
 [09-types]: lectures/00-intro.html
 [10-refinements]: lectures/00-intro.html
 [11-proofs]: lectures/00-intro.html 
-
 
 [pdf-intro]: static/lec-intro-2x2.pdf 
 [pdf-lambda]: static/lec-lambda-2x2.pdf
