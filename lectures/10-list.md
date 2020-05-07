@@ -177,7 +177,7 @@ quiz = do x <- ["cat", "dog"]
 <br>
 <br>
 
-## Whoa! Like a `for`-loop!
+## Whoa, behaves like a `for`-loop!
 
 Lets work it out.
 
@@ -222,8 +222,40 @@ So
 <br>
 <br>
 
+## QUIZ 
 
-## Using the List Monad
+What does the following evaluate to?
+
+```haskell
+triples :: [(Int, Int, Int)]
+triples = do
+    x <- [0,1]
+    y <- [10,11]
+    z <- [100,101]
+    []
+```
+
+**A.** `[(0,10,100), (0,10,101),(1,10,100),(1,10,101),(0,11,100),(0,11,101)]`
+
+**B.** `[]`
+
+**C.** `[[]]`
+
+**D.** `[(0,10,100), (1,11,101)]`
+
+**E.** `[0,1,10,100,100,101]` 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## EXERCISE: Using the List Monad
 
 A **Pythagorean Triple** is a 
 
@@ -235,17 +267,20 @@ Lets implement a function to return all triples where
 - `a`,`b`,`c` are between `0..n` 
 
 ```haskell
-pyTriples :: Int -> [(Int,Int,Int)] 
+pyTriples :: Int -> [(Int, Int, Int)] 
 pyTriples n = do
-  a <- [0..n] 
-  b <- [0..n] 
-  c <- [0..n] 
-  if (a*a + b*b == c*c) 
-    then return (a, b, c)
-    else []
+  a <- ???
+  b <- ???
+  c <- ???
+  ???
 ```
 
 **HINT:** You can write `[i..j]` to generate the list of numbers between `i` and `j`
+
+```haskell
+>>> [0..5]
+[0,1,2,3,4,5]
+```
 
 <br>
 <br>
@@ -282,11 +317,52 @@ Such that
 ["000", "001", "010", "011", "100", "101", "110", "111"]
 ```
 
+<!-- 
 ```haskell
 bits 0 = return "" 
 bits n = do { s <- bits (n-1); c <- ['0', '1']; return (c:s) }
 ```
+-->
 
-## N-QUEENS
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+## Summary
+
+The `Maybe` or `Result` monad instance 
+
+- Conveniently work with computations that *may fail*
+
+Generalize to `List` monad instance
+
+- *empty list* is *failure*
+- *non-empty* list is *successes*
+
+Gives us a `for`-loop or iterator *for free*.
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 
 

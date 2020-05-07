@@ -31,9 +31,11 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/6*      | Typeclasses                     | [html][08-typeclasses]    | [pdf][08-classes-A]  | [code][lec_5_6]  |
 |            | ""                              |                           | [pdf][08-classes-B]  | [code][lec_5_8]  |
 |            | Functors & Monads               | [html][09-monads]         |                      |                  | 
-|            | Imperative Programming          | [html][10-list]          |                      |                  |
+|            | List Monad                      | [html][10-list]           |                      |                  |
+|            | State Monad                     | [html][11-state]          |                      |                  |
 |            | Parser Combinators              |                           |                      |                  |
-|            | Testing                         |                           |                      |                  | 
+|            | Property-based Testing          |                           |                      |                  | 
+|            | Transformers                    |                           |                      |                  | 
 |            | Refinement Types                |                           |                      |                  |          
 |            | Proofs as Programs              |                           |                      |                  | 
 
