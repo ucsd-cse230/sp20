@@ -31,7 +31,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/6*      | Typeclasses                     | [html][08-typeclasses]    | [pdf][08-classes-A]  | [code][lec_5_6]  |
 |            | ""                              |                           | [pdf][08-classes-B]  | [code][lec_5_8]  |
 |            | Functors & Monads               | [html][09-monads]         |                      |                  | 
-|            | Imperative Programming          | [html][10-state]          |                      |                  |
+|            | Imperative Programming          | [html][10-list]          |                      |                  |
 |            | Parser Combinators              |                           |                      |                  |
 |            | Testing                         |                           |                      |                  | 
 |            | Refinement Types                |                           |                      |                  |          
@@ -89,7 +89,7 @@ Liquid    = 3
 [07-patterns]: lectures/07-bottling-patterns.html     
 [08-typeclasses]: lectures/08-typeclasses.html  
 [09-monads]: lectures/09-monads.html
-[10-state]: lectures/10-state.html
+[10-list]: lectures/10-list.html
 
 
 
