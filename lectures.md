@@ -29,7 +29,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/1*      | ""                              |                           | [pdf][07-bottling-B] | [code][lec_5_1]  |
 | *5/4*      | Haskell: IO                     | [html][04-hs-io]          | [pdf][04-hs-io-A]    | [code][lec_5_4]  |
 | *5/6*      | Typeclasses                     | [html][08-typeclasses]    | [pdf][08-classes-A]  | [code][lec_5_6]  |
-|            | ""                              |                           | [pdf][08-classes-B]  | [code][lec_5_8]  |
+| *5/8*      | ""                              |                           | [pdf][08-classes-B]  | [code][lec_5_8]  |
 |            | Functors & Monads               | [html][09-monads]         |                      |                  | 
 |            | List Monad                      | [html][10-list]           |                      |                  |
 |            | State Monad                     | [html][11-state]          |                      |                  |
