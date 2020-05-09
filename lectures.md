@@ -83,7 +83,7 @@ Liquid    = 3
 [08-classes-A]: static/raw/08-typeclasses-A.pdf
 [lec_5_6]: static/raw/lec_5_6_20.hs
 [08-classes-B]: static/raw/08-typeclasses-A.pdf
-[lec_5_8]: static/raw/lec_5_6_20.hs
+[lec_5_8]: static/raw/lec_5_8_20.hs
 
 
 [05-higher-order]: lectures/05-higher-order.html 
