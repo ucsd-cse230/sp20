@@ -30,12 +30,13 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/4*      | Haskell: IO                     | [html][04-hs-io]          | [pdf][04-hs-io-A]    | [code][lec_5_4]  |
 | *5/6*      | Typeclasses                     | [html][08-typeclasses]    | [pdf][08-classes-A]  | [code][lec_5_6]  |
 | *5/8*      | ""                              |                           | [pdf][08-classes-B]  | [code][lec_5_8]  |
-|            | Functors & Monads               | [html][09-monads]         |                      |                  | 
+| *5/11*     | Functors & Monads               | [html][09-monads]         | [pdf][09-monads-A]   | [code][lec_5_11] | 
 |            | List Monad                      | [html][10-list]           |                      |                  |
 |            | State Monad                     | [html][11-state]          |                      |                  |
 |            | Parser Combinators              |                           |                      |                  |
-|            | Property-based Testing          |                           |                      |                  | 
 |            | Transformers                    |                           |                      |                  | 
+|            | Concurrency / STM / Async       |                           |                      |                  |
+|            | Property-based Testing          |                           |                      |                  | 
 |            | Refinement Types                |                           |                      |                  |          
 |            | Proofs as Programs              |                           |                      |                  | 
 
@@ -84,6 +85,9 @@ Liquid    = 3
 [lec_5_6]: static/raw/lec_5_6_20.hs
 [08-classes-B]: static/raw/08-typeclasses-A.pdf
 [lec_5_8]: static/raw/lec_5_8_20.hs
+[09-monads-A]: static/raw/09-monads-A.pdf
+[lec_5_11]: static/raw/lec_5_11_20.hs
+
 
 
 [05-higher-order]: lectures/05-higher-order.html 
