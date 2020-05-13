@@ -27,13 +27,7 @@ data Tree a
   deriving (Eq, Show, Functor, Foldable)
 
 -- >>> length tree1
--- (Error while loading modules for evaluation)
--- [2 of 2] Compiling Main             ( /Users/rjhala/teaching/230-sp20/old-lectures/lec-stm.lhs, interpreted )
--- <BLANKLINE>
--- /Users/rjhala/teaching/230-sp20/old-lectures/lec-stm.lhs:41:35-47: error:
---     parse error on input ‘-- *p = v + 1’
--- Failed, one module loaded.
---
+-- 3
 
 tree1 :: Tree Int
 tree1 = Node 2 

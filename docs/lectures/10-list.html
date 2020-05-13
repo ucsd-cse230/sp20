@@ -286,21 +286,28 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 </ul>
 <p>… but maybe there’s something sensible for lists with <em>many</em> elements?</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
-<h2 id="exercise">EXERCISE</h2>
-<p>Can you implement the <code class="sourceCode haskell"><span class="dt">Monad</span></code> instance for lists?</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">Monad</span> [] <span class="kw">where</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">    <span class="co">-- return :: a -&gt; [a]</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">    return x <span class="fu">=</span> <span class="fu">???</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">    <span class="co">-- (&gt;&gt;=)  :: [a] -&gt; (a -&gt; [b]) -&gt; [b]</span></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">    []     <span class="fu">&gt;&gt;=</span> process <span class="fu">=</span> <span class="fu">???</span></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">    (x<span class="fu">:</span>xs) <span class="fu">&gt;&gt;=</span> process <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<h2 id="a-monad-instance-for-lists">A Monad Instance for Lists</h2>
+<p>Lets implement the <code class="sourceCode haskell"><span class="dt">Monad</span></code> instance for lists?</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">-- return :: a -&gt; [a]</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">return x <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p>What’s the only sensible implementation?</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="quiz">QUIZ</h2>
+<p>How should we implement the <code class="sourceCode haskell"><span class="fu">&gt;&gt;=</span></code> operator?</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">-- (&gt;&gt;=)  :: [a] -&gt; (a -&gt; [b]) -&gt; [b]</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">[]     <span class="fu">&gt;&gt;=</span> process <span class="fu">=</span> [] </a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">(x<span class="fu">:</span>xs) <span class="fu">&gt;&gt;=</span> process <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p><strong>A.</strong> <code class="sourceCode haskell">xs</code></p>
+<p><strong>B.</strong> <code class="sourceCode haskell">process x</code></p>
+<p><strong>C.</strong> <code class="sourceCode haskell">process x <span class="fu">&gt;&gt;=</span> xs</code></p>
+<p><strong>D.</strong> <code class="sourceCode haskell">process x <span class="fu">++</span> (xs <span class="fu">&gt;&gt;=</span> process)</code></p>
+<p><strong>E.</strong> <code class="sourceCode haskell">process x <span class="fu">:</span> (xs <span class="fu">&gt;&gt;=</span> process)</code></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="quiz-1">QUIZ</h2>
 <p>What does the following program evaluate to?</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1">quiz <span class="fu">=</span> <span class="kw">do</span> x <span class="ot">&lt;-</span> [<span class="st">&quot;cat&quot;</span>, <span class="st">&quot;dog&quot;</span>]</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">          y <span class="ot">&lt;-</span> [<span class="dv">0</span>, <span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">          return (x, y)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1">quiz <span class="fu">=</span> <span class="kw">do</span> x <span class="ot">&lt;-</span> [<span class="st">&quot;cat&quot;</span>, <span class="st">&quot;dog&quot;</span>]</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">          y <span class="ot">&lt;-</span> [<span class="dv">0</span>, <span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">          return (x, y)</a></code></pre></div>
 <p><strong>A.</strong> <code class="sourceCode haskell">[(<span class="st">&quot;cat&quot;</span>, <span class="dv">0</span>)]</code></p>
 <p><strong>B.</strong> <code class="sourceCode haskell">[(<span class="st">&quot;dog&quot;</span>, <span class="dv">1</span>)]</code></p>
 <p><strong>C.</strong> <code class="sourceCode haskell">[<span class="st">&quot;cat&quot;</span>, <span class="st">&quot;dog&quot;</span>, <span class="dv">0</span>, <span class="dv">1</span>]</code></p>
@@ -309,34 +316,34 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p><br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="whoa-behaves-like-a-for-loop">Whoa, behaves like a <code class="sourceCode haskell">for</code>-loop!</h2>
 <p>Lets work it out.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">do</span> {x <span class="ot">&lt;-</span> [<span class="st">&quot;cat&quot;</span>, <span class="st">&quot;dog&quot;</span>]; y <span class="ot">&lt;-</span> [<span class="dv">0</span>, <span class="dv">1</span>]; return (x, y)}</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="fu">==</span> [<span class="st">&quot;cat&quot;</span>, <span class="st">&quot;dog&quot;</span>] <span class="fu">&gt;&gt;=</span> (\x <span class="ot">-&gt;</span> [<span class="dv">0</span>, <span class="dv">1</span>] <span class="fu">&gt;&gt;=</span> (\y <span class="ot">-&gt;</span> return (x, y)))</a></code></pre></div>
-<p>Now lets break up the evaluation</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1">[<span class="dv">0</span>, <span class="dv">1</span>] <span class="fu">&gt;&gt;=</span> (\y <span class="ot">-&gt;</span> [(x, y)])</a>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">do</span> {x <span class="ot">&lt;-</span> [<span class="st">&quot;cat&quot;</span>, <span class="st">&quot;dog&quot;</span>]; y <span class="ot">&lt;-</span> [<span class="dv">0</span>, <span class="dv">1</span>]; return (x, y)}</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="fu">==&gt;</span>  ((\y <span class="ot">-&gt;</span> [(x, y)]) <span class="dv">0</span>) <span class="fu">++</span> ((\y <span class="ot">-&gt;</span> [(x, y)]) <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="fu">==&gt;</span> [(x, <span class="dv">0</span>)] <span class="fu">++</span> [(x, <span class="dv">1</span>)] </a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="fu">==&gt;</span> [(x, <span class="dv">0</span>), (x, <span class="dv">1</span>)] </a></code></pre></div>
-<p>So</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1">[<span class="st">&quot;cat&quot;</span>, <span class="st">&quot;dog&quot;</span>] <span class="fu">&gt;&gt;=</span> (\x <span class="ot">-&gt;</span> [(x, <span class="dv">0</span>), (x, <span class="dv">1</span>)])</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="fu">==</span> [<span class="st">&quot;cat&quot;</span>, <span class="st">&quot;dog&quot;</span>] <span class="fu">&gt;&gt;=</span> (\x <span class="ot">-&gt;</span> [<span class="dv">0</span>, <span class="dv">1</span>] <span class="fu">&gt;&gt;=</span> (\y <span class="ot">-&gt;</span> return (x, y)))</a></code></pre></div>
+<p>Now lets break up the evaluation</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1">[<span class="dv">0</span>, <span class="dv">1</span>] <span class="fu">&gt;&gt;=</span> (\y <span class="ot">-&gt;</span> [(x, y)])</a>
 <a class="sourceLine" id="cb9-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="fu">==&gt;</span> (\x <span class="ot">-&gt;</span> [(x, <span class="dv">0</span>), (x, <span class="dv">1</span>)]) <span class="st">&quot;cat&quot;</span>) <span class="fu">++</span> (\x <span class="ot">-&gt;</span> [(x, <span class="dv">0</span>), (x, <span class="dv">1</span>)]) <span class="st">&quot;dog&quot;</span>)</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="fu">==&gt;</span>  ((\y <span class="ot">-&gt;</span> [(x, y)]) <span class="dv">0</span>) <span class="fu">++</span> ((\y <span class="ot">-&gt;</span> [(x, y)]) <span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="fu">==&gt;</span> [(<span class="st">&quot;cat&quot;</span>, <span class="dv">0</span>), (<span class="st">&quot;cat&quot;</span>, <span class="dv">1</span>)] <span class="fu">++</span> [(<span class="st">&quot;dog&quot;</span>, <span class="dv">0</span>), (<span class="st">&quot;dog&quot;</span>, <span class="dv">1</span>)] </a>
+<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="fu">==&gt;</span> [(x, <span class="dv">0</span>)] <span class="fu">++</span> [(x, <span class="dv">1</span>)] </a>
 <a class="sourceLine" id="cb9-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="fu">==&gt;</span> [(<span class="st">&quot;cat&quot;</span>, <span class="dv">0</span>), (<span class="st">&quot;cat&quot;</span>, <span class="dv">1</span>), (<span class="st">&quot;dog&quot;</span>, <span class="dv">0</span>), (<span class="st">&quot;dog&quot;</span>, <span class="dv">1</span>)] </a></code></pre></div>
+<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="fu">==&gt;</span> [(x, <span class="dv">0</span>), (x, <span class="dv">1</span>)] </a></code></pre></div>
+<p>So</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1">[<span class="st">&quot;cat&quot;</span>, <span class="st">&quot;dog&quot;</span>] <span class="fu">&gt;&gt;=</span> (\x <span class="ot">-&gt;</span> [(x, <span class="dv">0</span>), (x, <span class="dv">1</span>)])</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="fu">==&gt;</span> (\x <span class="ot">-&gt;</span> [(x, <span class="dv">0</span>), (x, <span class="dv">1</span>)]) <span class="st">&quot;cat&quot;</span>) <span class="fu">++</span> (\x <span class="ot">-&gt;</span> [(x, <span class="dv">0</span>), (x, <span class="dv">1</span>)]) <span class="st">&quot;dog&quot;</span>)</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="fu">==&gt;</span> [(<span class="st">&quot;cat&quot;</span>, <span class="dv">0</span>), (<span class="st">&quot;cat&quot;</span>, <span class="dv">1</span>)] <span class="fu">++</span> [(<span class="st">&quot;dog&quot;</span>, <span class="dv">0</span>), (<span class="st">&quot;dog&quot;</span>, <span class="dv">1</span>)] </a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="fu">==&gt;</span> [(<span class="st">&quot;cat&quot;</span>, <span class="dv">0</span>), (<span class="st">&quot;cat&quot;</span>, <span class="dv">1</span>), (<span class="st">&quot;dog&quot;</span>, <span class="dv">0</span>), (<span class="st">&quot;dog&quot;</span>, <span class="dv">1</span>)] </a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
-<h2 id="quiz-1">QUIZ</h2>
+<h2 id="quiz-2">QUIZ</h2>
 <p>What does the following evaluate to?</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="ot">triples ::</span> [(<span class="dt">Int</span>, <span class="dt">Int</span>, <span class="dt">Int</span>)]</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">triples <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">    x <span class="ot">&lt;-</span> [<span class="dv">0</span>,<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">    y <span class="ot">&lt;-</span> [<span class="dv">10</span>,<span class="dv">11</span>]</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">    z <span class="ot">&lt;-</span> [<span class="dv">100</span>,<span class="dv">101</span>]</a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">    []</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="ot">triples ::</span> [(<span class="dt">Int</span>, <span class="dt">Int</span>, <span class="dt">Int</span>)]</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">triples <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">    x <span class="ot">&lt;-</span> [<span class="dv">0</span>,<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">    y <span class="ot">&lt;-</span> [<span class="dv">10</span>,<span class="dv">11</span>]</a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">    z <span class="ot">&lt;-</span> [<span class="dv">100</span>,<span class="dv">101</span>]</a>
+<a class="sourceLine" id="cb11-6" data-line-number="6">    []</a></code></pre></div>
 <p><strong>A.</strong> <code class="sourceCode haskell">[(<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">100</span>), (<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">101</span>),(<span class="dv">1</span>,<span class="dv">10</span>,<span class="dv">100</span>),(<span class="dv">1</span>,<span class="dv">10</span>,<span class="dv">101</span>),(<span class="dv">0</span>,<span class="dv">11</span>,<span class="dv">100</span>),(<span class="dv">0</span>,<span class="dv">11</span>,<span class="dv">101</span>)]</code></p>
 <p><strong>B.</strong> <code class="sourceCode haskell">[]</code></p>
 <p><strong>C.</strong> <code class="sourceCode haskell">[[]]</code></p>
@@ -353,29 +360,29 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <ul>
 <li><code class="sourceCode haskell">a</code>,<code class="sourceCode haskell">b</code>,<code class="sourceCode haskell">c</code> are between <code class="sourceCode haskell"><span class="dv">0</span><span class="fu">..</span>n</code></li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="ot">pyTriples ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [(<span class="dt">Int</span>, <span class="dt">Int</span>, <span class="dt">Int</span>)] </a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">pyTriples n <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">  a <span class="ot">&lt;-</span> <span class="fu">???</span></a>
-<a class="sourceLine" id="cb11-4" data-line-number="4">  b <span class="ot">&lt;-</span> <span class="fu">???</span></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">  c <span class="ot">&lt;-</span> <span class="fu">???</span></a>
-<a class="sourceLine" id="cb11-6" data-line-number="6">  <span class="fu">???</span></a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="ot">pyTriples ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [(<span class="dt">Int</span>, <span class="dt">Int</span>, <span class="dt">Int</span>)] </a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">pyTriples n <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">  a <span class="ot">&lt;-</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">  b <span class="ot">&lt;-</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">  c <span class="ot">&lt;-</span> <span class="fu">???</span></a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">  <span class="fu">???</span></a></code></pre></div>
 <p><strong>HINT:</strong> You can write <code class="sourceCode haskell">[i<span class="fu">..</span>j]</code> to generate the list of numbers between <code class="sourceCode haskell">i</code> and <code class="sourceCode haskell">j</code></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> [<span class="dv">0</span><span class="fu">..</span><span class="dv">5</span>]</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">[<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> [<span class="dv">0</span><span class="fu">..</span><span class="dv">5</span>]</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">[<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]</a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="using-the-list-monad">Using the List Monad</h2>
 <p>So lets implement a function</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="ot">bits ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [<span class="dt">String</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="ot">bits ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [<span class="dt">String</span>]</a></code></pre></div>
 <p>Such that</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> bits <span class="dv">0</span> </a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">[]</a>
-<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="fu">&gt;&gt;&gt;</span> bits <span class="dv">1</span></a>
-<a class="sourceLine" id="cb14-4" data-line-number="4">[<span class="st">&quot;0&quot;</span>, <span class="st">&quot;1&quot;</span>]</a>
-<a class="sourceLine" id="cb14-5" data-line-number="5"><span class="fu">&gt;&gt;&gt;</span> bits <span class="dv">2</span> </a>
-<a class="sourceLine" id="cb14-6" data-line-number="6">[<span class="st">&quot;00&quot;</span>, <span class="st">&quot;01&quot;</span>, <span class="st">&quot;10&quot;</span>, <span class="st">&quot;11&quot;</span>]</a>
-<a class="sourceLine" id="cb14-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb14-8" data-line-number="8"><span class="fu">&gt;&gt;&gt;</span> bits <span class="dv">3</span> </a>
-<a class="sourceLine" id="cb14-9" data-line-number="9">[<span class="st">&quot;000&quot;</span>, <span class="st">&quot;001&quot;</span>, <span class="st">&quot;010&quot;</span>, <span class="st">&quot;011&quot;</span>, <span class="st">&quot;100&quot;</span>, <span class="st">&quot;101&quot;</span>, <span class="st">&quot;110&quot;</span>, <span class="st">&quot;111&quot;</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> bits <span class="dv">0</span> </a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">[]</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="fu">&gt;&gt;&gt;</span> bits <span class="dv">1</span></a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">[<span class="st">&quot;0&quot;</span>, <span class="st">&quot;1&quot;</span>]</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="fu">&gt;&gt;&gt;</span> bits <span class="dv">2</span> </a>
+<a class="sourceLine" id="cb15-6" data-line-number="6">[<span class="st">&quot;00&quot;</span>, <span class="st">&quot;01&quot;</span>, <span class="st">&quot;10&quot;</span>, <span class="st">&quot;11&quot;</span>]</a>
+<a class="sourceLine" id="cb15-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb15-8" data-line-number="8"><span class="fu">&gt;&gt;&gt;</span> bits <span class="dv">3</span> </a>
+<a class="sourceLine" id="cb15-9" data-line-number="9">[<span class="st">&quot;000&quot;</span>, <span class="st">&quot;001&quot;</span>, <span class="st">&quot;010&quot;</span>, <span class="st">&quot;011&quot;</span>, <span class="st">&quot;100&quot;</span>, <span class="st">&quot;101&quot;</span>, <span class="st">&quot;110&quot;</span>, <span class="st">&quot;111&quot;</span>]</a></code></pre></div>
 <!-- 
 ```haskell
 bits 0 = return "" 

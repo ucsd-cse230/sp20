@@ -244,9 +244,8 @@ data Expr
 ## Some Example Expressions 
 
 ```haskell
-e1
 e1 = Plus  (Number 2) (Number 3)    -- 2 + 3
-e2 = Minus (Number 10) (Number 5)   -- 10 - 4
+e2 = Minus (Number 10) (Number 4)   -- 10 - 4
 e3 = Mult e1 e2                     -- (2 + 3) * (10 - 4)
 e4 = Div  e3 (Number 3)             -- ((2 + 3) * (10 - 4)) / 3 
 ```

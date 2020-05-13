@@ -122,20 +122,17 @@ Lets *generalize* the `Maybe` monad into a *List* monad!
 <br>
 <br>
 
-## EXERCISE 
+## A Monad Instance for Lists
 
-Can you implement the `Monad` instance for lists?
+Lets implement the `Monad` instance for lists?
 
 ```haskell
-instance Monad [] where
-    -- return :: a -> [a]
-    return x = ???
-
-    -- (>>=)  :: [a] -> (a -> [b]) -> [b]
-    []     >>= process = ???
-    (x:xs) >>= process = ???
+-- return :: a -> [a]
+return x = ???
 ```
 
+What's the only sensible implementation?
+
 <br>
 <br>
 <br>
@@ -147,6 +144,42 @@ instance Monad [] where
 <br>
 <br>
 <br>
+
+## QUIZ 
+
+
+How should we implement the `>>=` operator?
+
+```haskell
+-- (>>=)  :: [a] -> (a -> [b]) -> [b]
+[]     >>= process = [] 
+(x:xs) >>= process = ???
+```
+
+**A.** `xs`
+
+**B.** `process x`
+
+**C.** `process x >>= xs` 
+
+**D.** `process x ++ (xs >>= process)` 
+
+**E.** `process x : (xs >>= process)` 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
 
 ## QUIZ
 

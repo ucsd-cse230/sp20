@@ -340,11 +340,10 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb16-7" data-line-number="7">  <span class="kw">deriving</span> (<span class="dt">Show</span>)</a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="some-example-expressions">Some Example Expressions</h2>
-<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb17-1" data-line-number="1">e1</a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">e1 <span class="fu">=</span> <span class="dt">Plus</span>  (<span class="dt">Number</span> <span class="dv">2</span>) (<span class="dt">Number</span> <span class="dv">3</span>)    <span class="co">-- 2 + 3</span></a>
-<a class="sourceLine" id="cb17-3" data-line-number="3">e2 <span class="fu">=</span> <span class="dt">Minus</span> (<span class="dt">Number</span> <span class="dv">10</span>) (<span class="dt">Number</span> <span class="dv">5</span>)   <span class="co">-- 10 - 4</span></a>
-<a class="sourceLine" id="cb17-4" data-line-number="4">e3 <span class="fu">=</span> <span class="dt">Mult</span> e1 e2                     <span class="co">-- (2 + 3) * (10 - 4)</span></a>
-<a class="sourceLine" id="cb17-5" data-line-number="5">e4 <span class="fu">=</span> <span class="dt">Div</span>  e3 (<span class="dt">Number</span> <span class="dv">3</span>)             <span class="co">-- ((2 + 3) * (10 - 4)) / 3 </span></a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb17-1" data-line-number="1">e1 <span class="fu">=</span> <span class="dt">Plus</span>  (<span class="dt">Number</span> <span class="dv">2</span>) (<span class="dt">Number</span> <span class="dv">3</span>)    <span class="co">-- 2 + 3</span></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">e2 <span class="fu">=</span> <span class="dt">Minus</span> (<span class="dt">Number</span> <span class="dv">10</span>) (<span class="dt">Number</span> <span class="dv">4</span>)   <span class="co">-- 10 - 4</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">e3 <span class="fu">=</span> <span class="dt">Mult</span> e1 e2                     <span class="co">-- (2 + 3) * (10 - 4)</span></a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">e4 <span class="fu">=</span> <span class="dt">Div</span>  e3 (<span class="dt">Number</span> <span class="dv">3</span>)             <span class="co">-- ((2 + 3) * (10 - 4)) / 3 </span></a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="exercise-an-evaluator-for-expressions">EXERCISE: An Evaluator for Expressions</h2>
 <p>Fill in an implementation of <code class="sourceCode haskell">eval</code></p>
