@@ -122,13 +122,50 @@ Lets *generalize* the `Maybe` monad into a *List* monad!
 <br>
 <br>
 
+## QUIZ 
+
+Lets make lists an instance of `Monad` by:
+
+```haskell
+class Monad m where
+  return :: a -> m a
+  (>>=)  :: m a -> (a -> m b) -> m b
+
+instance Monad [] where 
+  return = returnForList
+  (>>=)  = bindForList
+```
+
+What must the type of `returnForList` be ?
+
+**A.** `[a]`
+
+**B.** `a -> a`
+
+**C.** `a -> [a]`
+
+**D.** `[a] -> a`
+
+**E.** `[a] -> [a]`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
 ## A Monad Instance for Lists
 
 Lets implement the `Monad` instance for lists?
 
 ```haskell
--- return :: a -> [a]
-return x = ???
+-- returnForList :: a -> [a]
+returnForList x = ???
 ```
 
 What's the only sensible implementation?
@@ -145,27 +182,78 @@ What's the only sensible implementation?
 <br>
 <br>
 
+
+
+## QUIZ
+
+Lets make lists an instance of `Monad` by:
+
+~~~~~{.haskell}
+class Monad m where 
+  return :: a -> m a
+  (>>=)  :: m a -> (a -> m b) -> m b
+
+instance Monad [] where 
+  return = returnForList
+  (>>=)  = bindForList
+~~~~~
+
+
+What must the type of `bindForList` be?
+
+**A.** `[a] -> [b] -> [b]` 
+
+**B.** `[a] -> (a -> b) -> [b]`
+
+**C.** `[a] -> (a -> [b]) -> b`
+
+**D.** `[a] -> (a -> [b]) -> [b]`
+
+**E.** `[a] -> [b]`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
 ## QUIZ 
 
-
-How should we implement the `>>=` operator?
+Which of the following is a valid
 
 ```haskell
--- (>>=)  :: [a] -> (a -> [b]) -> [b]
-[]     >>= process = [] 
-(x:xs) >>= process = ???
+bindForList :: [a] -> (a -> [b]) -> [b] 
+bindForList = bfl
+
+-- a
+bfl f []     = []
+bfl f (x:xs) = f x : bfl f xs
+
+-- b
+bfl f []     = []
+bfl f (x:xs) = f x ++ bfl f xs
+
+-- c
+bfl []     f = []
+bfl (x:xs) f = f x ++ bfl f xs
+
+-- d
+bfl []     f = []
+bfl (x:xs) f = f x : bfl f xs
+
+-- e
+bfl []     f = []
+bfl (x:xs) f = x : f xs
 ```
 
-**A.** `xs`
-
-**B.** `process x`
-
-**C.** `process x >>= xs` 
-
-**D.** `process x ++ (xs >>= process)` 
-
-**E.** `process x : (xs >>= process)` 
-
 <br>
 <br>
 <br>
@@ -179,7 +267,44 @@ How should we implement the `>>=` operator?
 <br>
 
 
+## The List Monad 
 
+Lets "run" the `>>=` on some inputs to see how it behaves!
+
+```haskell
+(>>=)  :: [a] -> (a -> [b]) -> [b]
+[]         >>= _ = [] 
+(x:xs)     >>= f = f x ++ (xs >>= f) 
+```
+
+
+```haskell
+[] >>= f  ==> []
+```
+
+```haskell
+[x3] >>= f  ==> f x3 ++ ([] >>= f)  ==> f x3
+```
+
+```haskell
+[x2,x3] >>= f  ==> f x2 ++ ([x3] >>= f)    ==> f x2 ++ f x3
+```
+
+```haskell
+[x1,x2,x3] >>= f  ==> f x1 ++ ([x2,x3] >>=f ) ==> f x1 ++ f x2 ++ f x3
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## QUIZ
 
@@ -255,6 +380,33 @@ So
 <br>
 <br>
 
+
+## QUIZ 
+
+What does `quiz` evaluate to?
+
+```haskell
+foo f xs = do
+  x <- xs
+  return (f x)
+
+quiz = foo (\n -> n*n)  [0,1,2,3]
+```
+
+**A.** `[0]`
+**B.** `[0,1,4,9]`
+**C.** `[9]`
+**D.** _Type Error_
+**E.** _Runtime Exception_
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 ## QUIZ 
 
 What does the following evaluate to?
@@ -290,9 +442,9 @@ triples = do
 
 ## EXERCISE: Using the List Monad
 
-A **Pythagorean Triple** is a 
+A **Pythagorean Triple** is a
 
-- triple of positive integers `a`, `b`, `c` 
+- triple of positive integers `a`, `b`, `c`
 - such that `a*a + b*b = c*c`
 
 Lets implement a function to return all triples where 
