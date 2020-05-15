@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveFunctor #-}
 
-module Lec_5_15_20 where
+module Lec_5_13_20 where
 
 import Prelude hiding (Monad)
 
