@@ -164,5 +164,240 @@ data ST a = STC (State -> (State, a))
 
 A *state transformer* is a function that
 
-* takes as input an **old** `State`
-* returns as output a **new** `State` and **value** `a`
+* takes as input an **old** `s :: State`
+* returns as output a **new** `s' :: State` and **value** `v :: a`
+
+![](/static/img/monad1.png){#fig:ST .align-center width=80%}
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Executing Transformers
+
+Lets write a function to _execute_ an `ST a`
+
+```haskell
+exec :: State -> ST a -> a
+exec = ???
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ
+
+What is the value of `quiz` ?
+
+```haskell
+st :: St [Int]
+st = STC (\n -> (n+3, [n, n+1, n+2]))
+
+quiz = exec 100 st
+```
+
+**A.** `103`
+
+**B.** `[100, 101, 102]`
+
+**C.** `(103, [100, 101, 102])`
+
+**D.** `[0, 1, 2]`
+
+**E.** Type error
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Lets Make State Transformer a Monad!
+
+```haskell
+instance Monad ST where
+    return :: a -> ST a
+    return = returnST
+
+    (>>=)  :: ST a -> (a -> ST b) -> ST b
+    (>>=) = bindST
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## EXERCISE: Implement `returnST`!
+
+What is a valid implementation of `returnST`?
+
+```haskell
+type State = Int
+data ST a  = STC (State -> (State, a))
+
+returnST :: a -> ST a
+returnST = ???
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## What is `returnST` *doing* ? 
+
+`returnST v` is a *state transformer* that ... ???
+
+<br>
+<br>
+<br>
+
+(Can someone suggest an explanation in English?)
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## HELP 
+
+Now, lets implement `bindST`!
+
+```haskell
+type State = Int
+
+data ST a  = STC (State -> (State, a))
+
+bindST :: ST a -> (a -> ST b) -> ST b
+bindST = ???
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## What is `returnST` *doing* ? 
+
+`returnST v` is a *state transformer* that ... ???
+
+<br>
+<br>
+<br>
+
+(Can someone suggest an explanation in English?)
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+## What is `returnST` *doing* ? 
+
+`returnST v` is a *state transformer* that ... ???
+
+<br>
+<br>
+<br>
+
+(Can someone suggest an explanation in English?)
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+## `bindST` lets us **sequence** state transformers
+
+
+`st >>= f` 
+
+1. Applies transformer `st` to an initial state `s`
+    - to get output `s'` and value `x` 
+
+2. Then applies function `f` to the resulting value `x`
+    - to get a _second_ transformer
+
+3. The _second_ transformer is applied to `s'`
+    - to get final `s''` and value `y` 
+
+**OVERALL:** Transform `s` to `s''` and produce value `y`     
+
+![](/static/img/monad4.png)
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+## Global Counter
