@@ -6,6 +6,7 @@ import Data.List
 import Hakyll
 import Text.Pandoc
 import Text.Pandoc.Walk (walk)
+import qualified Data.Map as M 
 
 --------------------------------------------------------------------------------
 main :: IO ()

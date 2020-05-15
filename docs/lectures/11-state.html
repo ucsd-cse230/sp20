@@ -641,10 +641,10 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p>Lets implement the <em>char-frequency counter</em> <code class="sourceCode haskell">charNext</code> as</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="ot">charNext ::</span> <span class="dt">Char</span> <span class="ot">-&gt;</span> <span class="dt">ST</span> (<span class="dt">Map</span> <span class="dt">Char</span> <span class="dt">Int</span>) <span class="dt">Int</span></a>
 <a class="sourceLine" id="cb48-2" data-line-number="2">charNext c <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb48-3" data-line-number="3">  m    <span class="ot">&lt;-</span> get                     <span class="co">-- get current freq-map</span></a>
-<a class="sourceLine" id="cb48-4" data-line-number="4">  <span class="kw">let</span> n <span class="fu">=</span> M.getWithDefault <span class="dv">0</span> c m  <span class="co">-- current freq for c (or 0)</span></a>
-<a class="sourceLine" id="cb48-5" data-line-number="5">  put (M.insert c (n<span class="fu">+</span><span class="dv">1</span>) m)        <span class="co">-- update freq for c</span></a>
-<a class="sourceLine" id="cb48-6" data-line-number="6">  return n                        <span class="co">-- return current as value</span></a></code></pre></div>
+<a class="sourceLine" id="cb48-3" data-line-number="3">  m    <span class="ot">&lt;-</span> get                      <span class="co">-- get current freq-map</span></a>
+<a class="sourceLine" id="cb48-4" data-line-number="4">  <span class="kw">let</span> n <span class="fu">=</span> M.findWithDefault <span class="dv">0</span> c m  <span class="co">-- current freq for c (or 0)</span></a>
+<a class="sourceLine" id="cb48-5" data-line-number="5">  put (M.insert c (n<span class="fu">+</span><span class="dv">1</span>) m)         <span class="co">-- update freq for c</span></a>
+<a class="sourceLine" id="cb48-6" data-line-number="6">  return n                         <span class="co">-- return current as value</span></a></code></pre></div>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="section"></h2>
 <h2 id="a-state-transformer-library">A State-Transformer Library</h2>

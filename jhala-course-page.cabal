@@ -19,4 +19,5 @@ executable homepage
   build-depends:       base,
                        hakyll,
                        pandoc,
-                       pandoc-types
+                       pandoc-types,
+                       containers

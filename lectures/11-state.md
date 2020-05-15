@@ -1002,10 +1002,10 @@ Lets implement the *char-frequency counter* `charNext` as
 ```haskell
 charNext :: Char -> ST (Map Char Int) Int
 charNext c = do
-  m    <- get                     -- get current freq-map
-  let n = M.getWithDefault 0 c m  -- current freq for c (or 0)
-  put (M.insert c (n+1) m)        -- update freq for c
-  return n                        -- return current as value
+  m    <- get                      -- get current freq-map
+  let n = M.findWithDefault 0 c m  -- current freq for c (or 0)
+  put (M.insert c (n+1) m)         -- update freq for c
+  return n                         -- return current as value
 ```
 
 <br>

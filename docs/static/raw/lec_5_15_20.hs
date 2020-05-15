@@ -1,65 +1,23 @@
 {-# LANGUAGE DeriveFunctor #-}
 
-module Lec_5_13_20 where
+module Lec_5_15_20 where
 
-import Prelude hiding (Monad)
+import qualified Data.Map as M
 
-data Expr
-  = Number Int            -- ^ 0,1,2,3,4
-  | Plus   Expr Expr      -- ^ e1 + e2
-  | Minus  Expr Expr      -- ^ e1 - e2
-  | Mult   Expr Expr      -- ^ e1 * e2
-  | Div    Expr Expr      -- ^ e1 / e2
-  deriving (Show)
-
--------------------------------------------------------------------------------
-e1 = Plus  (Number 2) (Number 3)    -- 2 + 3
-e2 = Minus (Number 10) (Number 4)   -- 10 - 4
-e3 = Mult e1 e2                     -- (2 + 3) * (10 - 4)
-e4 = Div  e3 (Number 3)             -- ((2 + 3) * (10 - 4)) / 3
--------------------------------------------------------------------------------
-
-eval :: Expr -> Int
-eval (Number x)    = x
-eval (Plus e1 e2)  = eval e1   +   eval e2
-eval (Minus e1 e2) = eval e1   -   eval e2
-eval (Mult e1 e2)  = eval e1   *   eval e2
-eval (Div e1 e2)   = eval e1 `div` eval e2
-
-evalR :: Expr -> Result Int
-evalR (Number x)    = Ok x
-evalR (Plus e1 e2)  = eval e1   +   eval e2
-evalR (Minus e1 e2) = eval e1   -   eval e2
-evalR (Mult e1 e2)  = eval e1   *   eval e2
-evalR (Div e1 e2)   = eval e1 `div` eval e2
-
--------------------------------------------------------------------------------
-exQuiz :: Expr
-exQuiz = (Div (Number 60) (Minus (Number 5) (Number 5)))
--------------------------------------------------------------------------------
-
--- >>> eval exQuiz
+data Tree a
+    = Leaf a
+    | Node (Tree a) (Tree a)
+    deriving (Eq, Show)
 
 
-
-
-
--------------------------------------------------------------------------------
-
-data Result a
-  = Ok a
-  | Error
-  deriving (Eq, Show, Functor)
-
--------------------------------------------------------------------------------
-
-instance Monad Result where
--- (>>=) :: Result a -> (a -> Result b) -> Result b
-  Error  >>= _       = Error
-  (Ok v) >>= process = process v
-
--- return :: a -> Result a
-  return v = Ok v
+charT :: Tree Char
+charT = Node 
+            (Node 
+                (Leaf 'a') 
+                (Leaf 'b')) 
+            (Node 
+                (Leaf 'c') 
+                (Leaf 'a'))
 
 
 
@@ -88,6 +46,9 @@ instance Monad Result where
 
 
 
+type State = Int
+data ST0 a = ST0C (State -> (State, a)) 
+  deriving (Functor)
 
 
 
@@ -96,9 +57,61 @@ instance Monad Result where
 
 
 
+-- >>> charT
+-- Node (Node (Leaf 'a') (Leaf 'b')) (Node (Leaf 'c') (Leaf 'a'))
+--
 
 
 
-instance Applicative Result where
+data ST s a = STC (s -> (s, a)) 
+  deriving (Functor)
+
+get :: ST s s
+get = STC (\s -> (s, s))
+
+put :: s -> ST s ()
+put s = STC (\_ -> (s, ()))
+
+instance Monad (ST s) where
+  return x = STC (\s -> (s, x))
+  st >>= f = STC (\s -> let (s', x) = runState st s 
+                        in runState (f x) s')
+
+runState :: ST s a -> s -> (s, a)
+runState (STC f) s = f s
+
+evalState :: ST s a -> s -> a
+evalState st s = snd (runState st s) 
+
+charNext :: Char -> ST (M.Map Char Int) Int
+charNext c = do
+  m    <- get                     -- get current freq-map
+  let n = M.findWithDefault 0 c m  -- current freq for c (or 0)
+  put (M.insert c (n+1) m)        -- update freq for c
+  return n                        -- return current as valu
+
+type MapST a = ST (M.Map Char Int)  a 
+
+keyHelperS :: Tree Char -> MapST (Tree (Char, Int))
+keyHelperS (Leaf c) = do 
+    n <- charNext c
+    return (Leaf (c, n))
+
+keyHelperS (Node l r) = do
+    l' <- keyHelperS l
+    r' <- keyHelperS r
+    return (Node l' r')
+
+keyLabelS :: Tree Char -> Tree (Char, Int)
+keyLabelS t = evalState (keyHelperS t) M.empty 
+
+
+
+instance Applicative ST0 where
+  pure  = undefined
+  (<*>) = undefined
+
+
+instance Applicative (ST s) where
   pure  = undefined
   (<*>) = undefined
