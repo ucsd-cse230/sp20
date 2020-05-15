@@ -91,20 +91,27 @@ helper n (Node l r) = (n'', Node l' r')
 Now, modify `label` so that you get new numbers for each `letter` so,
 
 ```haskell
->>> label (Node (Node (Leaf 'a') (Leaf 'b')) (Node (Leaf 'c') (Leaf 'a')))
+>>> keyLabel (Node (Node (Leaf 'a') (Leaf 'b')) (Node (Leaf 'c') (Leaf 'a')))
     (Node
         (Node (Leaf ('a', 0)) (Leaf ('b', 0))) 
         (Node (Leaf ('c', 0)) (Leaf ('a', 1))))
 ```
 
-That is, a _separate_ counter for each `a`, `b`, `c` etc.
+That is, a _separate_ counter for each *key* `a`, `b`, `c` etc.
 
 **HINT** Use the following `Map k v` type
 
 ```haskell
-empty         :: M.Map Char Int
-lookupDefault :: Int -> Char -> M.Map Char Int -> Int
-insert        :: Char -> Int -> M.Map Char Int -> M.Map Char Int
+-- | The empty Map
+empty :: Map k v
+
+-- | 'insert key val m` returns a new map that extends 'm'
+--   by setting `key` to `val`
+insert :: k -> v -> Map k v -> Map k v
+
+-- | 'lookupDefault def key m' returns the value of `key`
+--   in `m`  or `def` if `key` is not defined
+lookupDefault :: v -> k -> Map k v -> v
 ```
 
 <br>
@@ -399,5 +406,383 @@ bindST = ???
 <br>
 <br>
 
+## Lets Implement a Global Counter
 
-## Global Counter
+The (counter) `State` is an `Int`
+
+```haskell
+type State = Int
+```
+
+A function that _increments_ the counter to _return_ the `next` `Int`.
+
+```haskell
+next :: ST Int
+next = STC (\old -> let new = old + 1 in (new, old))
+```
+
+`next` is a *state transformer* that that returns `Int` values 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ
+
+Recall that
+
+```haskell
+exec :: State -> ST a -> a
+exec s (STC st) = snd (st s)
+
+next :: ST Int
+next = STC (\n -> (n+1, n))
+```
+
+What does `quiz` evaluate to?
+
+```haskell
+quiz = exec 100 next
+```
+
+**A.** `100`
+
+**B.** `101`
+
+**C.** `0`
+
+**D.** `1`
+
+**E.** `(101, 100)`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ
+
+Recall the definitions
+
+```haskell
+exec :: State -> ST a -> a
+exec s (STC st) = snd (st s)
+
+next :: ST Int
+next = STC (\n -> (n+1, n))
+```
+
+Now suppose we have
+
+```haskell
+wtf1 = ST Int
+wtf1 = next >>= \n ->
+         return n
+```
+
+What does `quiz` evaluate to?
+
+```haskell
+quiz = exec 100 wtf1
+```
+
+**A.** `100`
+
+**B.** `101`
+
+**C.** `0`
+
+**D.** `1`
+
+**E.** `(101, 100)`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+## QUIZ 
+
+Consider a function `wtf2` defined as
+
+```haskell
+wtf2 = next >>= \n1 ->
+         next >>= \n2 ->
+           next >>= \n3 ->
+             return [n1, n2, n3]
+```
+
+What does `quiz` evaluate to?
+
+```haskell
+quiz = exec 100 wtf
+```
+
+**A.** Type Error!
+
+**B.** [100, 100, 100]
+
+**C.** [0, 0, 0]
+
+**D.** [100, 101, 102]
+
+**E.** [102, 102, 102]
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Chaining Transformers
+
+`>>=` lets us *chain* transformers into *one* big transformer!
+
+So we can define a function to _increment the counter by 3_
+
+```haskell
+-- Increment the counter by 3
+next3 :: ST [Int, Int]
+next3 = next >>= \n1 ->
+          next >>= \n2 ->
+            next >>= \n3 ->
+                return [n1,n2,n3]
+```
+
+And then sequence it _twice_ to get
+
+```haskell
+next6 :: ST [Int]
+next6 = next3 >>= \ns_1_2_3 ->
+          next3 >>= \ns_4_5_6 ->
+            return (ns_123 ++ ns_4_5_6)
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Lets `do` the above examples
+
+Remember, `do` is just nice syntax for the above!
+
+```haskell
+-- Increment the counter by 3
+next3 :: ST [Int, Int]
+next3 = do
+  n1 <- next
+  n2 <- next
+  n3 <- next
+  return [n1,n2,n3]
+```
+
+And then sequence it _twice_ to get
+
+```haskell
+next6 :: ST [Int]
+next6 = do
+  ns_123 <- next3
+  ns_456 <- next3
+  return (ns_123 ++ ns_4_5_6)
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Labeling a Tree with a "Global Counter"
+
+Lets **rewrite** our `Tree` labeler with `ST`
+
+```haskell
+helperS :: Tree a -> ST (Tree (a, Int))
+helperS = ???
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+### Wow, compare to the old code! 
+
+```haskell
+helper :: Int -> (Int, Tree (a, Int))
+helper n (Leaf x)   = (n+1, Leaf (x, n))
+helper n (Node l r) = (n'', Node l' r')
+  where 
+      (n', l')      = helper n l
+      (n'', r')     = helper n' r
+```
+
+Avoid worrying about propagating the "right" counters 
+
+- Automatically handled by `ST` monad instance! 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Executing the Transformer
+
+In the **old** code we _called_ the helper with an _initial_ counter  `0`
+
+```haskell
+label :: Tree a -> Tree (a, Int)
+label t       = t'
+  where
+      (_, t') = helper 0 t
+```
+
+In the **new** code what should we do?
+
+```haskell
+helperS :: Tree a -> ST (Tree (a, Int))
+helperS = ...
+
+labelS :: Tree a -> Tree (a, Int)
+labelS = ???
+```
+
+Now, we should be able to `exec` the `labelS` transformer
+
+```haskell
+>>> labelS (Node (Node (Leaf 'a') (Leaf 'b')) (Leaf 'c'))
+(Node (Node (Leaf ('a', 0)) (Leaf ('b', 1))) (Leaf ('c', 2)))
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## How to implement `keyLabel`?
+
+So far, we _hardwired_ an `Int` counter as our `State`
+
+```haskell
+type State = Int
+
+data ST a  = STC (State -> (State, a))
+```
+
+Have to _reimplement_ the monad if we want a _different_ state?
+
+- e.g. `Map Char Int` to implement `keyLabel`
+
+**Don't Repeat Yourself!**
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## A Generic State Transformer
+
+Don't have _separate_ types for `IntList` and `CharList` 
+
+- Define a generic list `[a]` where `a` is a _type parameter_
+
+- Instantiate `a` to get `[Int]` and `[Char]`
+
+Similarly, reuse `ST` with a **type** parameter!
+
+```haskell
+data ST s a = STC (s -> (s, a))
+```
+
+- **State** is represented by type `s`
+- **Return Value** is the type `a` (as before).
+
+We make the above a monad by declaring it to be
+an instance of the `monad` typeclass
+
+```haskell
+instance Monad (ST s) where
+  return x = STC (\s -> (x, s))
+  st >>= f = STC (\s -> let (x, s') = apply st s 
+                        in apply (f x) s')
+
+apply :: ST s a -> s -> (a, s)
+apply (STC f) s = f s
+```
+
+(*exactly* the same code as `returnST` and `bindST`)
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Getting and Setting State 
+
+Accessing and Updat
