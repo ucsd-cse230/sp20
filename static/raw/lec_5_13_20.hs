@@ -2,7 +2,7 @@
 
 module Lec_5_13_20 where
 
-import Prelude hiding (Monad)
+-- import Prelude hiding (Monad)
 
 data Expr
   = Number Int            -- ^ 0,1,2,3,4
@@ -26,13 +26,6 @@ eval (Minus e1 e2) = eval e1   -   eval e2
 eval (Mult e1 e2)  = eval e1   *   eval e2
 eval (Div e1 e2)   = eval e1 `div` eval e2
 
-evalR :: Expr -> Result Int
-evalR (Number x)    = Ok x
-evalR (Plus e1 e2)  = eval e1   +   eval e2
-evalR (Minus e1 e2) = eval e1   -   eval e2
-evalR (Mult e1 e2)  = eval e1   *   eval e2
-evalR (Div e1 e2)   = eval e1 `div` eval e2
-
 -------------------------------------------------------------------------------
 exQuiz :: Expr
 exQuiz = (Div (Number 60) (Minus (Number 5) (Number 5)))
@@ -48,7 +41,7 @@ exQuiz = (Div (Number 60) (Minus (Number 5) (Number 5)))
 
 data Result a
   = Ok a
-  | Error
+  | Error String
   deriving (Eq, Show, Functor)
 
 -------------------------------------------------------------------------------
@@ -63,7 +56,29 @@ instance Monad Result where
 
 
 
+evalR :: Expr -> Result Int
+evalR (Number x)    = Ok x
+evalR (Plus e1 e2)  = do n1 <- eval e1   +   eval e2
+evalR (Minus e1 e2) = eval e1   -   eval e2
+evalR (Mult e1 e2)  = eval e1   *   eval e2
+evalR (Div e1 e2)   = eval e1 `div` eval e2
 
+evalR :: Expr -> Result Int
+evalR (Number n)    = return n
+evalR (Plus e1 e2)  = do v1 <- eval e1
+                         v2 <- eval e2
+                         return (v1 + v2)
+evalR (Minus e1 e2) = do v1 <- eval e1
+                         v2 <- eval e2
+                         return (v1 + v2)
+evalR (Mult e1 e2)  = do v1 <- eval e1
+                         v2 <- eval e2
+                         return (v1 + v2)
+evalR (Div e1 e2)  = do v1 <- eval e1
+                        v2 <- eval e2
+                        if v2 == 0
+                          then Error ("yikes dbz:" ++ show e2)
+                          else return (v1 `div` v2)
 
 
 
