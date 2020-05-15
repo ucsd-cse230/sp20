@@ -128,7 +128,13 @@ Lets implement the `Monad` instance for lists?
 
 ```haskell
 -- return :: a -> [a]
-return x = ???
+return x = [x]
+
+-- (>>=) ::
+
+do { for x in [0,1,2]: 
+       for y in ["cat", "dog", "horse"]:
+         yield (x, y) }
 ```
 
 What's the only sensible implementation?
