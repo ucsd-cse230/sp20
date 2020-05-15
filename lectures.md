@@ -32,7 +32,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/8*      | ""                              |                           | [pdf][08-classes-B]  | [code][lec_5_8]  |
 | *5/11*     | Functors & Monads               | [html][09-monads]         | [pdf][09-monads-A]   | [code][lec_5_11] | 
 | *5/13*     | ""                              |                           |                      | [code][lec_5_13] |
-| *5/15*     | State Transformer Monad         | [html][11-state]          | [pdf][11-state-A]    | [code][lec_5_15] |
+| *5/15*     | State Transformers              | [html][11-state]          | [pdf][11-state-A]    | [code][lec_5_15] |
 |            | List Monad                      | [html][10-list]           |                      |                  |
 |            | Parser Combinators              |                           |                      |                  |
 |            | Transformers                    |                           |                      |                  | 
