@@ -31,8 +31,9 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/6*      | Typeclasses                     | [html][08-typeclasses]    | [pdf][08-classes-A]  | [code][lec_5_6]  |
 | *5/8*      | ""                              |                           | [pdf][08-classes-B]  | [code][lec_5_8]  |
 | *5/11*     | Functors & Monads               | [html][09-monads]         | [pdf][09-monads-A]   | [code][lec_5_11] | 
+| *5/13*     | ""                              |                           |                      | [code][lec_5_13] |
+| *5/15*     | State Transformer Monad         | [html][11-state]          | [pdf][11-state-A]    | [code][lec_5_15] |
 |            | List Monad                      | [html][10-list]           |                      |                  |
-|            | State Monad                     | [html][11-state]          |                      |                  |
 |            | Parser Combinators              |                           |                      |                  |
 |            | Transformers                    |                           |                      |                  | 
 |            | Concurrency / STM / Async       |                           |                      |                  |
@@ -87,8 +88,9 @@ Liquid    = 3
 [lec_5_8]: static/raw/lec_5_8_20.hs
 [09-monads-A]: static/raw/09-monads-A.pdf
 [lec_5_11]: static/raw/lec_5_11_20.hs
-
-
+[11-state-A]: static/raw/11-state-A.pdf
+[lec_5_13]: static/raw/lec_5_13_20.hs
+[lec_5_15]: static/raw/lec_5_15_20.hs
 
 [05-higher-order]: lectures/05-higher-order.html 
 [06-poly-data]: lectures/06-poly-data.html    
@@ -96,7 +98,7 @@ Liquid    = 3
 [08-typeclasses]: lectures/08-typeclasses.html  
 [09-monads]: lectures/09-monads.html
 [10-list]: lectures/10-list.html
-
+[11-state]: lectures/11-state.html
 
 
 
