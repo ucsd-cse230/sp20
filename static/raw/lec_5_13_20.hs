@@ -32,9 +32,8 @@ exQuiz = (Div (Number 60) (Minus (Number 5) (Number 5)))
 -------------------------------------------------------------------------------
 
 -- >>> eval exQuiz
-
-
-
+-- *** Exception: divide by zero
+--
 
 
 -------------------------------------------------------------------------------
@@ -48,39 +47,33 @@ data Result a
 
 instance Monad Result where
 -- (>>=) :: Result a -> (a -> Result b) -> Result b
-  Error  >>= _       = Error
-  (Ok v) >>= process = process v
+  Error s  >>= _      = Error s
+  (Ok v)  >>= process = process v
 
 -- return :: a -> Result a
   return v = Ok v
 
-
-
-evalR :: Expr -> Result Int
-evalR (Number x)    = Ok x
-evalR (Plus e1 e2)  = do n1 <- eval e1   +   eval e2
-evalR (Minus e1 e2) = eval e1   -   eval e2
-evalR (Mult e1 e2)  = eval e1   *   eval e2
-evalR (Div e1 e2)   = eval e1 `div` eval e2
-
 evalR :: Expr -> Result Int
 evalR (Number n)    = return n
-evalR (Plus e1 e2)  = do v1 <- eval e1
-                         v2 <- eval e2
+evalR (Plus e1 e2)  = do v1 <- evalR e1
+                         v2 <- evalR e2
                          return (v1 + v2)
-evalR (Minus e1 e2) = do v1 <- eval e1
-                         v2 <- eval e2
-                         return (v1 + v2)
-evalR (Mult e1 e2)  = do v1 <- eval e1
-                         v2 <- eval e2
-                         return (v1 + v2)
-evalR (Div e1 e2)  = do v1 <- eval e1
-                        v2 <- eval e2
+evalR (Minus e1 e2) = do v1 <- evalR e1
+                         v2 <- evalR e2
+                         return (v1 - v2)
+evalR (Mult e1 e2)  = do v1 <- evalR e1
+                         v2 <- evalR e2
+                         return (v1 * v2)
+evalR (Div e1 e2)  = do v1 <- evalR e1
+                        v2 <- evalR e2
                         if v2 == 0
                           then Error ("yikes dbz:" ++ show e2)
                           else return (v1 `div` v2)
 
 
+-- >>> evalR exQuiz
+-- Error "yikes dbz:Minus (Number 5) (Number 5)"
+--
 
 
 
