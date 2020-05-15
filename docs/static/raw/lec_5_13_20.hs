@@ -37,6 +37,12 @@ exQuiz = (Div (Number 60) (Minus (Number 5) (Number 5)))
 
 
 -------------------------------------------------------------------------------
+{- 
+data Maybe a 
+  = Just a 
+  | Nothing
+-}
+
 
 data Result a
   = Ok a
@@ -44,6 +50,22 @@ data Result a
   deriving (Eq, Show, Functor)
 
 -------------------------------------------------------------------------------
+
+{- 
+class Monad m where
+  (>>=)  :: m a -> (a -> m b) -> m b
+  return :: a -> m a 
+
+foo1 >>= \x1  -> 
+  foo2 >>= \x2 -> 
+    foo3 >>= \x3 -> 
+      bar
+
+do x1 <- foo1
+   x2 <- foo2
+   x3 <- foo3
+   bar 
+-}
 
 instance Monad Result where
 -- (>>=) :: Result a -> (a -> Result b) -> Result b
