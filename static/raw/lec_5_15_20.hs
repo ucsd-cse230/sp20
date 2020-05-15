@@ -117,17 +117,21 @@ returnST :: a -> ST0 a
 returnST v = ST0C (\s -> (s, v)) 
 
 bindST :: ST0 a -> (a -> ST0 b) -> ST0 b
-bindST (ST0C st) f 
-  = ST0C (\s -> let (s', v_of_type_a) = st s
-                    ST0C stb          = f v_of_type_a 
-                    (newState, v_of_type_b) = stb s'
+bindST sta f 
+  = ST0C (\s -> let (s1, a)  = runState sta s 
+                    stb      = f a 
+                    (s2, b)  = runState stb s1  
                 in
-                    (newState, v_of_type_b)
+                    (s2, b)
          )
+
+runState :: ST0 a -> State -> (State, a)
+runState (ST0C f) s = f s
 
 instance Monad ST0 where
   return = returnST
   (>>=)  = bindST
+
 
 
 st :: ST0 [Int]
