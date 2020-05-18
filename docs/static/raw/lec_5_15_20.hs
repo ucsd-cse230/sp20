@@ -133,7 +133,6 @@ instance Monad ST0 where
   (>>=)  = bindST
 
 
-
 st :: ST0 [Int]
 st = ST0C (\n -> (n+3, [n, (n+1), (n+2)]))
              -- n   = old-state :: Int
