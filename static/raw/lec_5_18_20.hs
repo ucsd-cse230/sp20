@@ -97,7 +97,6 @@ st1 = ST0C (\n -> (n+3, [show n, show (n+1), show (n+2)]))
 
 --------------------------------------------------------
 
-
 runState :: ST0 a -> State -> (State, a)
 runState (ST0C f) s = f s
 
@@ -116,6 +115,10 @@ wtf1 = do n <- nextq      -- n := 1
 -- [1000]
 --
 
+nextS :: ST0 String
+nextS = ST0C (\s -> (s+1, show s))
+
+quizS = evalState (next >>= (\n -> return [n])) 1
 
 wtf2 :: ST0 [Int]
 wtf2 = nextq  >>= \n0 ->
@@ -124,10 +127,8 @@ wtf2 = nextq  >>= \n0 ->
              return [n0, n1, n2]
 
 
-
-
 -- >>> evalState wtf2 1
--- [1000,2000,666,4000,5000]
+-- [1000,2000,3000]
 --
 
 {- 

@@ -392,20 +392,33 @@ bindST = ???
 ## `bindST` lets us **sequence** state transformers
 
 
+```haskell
+(>>=) :: ST0 a -> (a -> ST0 b) -> ST0 b
+sta >>= f = STC (\s -> 
+                    let (s', va)  = runState sta s 
+                        stb       = f va
+                        (s'', vb) = runState stb s'
+                    in 
+                        (s'', vb)
+                )
+
+
+```
+
 `st >>= f` 
 
 1. Applies transformer `st` to an initial state `s`
-    - to get output `s'` and value `x` 
+    - to get output `s'` and value `va` 
 
-2. Then applies function `f` to the resulting value `x`
+2. Then applies function `f` to the resulting value `va`
     - to get a _second_ transformer
 
 3. The _second_ transformer is applied to `s'`
-    - to get final `s''` and value `y` 
+    - to get final `s''` and value `vb` 
 
-**OVERALL:** Transform `s` to `s''` and produce value `y`     
+**OVERALL:** Transform `s` to `s''` and produce value `vb`     
 
-![](/static/img/monad4.png)
+![](/static/img/bind-0.png)
 
 <br>
 <br>
@@ -429,11 +442,11 @@ type State = Int
 A function that _increments_ the counter to _return_ the `next` `Int`.
 
 ```haskell
-next :: ST Int
-next = STC (\old -> let new = old + 1 in (new, old))
+next :: ST String
+next = STC (\s -> (s+1, show s))
 ```
 
-`next` is a *state transformer* that that returns `Int` values 
+`next` is a *state transformer* that that returns `String` values 
 
 <br>
 <br>
@@ -455,8 +468,8 @@ Recall that
 evalState :: State -> ST a -> a
 evalState s (STC st) = snd (st s)
 
-next :: ST Int
-next = STC (\n -> (n+1, n))
+next :: ST String
+next = STC (\s -> (s+1, show s))
 ```
 
 What does `quiz` evaluate to?
@@ -465,15 +478,15 @@ What does `quiz` evaluate to?
 quiz = evalState 100 next
 ```
 
-**A.** `100`
+**A.** `"100"`
 
-**B.** `101`
+**B.** `"101"`
 
-**C.** `0`
+**C.** `"0"`
 
-**D.** `1`
+**D.** `"1"`
 
-**E.** `(101, 100)`
+**E.** `(101, "100")`
 
 <br>
 <br>
@@ -496,8 +509,8 @@ Recall the definitions
 evalState :: State -> ST a -> a
 evalState s (STC st) = snd (st s)
 
-next :: ST Int
-next = STC (\n -> (n+1, n))
+next :: ST String
+next = STC (\s -> (s+1, show s))
 ```
 
 Now suppose we have
@@ -536,6 +549,49 @@ quiz = evalState 100 wtf1
 <br>
 <br>
 <br>
+
+## Example
+
+
+![](/static/img/bind-1.png)
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+Riyadh Moosa 
+-
+
+
+## Example
+
+
+![](/static/img/bind-2.png)
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 
 
 ## QUIZ 
