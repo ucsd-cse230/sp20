@@ -733,9 +733,76 @@ quiz2 = runParser (\c -> c == 'h') "yellow"
 <br>
 <br>
 
+## Parsing Alphabets and Numerics 
 
+We can now use `satP` to write 
 
+```haskell
+-- parse ONLY the Char c
+char :: Parser Char
+char c = satP (\c' -> c == c')
 
+-- parse ANY ALPHABET 
+alphaCharP :: Parser Char
+alphaCharP = satP isAlpha
+
+-- parse ANY NUMERIC DIGIT
+digitCharP :: Parser Char
+digitCharP = satP isDigit
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ 
+
+We can parse a single `Int` digit
+
+```haskell
+digitIntP :: Parser Int
+digitIntP = do
+  c <- digitCharP      -- parse the Char c
+  return (read [c])   -- convert Char to Int
+```
+
+What is the result of 
+
+```haskell
+quiz1 = runParser digitIntP "92"
+quiz2 = runParser digitIntP "cat"
+```
+
+|       | `quiz1`           | `quiz2`          | 
+|------:|------------------:|-----------------:| 
+| **A** | `[]`              | `[]`             |
+| **B** | `[('9', "at")]`   | `[('c', "at")]`  |
+| **C** | `[(9, "at")]`     | `[]`             |
+| **D** | `[]`              | `[('c', "at")]`  |
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## EXERCISE 
+
+Use `char` to writ
 
 [2]: http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf
 [3]: http://www.haskell.org/haskellwiki/Parsec
