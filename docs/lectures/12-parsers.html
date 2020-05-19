@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <!--
+      loads the http over https ssl -
+      welcome to my website!
+
+	this theme is based off the Ice & Fire theme created by Lucas Gatsas
+      https://www.twitter.com/LucasGatsas
+      www.lucasgatsas.ch - switzerland.
+  -->
+
+
+<!-- Microsoft Internet Explorer documentMode compatMode setting IE Modus -->
+<script type="text/javascript">
+var IE = null;
+if (window.navigator.appName == "Microsoft Internet Explorer") {
+  if (document.documentMode) {
+
+    IE = document.documentMode;
+    } else {
+
+        IE = 5;
+          if (document.compatMode) {
+      if (document.compatMode == "CSS1Compat")
+      IE = 11;
+      }
+    }
+  }
+</script>
+
+    <meta charset="utf-8">
+    <!-- X-UA -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=11" />
+    <link rel="author" title="Ranjit Jhala" href="http://ranjitjhala.github.io" />
+
+    <meta name="google" content="notranslate" />
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- index ROBOTS follow -->
+    <meta name="robots" content="index, follow" />
+    <!-- Site Desciption -->
+    <meta name="description" content="UCSD CSE 230">
+    <!-- Site Desciption -->
+    <meta name="keywords" content="haskell, refinement types, liquid types, formal methods, type systems">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://ucsd-cse230.github.io/sp20/static/img/ico.png" type="image/x-icon" />
+    <!-- Blog Title -->
+    <title>cse230</title>
+
+    <!--     <title>{% if page.title %}{{ page.title }} - {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+-->
+    <!-- Property Metas -->
+    <meta property="og:image" content="https://ucsd-cse230.github.io/sp20/static/img/ix.png" />
+    <meta property="og:title" content="UCSD CSE 230" />
+    <meta property="og:site_name" content="UCSD CSE 230" />
+    <!-- Canonical -->
+    <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseUrl | prepend: site.url }}">
+    <!-- StyleSheet -->
+    <link rel="stylesheet" href="https://ucsd-cse230.github.io/sp20/static/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://ucsd-cse230.github.io/sp20/static/css/spaceg.stylesheets.css"> -->
+    <link rel="stylesheet" href="https://ucsd-cse230.github.io/sp20/static/css/ronacher.css" type="text/css">
+
+    <link rel="stylesheet" href="https://ucsd-cse230.github.io/sp20/static/css/syntax.css">
+    <link rel="stylesheet" href="https://ucsd-cse230.github.io/sp20/static/css/liquid-light.css">
+
+    <!-- Fonts
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+    -->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+	#preloader {position:fixed;top:0;left:0;right:0;bottom:0;background-color:#fff; /* change if the mask should have another color then white */z-index:99; /* makes sure it stays on top */}
+	#status {width:200px;height:200px;position:absolute;left:50%; /* centers the loading animation horizontally one the screen */top:50%; /* centers the loading animation vertically one the screen */background-image:url("/static/img/preloader.gif"); /* path to your loading animation */background-repeat:no-repeat;background-position:center;margin:-100px 0 0 -100px; /* is width and height divided by two */}
+	ul, ol {margin-top: 0;margin-bottom: 10px;}
+	.navbar-inverse {background-color: #FFF;border-color: #FFFFFF;}
+</style>
+<!--link rel="stylesheet" href="https://ucsd-cse230.github.io/sp20/static/css/prettify.css"-->
+<style>
+  /* HEADER IMAGE */
+  header.intro-header {background: #6f5499;background: no-repeat center center;background-attachment: scroll;-webkit-background-size: cover;-moz-background-size: cover;background-size: cover;-o-background-size: cover;}
+
+	/* Preloader */#preloader {position:fixed;top:0;left:0;right:0;bottom:0;background-color:#fff; /* change if the mask should have another color then white */z-index:99; /* makes sure it stays on top */}
+	#status {width:200px;height:200px;position:absolute;left:50%; /* centers the loading animation horizontally one the screen */top:50%; /* centers the loading animation vertically one the screen */background-image:; /* path to your loading animation */background-repeat:no-repeat;background-position:center;margin:-100px 0 0 -100px; /* is width and height divided by two */}
+	li {list-style: none;}
+            body.modal-open
+            {overflow: hidden;padding-right: 0px;
+        }
+	article li {list-style: inherit;}
+	article .figure {text-align: center}
+    </style>
+    <!-- end Loading front stylesheet here -->
+    </head>
+
+    <body>
+	    
+	<!-- 	
+        <div id="preloader">
+	    <div id="status">
+	    </div>
+	</div>  
+	-->
+	<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://ucsd-cse230.github.io/sp20" id="blog-title-left-top">cse230</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="https://ucsd-cse230.github.io/sp20/calendar.html">Calendar</a></li>
+                <li><a href="https://ucsd-cse230.github.io/sp20/contact.html">Contact</a></li>
+                <li><a href="https://ucsd-cse230.github.io/sp20/grades.html">Grades</a></li>
+                <li><a href="https://ucsd-cse230.github.io/sp20/lectures.html">Lectures</a></li>
+                <li><a href="https://ucsd-cse230.github.io/sp20/assignments.html">Assignments</a></li>
+                <li><a href="https://ucsd-cse230.github.io/sp20/links.html">Links</a></li>
+                <li><a href="https://www.piazza.com/class/k8anl5ns5bldp" id="roundbutton" target="_blank"><i class="fa fa-twitter"></i>Piazza</a></li>
+                <li><a href="https://canvas.ucsd.edu/courses/12823" id="roundbutton" target="_blank"><i class="fa fa-twitter"></i>Canvas</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<!-- Portfolio Modals -->
+    <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true" style="padding-right:0px; overflow: hidden;">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h1 class="font-style-inline-small-h1">Ranjit Jhala</h1>
+                            <hr class="star-primary">
+                            <img src="https://ucsd-cse230.github.io/sp20/static/img/ico.png" class="img-responsive img-centered" alt title>
+                            <p class="font-style-inline-small">
+                                <a href="https://www.twitter.com/ranjitjhala" target="_blank">follow me</a>. <br>
+                                <a href="https://www.github.com/ranjitjhala" target="_blank">    <i class="fa fa-github" id="spaceg-social-modal"></i> </a>
+                                <a href="https://www.twitter.com/ranjitjhala" target="_blank"><i class="fa fa-twitter" id="spaceg-social-modal"></i> </a>
+                                <a href="https://plus.google.com/u/0/104385825850161331469" target="_blank"> <i class="fa fa-google-plus" id="spaceg-social-modal"></i></a>
+                            </p>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Menu Modals Add New Sa.21.Feb.2015 03:22:25 -->
+    <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true" style="padding-right:0px; overflow: hidden;">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h1 class="font-style-inline-small-h1">Ranjit Jhala</h1>
+                            <hr class="star-primary">
+                            <p class="font-style-inline-small">
+                              <a href="https://www.twitter.com/ranjitjhala" target="_blank">follow</a>. <br>
+                              <a href="https://www.github.com/ranjitjhala" target="_blank">    <i class="fa fa-github" id="spaceg-social-modal"></i> </a>
+                              <li><a href="https://ucsd-cse230.github.io/sp20/calendar.html">Calendar</a></li>
+                              <li><a href="https://ucsd-cse230.github.io/sp20/contact.html">Contact</a></li>
+                              <li><a href="https://ucsd-cse230.github.io/sp20/grades.html">Grades</a></li>
+                              <li><a href="https://ucsd-cse230.github.io/sp20/lectures.html">Lectures</a></li>
+                              <li><a href="https://ucsd-cse230.github.io/sp20/assignments.html">Assignments</a></li>
+                              <li><a href="https://ucsd-cse230.github.io/sp20/links.html">Links</a></li>
+                              <li><a href="https://www.piazza.com/class/k8anl5ns5bldp" id="roundbutton" target="_blank"><i class="fa fa-twitter"></i>Piazza</a></li>
+                              <li><a href="https://canvas.ucsd.edu/courses/12823" id="roundbutton" target="_blank"><i class="fa fa-twitter"></i>Canvas</a></li>
+                            </p>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        <div id="content">
+            <!-- Post Header -->
+    <header class="intro-header" style="background-image: url('https://ucsd-cse230.github.io/sp20/static/img/books.jpg')" alt title>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Parser Combinators</h1>
+                    
+                    <span class="meta">
+		    
+		    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+
+
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+			<p>Before we continue, a word from our sponsors:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1">		<span class="fu">**</span><span class="dt">Don't</span> <span class="dt">Fear</span> <span class="dt">Monads</span><span class="fu">**</span></a></code></pre></div>
+<p>They are simply an (extremely versatile) abstraction, like <code class="sourceCode haskell">map</code> or <code class="sourceCode haskell">fold</code>.</p>
+<h2 id="what-is-a-parser">What is a Parser?</h2>
+<p>A parser is a piece of software that takes a raw <code class="sourceCode haskell"><span class="dt">String</span></code> (or sequence of bytes) and returns some structured object, for example, a list of options, an XML tree or JSON object, a program’s Abstract Syntax Tree and so on. Parsing is one of the most basic computational tasks. <em>Every</em> serious software system has a parser tucked away somewhere inside, for example</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1">        <span class="dt">System</span>    <span class="dt">Parses</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">--------------    ------------------------------</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"> <span class="dt">Shell</span> <span class="dt">Scripts</span>    <span class="dt">Command</span><span class="fu">-</span>line options</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">      <span class="dt">Browsers</span>    <span class="dt">HTML</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">         <span class="dt">Games</span>    <span class="dt">Level</span> descriptors</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">       <span class="dt">Routers</span>    <span class="dt">Packets</span></a></code></pre></div>
+<p>(Indeed I defy you to find any serious system that <em>does not</em> do some parsing somewhere!)</p>
+<p>The simplest and most accurate way to think of a parser is as a function</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">type</span> <span class="dt">Parser</span> <span class="fu">=</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">StructuredObject</span></a></code></pre></div>
+<h2 id="composing-parsers">Composing Parsers</h2>
+<p>The usual way to build a parser is by specifying a grammar and using a parser generator (eg yacc, bison, antlr) to create the actual parsing function. While elegant, one major limitation of the grammar based approach is its lack of modularity. For example, suppose I have two kinds of primitive values <code class="sourceCode haskell"><span class="dt">Thingy</span></code> and <code class="sourceCode haskell"><span class="dt">Whatsit</span></code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="dt">Thingy</span> <span class="fu">:</span> rule 	{ action } </a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">;</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="dt">Whatsit</span> <span class="fu">:</span> rule  { action }</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">;</a></code></pre></div>
+<p>If you want a parser for <em>sequences of</em> <code class="sourceCode haskell"><span class="dt">Thingy</span></code> and <code class="sourceCode haskell"><span class="dt">Whatsit</span></code> we have to painstakingly duplicate the rules as</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="dt">Thingies</span> <span class="fu">:</span> <span class="dt">Thingy</span> <span class="dt">Thingies</span>  { <span class="fu">...</span> } </a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">           <span class="dt">EmptyThingy</span>      { <span class="fu">...</span> }</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">;</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="dt">Whatsits</span> <span class="fu">:</span> <span class="dt">Whatsit</span> <span class="dt">Whatsits</span> { <span class="fu">...</span> }</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">           <span class="dt">EmptyWhatsit</span>     { <span class="fu">...</span> }</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">;</a></code></pre></div>
+<p>This makes sub-parsers hard to reuse. Next, we will see how to <em>compose</em> mini-parsers for sub-values to get bigger parsers for complex values.</p>
+<p>To do so, we will generalize the above parser type a little bit, by noting that a (sub-)parser need not (indeed, will not) consume consume <em>all</em> of its input, and so we can simply have the parser return the unconsumed input</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">type</span> <span class="dt">Parser</span> <span class="fu">=</span> <span class="dt">String</span> <span class="ot">-&gt;</span> (<span class="dt">StructuredObject</span>, <span class="dt">String</span>) </a></code></pre></div>
+<p>Of course, it would be silly to have different types for parsers for different kinds of objects, and so we can make it a parameterized type</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">type</span> <span class="dt">Parser</span> a <span class="fu">=</span> <span class="dt">String</span> <span class="ot">-&gt;</span> (a, <span class="dt">String</span>) </a></code></pre></div>
+<p>One last generalization: the parser could return multiple results, for example, we may want to parse the string</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="st">&quot;2 - 3 - 4&quot;</span></a></code></pre></div>
+<p>either as</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="dt">Minus</span> (<span class="dt">Minus</span> <span class="dv">2</span> <span class="dv">3</span>) <span class="dv">4</span></a></code></pre></div>
+<p>or as</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="dt">Minus</span> <span class="dv">2</span> (<span class="dt">Minus</span> <span class="dv">3</span> <span class="dv">4</span>)</a></code></pre></div>
+<p>So, we can have our parsers return a <em>list</em> of possible results (where the empty list corresponds to a failure to parse.)</p>
+
+<p>The above is simply the parser (<em>cough</em> action) the actual parsing is done by</p>
+
+<p>Lets build some parsers!</p>
+<h2 id="parse-a-single-character">Parse A Single character</h2>
+<h2 id="quiz">QUIZ</h2>
+<p>Recall</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">newtype</span> <span class="dt">Parser</span> a <span class="fu">=</span> <span class="dt">P</span> (<span class="dt">String</span> <span class="ot">-&gt;</span> [(a, <span class="dt">String</span>)])</a></code></pre></div>
+<p>Which of the following is a valid single-character-parser that returns the <strong>first</strong> <code class="sourceCode haskell"><span class="dt">Char</span></code> from a string (if one exists.)</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co">-- a</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">oneChar <span class="fu">=</span> <span class="dt">P</span> <span class="fu">$</span> \cs <span class="ot">-&gt;</span> head cs</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="co">-- b</span></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">oneChar <span class="fu">=</span> <span class="dt">P</span> <span class="fu">$</span> \<span class="kw">case</span> <span class="ot">-&gt;</span> {[] <span class="ot">-&gt;</span> [('', []) <span class="fu">|</span> c<span class="fu">:</span>cs <span class="ot">-&gt;</span> (c, cs)}</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="co">-- c</span></a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">oneChar <span class="fu">=</span> <span class="dt">P</span> <span class="fu">$</span> \cs <span class="ot">-&gt;</span> (head cs, tail cs)</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb12-10" data-line-number="10"><span class="co">-- d</span></a>
+<a class="sourceLine" id="cb12-11" data-line-number="11">oneChar <span class="fu">=</span> <span class="dt">P</span> <span class="fu">$</span> \cs <span class="ot">-&gt;</span> [(head cs, tail cs)]</a>
+<a class="sourceLine" id="cb12-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb12-13" data-line-number="13"><span class="co">-- e</span></a>
+<a class="sourceLine" id="cb12-14" data-line-number="14">oneChar <span class="fu">=</span> <span class="dt">P</span> <span class="fu">$</span> \<span class="kw">case</span> <span class="ot">-&gt;</span> { [] <span class="ot">-&gt;</span> [] <span class="fu">|</span> cs <span class="ot">-&gt;</span> [(head cs, tail cs)]}</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"></a></code></pre></div>
+<p>Yes, we can!</p>
+<p>\begin{code} oneChar :: Parser Char oneChar = P (-&gt; case cs of c:cs’ -&gt; [(c, cs’)] _ -&gt; []) \end{code}</p>
+<p>Lets run the parser</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse oneChar <span class="st">&quot;hey!&quot;</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">[(<span class="ch">'h'</span>,<span class="st">&quot;ey!&quot;</span>)]</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">ghci<span class="fu">&gt;</span> doParse oneChar <span class="st">&quot;&quot;</span></a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">[]</a></code></pre></div>
+<p>Now we can write another parser that grabs a <strong>pair</strong> of <code class="sourceCode haskell"><span class="dt">Char</span></code> values</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="ot">twoChar ::</span> <span class="dt">Parser</span> (<span class="dt">Char</span>, <span class="dt">Char</span>)</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">twoChar  <span class="fu">=</span> <span class="dt">P</span> (\cs <span class="ot">-&gt;</span> <span class="kw">case</span> cs <span class="kw">of</span></a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">             c1<span class="fu">:</span>c2<span class="fu">:</span>cs' <span class="ot">-&gt;</span> [((c1, c2), cs')]</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">             _         <span class="ot">-&gt;</span> [])</a></code></pre></div>
+<p>Lets run the parser</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb16-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse twoChar <span class="st">&quot;hey!&quot;</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">[((<span class="ch">'h'</span>, <span class="ch">'e'</span>), <span class="st">&quot;y!&quot;</span>)]</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb16-4" data-line-number="4">ghci<span class="fu">&gt;</span> doParse twoChar <span class="st">&quot;h&quot;</span></a>
+<a class="sourceLine" id="cb16-5" data-line-number="5">[]</a></code></pre></div>
+<h2 id="parser-composition">Parser Composition</h2>
+<h2 id="quiz-1">QUIZ</h2>
+<p>Recall</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="ot">twoChar ::</span> <span class="dt">Parser</span> (<span class="dt">Char</span>, <span class="dt">Char</span>)</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">twoChar  <span class="fu">=</span> <span class="dt">P</span> (\cs <span class="ot">-&gt;</span> <span class="kw">case</span> cs <span class="kw">of</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">             c1<span class="fu">:</span>c2<span class="fu">:</span>cs' <span class="ot">-&gt;</span> [((c1, c2), cs')]</a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">             _         <span class="ot">-&gt;</span> [])</a></code></pre></div>
+<p>Suppose we had some <code class="sourceCode haskell">foo</code> such that behaved <strong>identically</strong> to <code class="sourceCode haskell">twoChar</code>.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb18-1" data-line-number="1">twoChar' <span class="fu">=</span> foo oneChar oneChar </a></code></pre></div>
+<p>What must the type of <code class="sourceCode haskell">foo</code> be?</p>
+<ol type="a">
+<li><code class="sourceCode haskell"><span class="dt">Parser</span> (<span class="dt">Char</span>, <span class="dt">Char</span>)</code></li>
+<li><code class="sourceCode haskell"><span class="dt">Parser</span> <span class="dt">Char</span> <span class="ot">-&gt;</span> <span class="dt">Parser</span> (<span class="dt">Char</span>, <span class="dt">Char</span>)</code></li>
+<li><code class="sourceCode haskell"><span class="dt">Parser</span> a <span class="ot">-&gt;</span> <span class="dt">Parser</span> a <span class="ot">-&gt;</span> <span class="dt">Parser</span> (a, a)</code></li>
+<li><code class="sourceCode haskell"><span class="dt">Parser</span> a <span class="ot">-&gt;</span> <span class="dt">Parser</span> b <span class="ot">-&gt;</span> <span class="dt">Parser</span> (a, b)</code></li>
+<li><code class="sourceCode haskell"><span class="dt">Parser</span> a <span class="ot">-&gt;</span> <span class="dt">Parser</span> (a, a)</code></li>
+</ol>
+<div class="sourceCode" id="cb19"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb19-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb19-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb19-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb19-5" data-line-number="5"></a></code></pre></div>
+<p>Indeed, <code class="sourceCode haskell">foo</code> is a <strong>parser combinator</strong> that takes two parsers and returns a new parser that returns a pair of values:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="ot">pairP ::</span>  <span class="dt">Parser</span> a <span class="ot">-&gt;</span> <span class="dt">Parser</span> b <span class="ot">-&gt;</span> <span class="dt">Parser</span> (a, b)</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">pairP p1 p2 <span class="fu">=</span> <span class="dt">P</span> (\cs <span class="ot">-&gt;</span> </a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">  [((x,y), cs'') <span class="fu">|</span> (x, cs' ) <span class="ot">&lt;-</span> doParse p1 cs, </a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">                   (y, cs'') <span class="ot">&lt;-</span> doParse p2 cs']</a>
+<a class="sourceLine" id="cb20-5" data-line-number="5">  )</a></code></pre></div>
+<p>Now we can more cleanly write:</p>
+
+<p>which would run like this</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb21-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse twoChar <span class="st">&quot;hey!&quot;</span></a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">[((<span class="ch">'h'</span>,<span class="ch">'e'</span>), <span class="st">&quot;y!&quot;</span>)]</a></code></pre></div>
+<p><strong>EXERCISE:</strong> Can you explain why we get the following behavior?</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb22-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse twoChar <span class="st">&quot;h&quot;</span></a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">[]</a></code></pre></div>
+<p>Now we could keep doing this, but often to go forward, it is helpful to step back and take a look at the bigger picture.</p>
+<p>Here’s the the <strong>type</strong> of a parser</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">newtype</span> <span class="dt">Parser</span> a <span class="fu">=</span> <span class="dt">P</span> (<span class="dt">String</span> <span class="ot">-&gt;</span> [(a, <span class="dt">String</span>)])</a></code></pre></div>
+<p>it should remind you of something else, remember this?</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">type</span> <span class="dt">ST</span> a <span class="fu">=</span> <span class="dt">S</span> (<span class="dt">State</span> <span class="ot">-&gt;</span> (a, <span class="dt">State</span>))</a></code></pre></div>
+<p><em>(drumroll…)</em></p>
+<h2 id="parser-is-a-monad">Parser is A Monad</h2>
+<p>Indeed, a parser, like a state transformer, <a href="http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf">is a monad!</a> if you squint just the right way.</p>
+<p>We need to define the <code class="sourceCode haskell">return</code> and <code class="sourceCode haskell"><span class="fu">&gt;&gt;=</span></code> functions.</p>
+<p>The bind is a bit tricky, but we just saw it above!</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="fu">:</span><span class="kw">type</span> bindP </a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="ot">bindP ::</span> <span class="dt">Parser</span> a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">Parser</span> b) <span class="ot">-&gt;</span> <span class="dt">Parser</span> b</a></code></pre></div>
+<p>so, we need to suck the <code class="sourceCode haskell">a</code> values out of the first parser and invoke the second parser with them on the remaining part of the string.</p>
+<h2 id="quiz-2">QUIZ</h2>
+<p>Recall</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="ot">doParse           ::</span> <span class="dt">Parser</span> a <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> [(a, <span class="dt">String</span>)]</a>
+<a class="sourceLine" id="cb26-2" data-line-number="2">doParse (<span class="dt">P</span> p) str <span class="fu">=</span> p str</a></code></pre></div>
+<p>Consider the function <code class="sourceCode haskell">bindP</code>:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="ot">bindP ::</span> <span class="dt">Parser</span> a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">Parser</span> b) <span class="ot">-&gt;</span> <span class="dt">Parser</span> b</a>
+<a class="sourceLine" id="cb27-2" data-line-number="2">bindP p1 fp2 <span class="fu">=</span> <span class="dt">P</span> <span class="fu">$</span> \cs <span class="ot">-&gt;</span> [(y, cs'') <span class="fu">|</span> (x, cs')  <span class="ot">&lt;-</span> undefined <span class="co">-- 1 </span></a>
+<a class="sourceLine" id="cb27-3" data-line-number="3">                                     , (y, cs'') <span class="ot">&lt;-</span> undefined <span class="co">-- 2</span></a>
+<a class="sourceLine" id="cb27-4" data-line-number="4">                          ]</a></code></pre></div>
+<p>What shall we fill in for the two <code class="sourceCode haskell">undefined</code> to get the code to typecheck?</p>
+<ol type="a">
+<li><code class="sourceCode haskell">p1 cs</code> and <code class="sourceCode haskell">fp2 x cs</code></li>
+<li><code class="sourceCode haskell">doParse p1 cs</code> and <code class="sourceCode haskell">doParse (fp2 x) cs'</code></li>
+<li><code class="sourceCode haskell">p1 cs</code> and <code class="sourceCode haskell">fp2 x cs'</code></li>
+<li><code class="sourceCode haskell">doParse p1 cs</code> and <code class="sourceCode haskell">doParse (fp2 x) cs</code></li>
+<li><code class="sourceCode haskell">doParse p1 cs</code> and <code class="sourceCode haskell">doParse fp2 x cs'</code></li>
+</ol>
+<div class="sourceCode" id="cb28"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb28-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb28-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb28-4" data-line-number="4"></a></code></pre></div>
+<p>Indeed, we can define the <code class="sourceCode haskell">bindP</code> function for <code class="sourceCode haskell"><span class="dt">Parser</span></code>s as:</p>
+
+<p>Seems a little silly to write the above, but its helpful to build up richer parsers like the following which parses a <code class="sourceCode haskell"><span class="dt">Char</span></code> <em>if</em> it satisfies a predicate <code class="sourceCode haskell">p</code></p>
+
+<p>we can write some simple parsers for particular characters</p>
+
+<div class="sourceCode" id="cb29"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb29-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse (satP (<span class="ch">'h'</span> <span class="fu">==</span>)) <span class="st">&quot;mugatu&quot;</span></a>
+<a class="sourceLine" id="cb29-2" data-line-number="2">[]</a>
+<a class="sourceLine" id="cb29-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb29-4" data-line-number="4">ghci<span class="fu">&gt;</span> doParse (satP (<span class="ch">'h'</span> <span class="fu">==</span>)) <span class="st">&quot;hello&quot;</span></a>
+<a class="sourceLine" id="cb29-5" data-line-number="5">[(<span class="ch">'h'</span>,<span class="st">&quot;ello&quot;</span>)]</a></code></pre></div>
+<p>The following parse alphabet and numeric characters respectively</p>
+
+<p>and this little fellow returns the first digit in a string as an <code class="sourceCode haskell"><span class="dt">Int</span></code></p>
+
+<p>which works like so</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb30-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse digitInt <span class="st">&quot;92&quot;</span></a>
+<a class="sourceLine" id="cb30-2" data-line-number="2">[(<span class="dv">9</span>,<span class="st">&quot;2&quot;</span>)]</a>
+<a class="sourceLine" id="cb30-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb30-4" data-line-number="4">ghci<span class="fu">&gt;</span> doParse digitInt <span class="st">&quot;cat&quot;</span></a>
+<a class="sourceLine" id="cb30-5" data-line-number="5">[]</a></code></pre></div>
+<p>Finally, this parser will parse only a particular <code class="sourceCode haskell"><span class="dt">Char</span></code> passed in as input</p>
+
+<p><strong>EXERCISE:</strong> Write a function <code class="sourceCode haskell"><span class="ot">strP ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Parser</span> <span class="dt">String</span></code> such that <code class="sourceCode haskell">strP s</code> parses <strong>exactly</strong> the string <code class="sourceCode haskell">s</code> and nothing else, that is,</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb31-1" data-line-number="1">ghci<span class="fu">&gt;</span> dogeP <span class="fu">=</span> strP <span class="st">&quot;doge&quot;</span></a>
+<a class="sourceLine" id="cb31-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb31-3" data-line-number="3">ghci<span class="fu">&gt;</span> doParse dogeP <span class="st">&quot;dogerel&quot;</span></a>
+<a class="sourceLine" id="cb31-4" data-line-number="4">[(<span class="st">&quot;doge&quot;</span>, <span class="st">&quot;rel&quot;</span>)]</a>
+<a class="sourceLine" id="cb31-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb31-6" data-line-number="6">ghci<span class="fu">&gt;</span> doParse dogeP <span class="st">&quot;doggoneit&quot;</span></a>
+<a class="sourceLine" id="cb31-7" data-line-number="7">[]</a></code></pre></div>
+<h2 id="a-nondeterministic-choice-combinator">A Nondeterministic Choice Combinator</h2>
+<p>Next, lets write a combinator that takes two sub-parsers and <strong>non-deterministically chooses</strong> between them.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="ot">chooseP ::</span> <span class="dt">Parser</span> a <span class="ot">-&gt;</span> <span class="dt">Parser</span> a <span class="ot">-&gt;</span> <span class="dt">Parser</span> a</a></code></pre></div>
+<p>That is, we want <code class="sourceCode haskell">chooseP p1 p2</code> to return a succesful parse if <em>either</em> <code class="sourceCode haskell">p1</code> or <code class="sourceCode haskell">p2</code> succeeds.</p>
+<p>We can use <code class="sourceCode haskell">chooseP</code> to build a parser that returns either an alphabet or a numeric character</p>
+
+<p>After defining the above, we should get something like:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb33-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse alphaNumChar <span class="st">&quot;cat&quot;</span></a>
+<a class="sourceLine" id="cb33-2" data-line-number="2">[(<span class="ch">'c'</span>, <span class="st">&quot;at&quot;</span>)]</a>
+<a class="sourceLine" id="cb33-3" data-line-number="3">ghci<span class="fu">&gt;</span> doParse alphaNumChar <span class="st">&quot;2cat&quot;</span></a>
+<a class="sourceLine" id="cb33-4" data-line-number="4">[(<span class="ch">'2'</span>, <span class="st">&quot;cat&quot;</span>)]</a>
+<a class="sourceLine" id="cb33-5" data-line-number="5">ghci<span class="fu">&gt;</span> doParse alphaNumChar <span class="st">&quot;230&quot;</span></a>
+<a class="sourceLine" id="cb33-6" data-line-number="6">[(<span class="ch">'2'</span>, <span class="st">&quot;30&quot;</span>)]</a></code></pre></div>
+<p><strong>QUIZ</strong></p>
+<p>How would we go about encoding <strong>choice</strong> in our parsers?</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="co">-- a </span></a>
+<a class="sourceLine" id="cb34-2" data-line-number="2">p1 <span class="ot">`chooseP`</span> p2 <span class="fu">=</span> <span class="kw">do</span> xs <span class="ot">&lt;-</span> p1</a>
+<a class="sourceLine" id="cb34-3" data-line-number="3">                     ys <span class="ot">&lt;-</span> p2</a>
+<a class="sourceLine" id="cb34-4" data-line-number="4">                     return (x1 <span class="fu">++</span> x2) </a>
+<a class="sourceLine" id="cb34-5" data-line-number="5"><span class="co">-- b</span></a>
+<a class="sourceLine" id="cb34-6" data-line-number="6">p1 <span class="ot">`chooseP`</span> p2 <span class="fu">=</span> <span class="kw">do</span> xs <span class="ot">&lt;-</span> p1 </a>
+<a class="sourceLine" id="cb34-7" data-line-number="7">                     <span class="kw">case</span> xs <span class="kw">of</span> </a>
+<a class="sourceLine" id="cb34-8" data-line-number="8">                       [] <span class="ot">-&gt;</span> p2 </a>
+<a class="sourceLine" id="cb34-9" data-line-number="9">                       _  <span class="ot">-&gt;</span> return xs</a>
+<a class="sourceLine" id="cb34-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb34-11" data-line-number="11"><span class="co">-- c</span></a>
+<a class="sourceLine" id="cb34-12" data-line-number="12">p1 <span class="ot">`chooseP`</span> p2 <span class="fu">=</span> <span class="dt">P</span> <span class="fu">$</span> \cs <span class="ot">-&gt;</span> doParse p1 cs <span class="fu">++</span> doParse p2 cs</a>
+<a class="sourceLine" id="cb34-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb34-14" data-line-number="14"><span class="co">-- d</span></a>
+<a class="sourceLine" id="cb34-15" data-line-number="15">p1 <span class="ot">`chooseP`</span> p2 <span class="fu">=</span> <span class="dt">P</span> <span class="fu">$</span> \cs <span class="ot">-&gt;</span> <span class="kw">case</span> doParse p1 cs <span class="kw">of</span></a>
+<a class="sourceLine" id="cb34-16" data-line-number="16">                               [] <span class="ot">-&gt;</span> doParse p2 cs</a>
+<a class="sourceLine" id="cb34-17" data-line-number="17">                               rs <span class="ot">-&gt;</span> rs</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb35-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb35-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb35-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb35-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb35-5" data-line-number="5"></a></code></pre></div>
+
+<p>Thus, what is even nicer is that if <em>both</em> parsers succeed, you end up with all the results.</p>
+<p>Here’s a parser that grabs <code class="sourceCode haskell">n</code> characters from the input</p>
+
+<p><strong>DO IN CLASS</strong> How would you nuke the nasty recursion from <code class="sourceCode haskell">grabn</code> ?</p>
+<p><strong>QUIZ</strong></p>
+<p>Lets now use our choice combinator to define:</p>
+
+<p>What does the following evaluate to?</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb36-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse foo <span class="st">&quot;mickeymouse&quot;</span></a></code></pre></div>
+<ol type="a">
+<li><code class="sourceCode haskell">[]</code></li>
+<li><code class="sourceCode haskell">[(<span class="st">&quot;mi&quot;</span>,<span class="st">&quot;ckeymouse&quot;</span>)]</code></li>
+<li><code class="sourceCode haskell">[(<span class="st">&quot;mick&quot;</span>,<span class="st">&quot;eymouse&quot;</span>)]</code></li>
+<li><code class="sourceCode haskell">[(<span class="st">&quot;mi&quot;</span>,<span class="st">&quot;ckeymouse&quot;</span>),(<span class="st">&quot;mick&quot;</span>,<span class="st">&quot;eymouse&quot;</span>)]</code></li>
+<li><code class="sourceCode haskell">[(<span class="st">&quot;mick&quot;</span>,<span class="st">&quot;eymouse&quot;</span>), (<span class="st">&quot;mi&quot;</span>,<span class="st">&quot;ckeymouse&quot;</span>)]</code></li>
+</ol>
+<div class="sourceCode" id="cb37"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb37-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb37-2" data-line-number="2"></a></code></pre></div>
+<p>and only one result if thats possible</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb38-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse grab2or4 <span class="st">&quot;mic&quot;</span></a>
+<a class="sourceLine" id="cb38-2" data-line-number="2">[(<span class="st">&quot;mi&quot;</span>,<span class="st">&quot;c&quot;</span>)]</a>
+<a class="sourceLine" id="cb38-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb38-4" data-line-number="4">ghci<span class="fu">&gt;</span> doParse grab2or4 <span class="st">&quot;m&quot;</span></a>
+<a class="sourceLine" id="cb38-5" data-line-number="5">[]</a></code></pre></div>
+<p>Even with the rudimentary parsers we have at our disposal, we can start doing some rather interesting things. For example, here is a little calculator. First, we parse the operation</p>
+
+<p><strong>DO IN CLASS</strong> Can you guess the type of the above parser?</p>
+<p>Next, we can parse the expression</p>
+<p>\begin{code} calc = do x &lt;- digitInt op &lt;- intOp y &lt;- digitInt return $ x <code class="sourceCode haskell">op</code> y \end{code}</p>
+<p>which, when run, will both parse and calculate</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb39-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse calc <span class="st">&quot;8/2&quot;</span></a>
+<a class="sourceLine" id="cb39-2" data-line-number="2">[(<span class="dv">4</span>,<span class="st">&quot;&quot;</span>)]</a>
+<a class="sourceLine" id="cb39-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb39-4" data-line-number="4">ghci<span class="fu">&gt;</span> doParse calc <span class="st">&quot;8+2cat&quot;</span></a>
+<a class="sourceLine" id="cb39-5" data-line-number="5">[(<span class="dv">10</span>,<span class="st">&quot;cat&quot;</span>)]</a>
+<a class="sourceLine" id="cb39-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb39-7" data-line-number="7">ghci<span class="fu">&gt;</span> doParse calc <span class="st">&quot;8/2cat&quot;</span></a>
+<a class="sourceLine" id="cb39-8" data-line-number="8">[(<span class="dv">4</span>,<span class="st">&quot;cat&quot;</span>)]</a>
+<a class="sourceLine" id="cb39-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb39-10" data-line-number="10">ghci<span class="fu">&gt;</span> doParse calc <span class="st">&quot;8-2cat&quot;</span></a>
+<a class="sourceLine" id="cb39-11" data-line-number="11">[(<span class="dv">6</span>,<span class="st">&quot;cat&quot;</span>)]</a>
+<a class="sourceLine" id="cb39-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb39-13" data-line-number="13">ghci<span class="fu">&gt;</span> doParse calc <span class="st">&quot;8*2cat&quot;</span></a>
+<a class="sourceLine" id="cb39-14" data-line-number="14">[(<span class="dv">16</span>,<span class="st">&quot;cat&quot;</span>)]</a></code></pre></div>
+<p><strong>QUIZ</strong></p>
+<p>What does the following return:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb40-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse calc <span class="st">&quot;99bottles&quot;</span></a></code></pre></div>
+<ol type="a">
+<li>Type error</li>
+<li><code class="sourceCode haskell">[]</code></li>
+<li><code class="sourceCode haskell">[(<span class="dv">9</span>, <span class="st">&quot;9bottles&quot;</span>)]</code></li>
+<li><code class="sourceCode haskell">[(<span class="dv">99</span>, <span class="st">&quot;bottles&quot;</span>)]</code></li>
+<li>Run-time exception</li>
+</ol>
+<h2 id="recursive-parsing">Recursive Parsing</h2>
+<p>To start parsing interesting things, we need to add recursion to our combinators. For example, its all very well to parse individual characters (as in <code class="sourceCode haskell">char</code> above) but it would a lot more swell if we could grab particular <code class="sourceCode haskell"><span class="dt">String</span></code> tokens.</p>
+<p>Lets try to write it!</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="ot">string ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Parser</span> <span class="dt">String</span></a>
+<a class="sourceLine" id="cb41-2" data-line-number="2">string <span class="st">&quot;&quot;</span>     <span class="fu">=</span> return <span class="st">&quot;&quot;</span></a>
+<a class="sourceLine" id="cb41-3" data-line-number="3">string (c<span class="fu">:</span>cs) <span class="fu">=</span> <span class="kw">do</span> char c</a>
+<a class="sourceLine" id="cb41-4" data-line-number="4">                   string cs</a>
+<a class="sourceLine" id="cb41-5" data-line-number="5">                   return (c<span class="fu">:</span>cs)</a></code></pre></div>
+<p><strong>DO IN CLASS</strong> Ewww! Is that explicit recursion ?! Lets try again (can you spot the pattern)</p>
+
+<p>Much better!</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb42-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse (string <span class="st">&quot;mic&quot;</span>) <span class="st">&quot;mickeyMouse&quot;</span></a>
+<a class="sourceLine" id="cb42-2" data-line-number="2">[(<span class="st">&quot;mic&quot;</span>,<span class="st">&quot;keyMouse&quot;</span>)]</a>
+<a class="sourceLine" id="cb42-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb42-4" data-line-number="4">ghci<span class="fu">&gt;</span> doParse (string <span class="st">&quot;mic&quot;</span>) <span class="st">&quot;donald duck&quot;</span></a>
+<a class="sourceLine" id="cb42-5" data-line-number="5">[]</a></code></pre></div>
+<p>Ok, I guess that wasn’t really recursive then after all!</p>
+<p>Lets try again.</p>
+<p>Lets write a combinator that takes a parser <code class="sourceCode haskell">p</code> that returns an <code class="sourceCode haskell">a</code> and returns a parser that returns <em>many</em> <code class="sourceCode haskell">a</code> values. That is, it keeps grabbing as many <code class="sourceCode haskell">a</code> values as it can and returns them as a <code class="sourceCode haskell">[a]</code>.</p>
+
+<p>But beware! The above can yield <em>many</em> results</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb43-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse (manyP digitInt) <span class="st">&quot;123a&quot;</span> </a>
+<a class="sourceLine" id="cb43-2" data-line-number="2">[([], <span class="st">&quot;123a&quot;</span>), ([<span class="dv">1</span>], <span class="st">&quot;23a&quot;</span>),([<span class="dv">1</span>, <span class="dv">2</span>], <span class="st">&quot;3a&quot;</span>),([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], <span class="st">&quot;a&quot;</span>)]</a></code></pre></div>
+<p>which is simply all the possible ways to extract sequences of integers from the input string.</p>
+<h2 id="deterministic-maximal-parsing">Deterministic Maximal Parsing</h2>
+<p>Often we want a single result, not a set of results. For example, the more intuitive behavior of <code class="sourceCode haskell">many</code> would be to return the maximal sequence of elements and not <em>all</em> the prefixes.</p>
+<p>To do so, we need a <em>deterministic</em> choice combinator</p>
+
+<p>after which we can rewrite the grammar in three lines</p>
+
+<div class="sourceCode" id="cb44"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb44-1" data-line-number="1">ghci<span class="fu">&gt;</span> doParse sumE2 <span class="st">&quot;10-1-1&quot;</span></a>
+<a class="sourceLine" id="cb44-2" data-line-number="2">[(<span class="dv">8</span>,<span class="st">&quot;&quot;</span>)]</a>
+<a class="sourceLine" id="cb44-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb44-4" data-line-number="4">ghci<span class="fu">&gt;</span> doParse sumE2 <span class="st">&quot;10*2+1&quot;</span></a>
+<a class="sourceLine" id="cb44-5" data-line-number="5">[(<span class="dv">21</span>,<span class="st">&quot;&quot;</span>)]</a>
+<a class="sourceLine" id="cb44-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb44-7" data-line-number="7">ghci<span class="fu">&gt;</span> doParse sumE2 <span class="st">&quot;10+2*1&quot;</span></a>
+<a class="sourceLine" id="cb44-8" data-line-number="8">[(<span class="dv">12</span>,<span class="st">&quot;&quot;</span>)]</a></code></pre></div>
+<p>That concludes our in-class exploration of monadic parsing. This is merely the tip of the iceberg. Though parsing is a very old problem, and has been studied since the dawn of computing, we saw how monads bring a fresh perspective which have recently been transferred from Haskell to <a href="http://www.haskell.org/haskellwiki/Parsec">many other languages</a>. There have been several exciting <a href="http://www.cse.chalmers.se/~nad/publications/danielsson-parser-combinators.html">recent</a> <a href="http://portal.acm.org/citation.cfm?doid=1706299.1706347">papers</a> on the subject, that you can explore on your own. Finally, Haskell comes with several parser combinator libraries including <a href="http://www.haskell.org/haskellwiki/Parsec">Parsec</a> which you will play around with in <a href="../homeworks/Hw2.html">HW2</a>.</p>
+<p>λ&gt;</p>
+                <hr>
+            </div>
+        </div>
+    </div>
+</article>
+
+        </div>
+        <div id="footer">
+        </div>
+      <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="https://ucsd-cse230.github.io/sp20/feed.xml" data-datatype="json" data-type="GET" data-target="#frame" class="reload" id="clickme">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="https://twitter.com/ranjitjhala" data-datatype="json" data-type="GET" data-target="#frame" class="reload" id="clickme" target="_blank">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="https://plus.google.com/u/0/104385825850161331469" data-datatype="json" data-type="GET" data-target="#frame" class="reload" id="clickme" target="_blank">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="https://github.com/ranjitjhala" target="_blank">
+                            <span class="fa-stack fa-lg">
+
+                              <i class="fa fa-arrow-circle-o-down"></i>
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+		    
+                </ul>
+                <p class="copyright text-muted">
+                
+                  Generated by <a href="http://jaspervdj.be/hakyll">Hakyll</a>,
+                  template by <a href="http://lucumr.pocoo.org">Armin Ronacher</a>,
+                  suggest improvements <a href="https://github.com/ucsd-progsys/liquidhaskell-blog/">here</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<!-- jQuery -->
+<script src="https://ucsd-cse230.github.io/sp20/static/js/jquery.min.js"></script>
+<script src="https://ucsd-cse230.github.io/sp20/static/js/spaceg.stylesheets.min.js"></script>
+<script src="https://ucsd-cse230.github.io/sp20/static/js/bootstrap.min.js"></script>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+<script src="https://ucsd-cse230.github.io/sp20/static/js/anim.js"></script>
+<script src="https://ucsd-cse230.github.io/sp20/static/js/scripts.js"></script>
+
+    </body>
+</html>
