@@ -439,6 +439,8 @@ ghci> doParse (satP ('h' ==)) "hello"
 [('h',"ello")]
 ~~~~~
 
+<!-- HEREHEREHEREHERE -->
+
 The following parse alphabet and numeric characters respectively
 
 \begin{code}
