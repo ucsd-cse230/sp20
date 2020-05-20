@@ -552,8 +552,8 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb32-3" data-line-number="3">  c <span class="ot">&lt;-</span> oneChar</a>
 <a class="sourceLine" id="cb32-4" data-line-number="4">  <span class="kw">if</span> p c <span class="kw">then</span> return c <span class="kw">else</span> failP</a></code></pre></div>
 <p>What is the value of</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb33-1" data-line-number="1">quiz1 <span class="fu">=</span> runParser (\c <span class="ot">-&gt;</span> c <span class="fu">==</span> <span class="ch">'h'</span>) <span class="st">&quot;hellow&quot;</span></a>
-<a class="sourceLine" id="cb33-2" data-line-number="2">quiz2 <span class="fu">=</span> runParser (\c <span class="ot">-&gt;</span> c <span class="fu">==</span> <span class="ch">'h'</span>) <span class="st">&quot;yellow&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb33-1" data-line-number="1">quiz1 <span class="fu">=</span> runParser (satP (\c <span class="ot">-&gt;</span> c <span class="fu">==</span> <span class="ch">'h'</span>)) <span class="st">&quot;hellow&quot;</span></a>
+<a class="sourceLine" id="cb33-2" data-line-number="2">quiz2 <span class="fu">=</span> runParser (satP (\c <span class="ot">-&gt;</span> c <span class="fu">==</span> <span class="ch">'h'</span>)) <span class="st">&quot;yellow&quot;</span></a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -895,7 +895,7 @@ and only one result if thats possible
 <a class="sourceLine" id="cb50-6" data-line-number="6">    m1  <span class="fu">=</span> <span class="kw">do</span> { x <span class="ot">&lt;-</span> p; xs <span class="ot">&lt;-</span> manyP p; return (x<span class="fu">:</span>xs) } </a></code></pre></div>
 <p>Recall <code class="sourceCode haskell"><span class="ot">digitChar ::</span> <span class="dt">Parser</span> <span class="dt">Char</span></code> returned a <em>single</em> numeric <code class="sourceCode haskell"><span class="dt">Char</span></code></p>
 <p>What will <code class="sourceCode haskell">quiz</code> evaluate to?</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb51-1" data-line-number="1">quiz <span class="fu">=</span> runParser (many digitChar) <span class="st">&quot;123horse&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb51-1" data-line-number="1">quiz <span class="fu">=</span> runParser (manyP digitChar) <span class="st">&quot;123horse&quot;</span></a></code></pre></div>
 <p><strong>A.</strong> <code class="sourceCode haskell">[(<span class="st">&quot;&quot;</span>  , <span class="st">&quot;1234horse&quot;</span>)]</code> <strong>B.</strong> <code class="sourceCode haskell">[(<span class="st">&quot;1&quot;</span> , <span class="st">&quot;234horse&quot;</span>)]</code> <strong>C.</strong> <code class="sourceCode haskell">[(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;23horse&quot;</span>), (<span class="st">&quot;12&quot;</span>, <span class="st">&quot;3horse&quot;</span>), (<span class="st">&quot;123&quot;</span>, <span class="st">&quot;horse&quot;</span>)]</code> <strong>D.</strong> <code class="sourceCode haskell">[(<span class="st">&quot;123&quot;</span>, <span class="st">&quot;horse&quot;</span>)]</code> <strong>E.</strong> <code class="sourceCode haskell">[]</code></p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="lets-fix-manyp">Lets fix <code class="sourceCode haskell">manyP</code>!</h2>
@@ -908,7 +908,7 @@ and only one result if thats possible
 <a class="sourceLine" id="cb52-6" data-line-number="6">    m1  <span class="fu">=</span> <span class="kw">do</span> { x <span class="ot">&lt;-</span> p; xs <span class="ot">&lt;-</span> manyP p; return (x<span class="fu">:</span>xs) } </a></code></pre></div>
 <p>now, we can write an <code class="sourceCode haskell"><span class="dt">Int</span></code> parser as</p>
 <div class="sourceCode" id="cb53"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="ot">int ::</span> <span class="dt">Parser</span> <span class="dt">Int</span></a>
-<a class="sourceLine" id="cb53-2" data-line-number="2">int <span class="fu">=</span> <span class="kw">do</span> { xs <span class="ot">&lt;-</span> many digitChar; return (read xs) }</a></code></pre></div>
+<a class="sourceLine" id="cb53-2" data-line-number="2">int <span class="fu">=</span> <span class="kw">do</span> { xs <span class="ot">&lt;-</span> manyP digitChar; return (read xs) }</a></code></pre></div>
 <p>which will produce</p>
 <div class="sourceCode" id="cb54"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb54-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> runParser oneChar <span class="st">&quot;123horse&quot;</span></a>
 <a class="sourceLine" id="cb54-2" data-line-number="2">[(<span class="st">&quot;123&quot;</span>, <span class="st">&quot;horse&quot;</span>)]</a>
@@ -1095,9 +1095,9 @@ and only one result if thats possible
 <a class="sourceLine" id="cb72-3" data-line-number="3">prod <span class="fu">=</span> oneOrMore base mulOp</a>
 <a class="sourceLine" id="cb72-4" data-line-number="4">base <span class="fu">=</span> parens expr <span class="fu">&lt;|&gt;</span> int</a></code></pre></div>
 <p>where <code class="sourceCode haskell">addOp</code> is <code class="sourceCode haskell"><span class="fu">+</span></code> or <code class="sourceCode haskell"><span class="fu">-</span></code> and <code class="sourceCode haskell">mulOp</code> is <code class="sourceCode haskell"><span class="fu">*</span></code> or <code class="sourceCode haskell"><span class="fu">/</span></code></p>
-<div class="sourceCode" id="cb73"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb73-1" data-line-number="1">sumOp,<span class="ot"> prodOp ::</span> <span class="dt">Parser</span> (<span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span>)</a>
-<a class="sourceLine" id="cb73-2" data-line-number="2">sumOp  <span class="fu">=</span> constP <span class="st">&quot;+&quot;</span> (<span class="fu">+</span>) <span class="fu">&lt;|&gt;</span> constP <span class="st">&quot;-&quot;</span> (<span class="fu">-</span>)</a>
-<a class="sourceLine" id="cb73-3" data-line-number="3">prodOp <span class="fu">=</span> constP <span class="st">&quot;*&quot;</span> (<span class="fu">*</span>) <span class="fu">&lt;|&gt;</span> constP <span class="st">&quot;/&quot;</span> div</a>
+<div class="sourceCode" id="cb73"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb73-1" data-line-number="1">addOp,<span class="ot"> mulOp ::</span> <span class="dt">Parser</span> (<span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span>)</a>
+<a class="sourceLine" id="cb73-2" data-line-number="2">addOp <span class="fu">=</span> constP <span class="st">&quot;+&quot;</span> (<span class="fu">+</span>) <span class="fu">&lt;|&gt;</span> constP <span class="st">&quot;-&quot;</span> (<span class="fu">-</span>)</a>
+<a class="sourceLine" id="cb73-3" data-line-number="3">mulOp <span class="fu">=</span> constP <span class="st">&quot;*&quot;</span> (<span class="fu">*</span>) <span class="fu">&lt;|&gt;</span> constP <span class="st">&quot;/&quot;</span> div</a>
 <a class="sourceLine" id="cb73-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb73-5" data-line-number="5"><span class="ot">constP ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Parser</span> a </a>
 <a class="sourceLine" id="cb73-6" data-line-number="6">constP s x <span class="fu">=</span> <span class="kw">do</span> { _ <span class="ot">&lt;-</span> string s; return x }</a></code></pre></div>
