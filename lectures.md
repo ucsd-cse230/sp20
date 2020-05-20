@@ -105,7 +105,7 @@ Liquid    = 3
 [09-monads]: lectures/09-monads.html
 [10-list]: lectures/10-list.html
 [11-state]: lectures/11-state.html
-[12-parsing]: lectures/12-parsing.html
+[12-parsing]: lectures/12-parsers.html
 
 
 <!-- JUNK -->
