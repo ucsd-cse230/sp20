@@ -560,16 +560,24 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <h2 id="a-generic-state-transformer-monad">A Generic State Transformer Monad</h2>
 <p>Lets make the above a(n instance of) <code class="sourceCode haskell"><span class="dt">Monad</span></code></p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">Monad</span> (<span class="dt">ST</span> s) <span class="kw">where</span></a>
-<a class="sourceLine" id="cb38-2" data-line-number="2">  return x <span class="fu">=</span> <span class="dt">STC</span> (\s <span class="ot">-&gt;</span> (s, x))</a>
-<a class="sourceLine" id="cb38-3" data-line-number="3">  st <span class="fu">&gt;&gt;=</span> f <span class="fu">=</span> <span class="dt">STC</span> (\s <span class="ot">-&gt;</span> <span class="kw">let</span> (s', x) <span class="fu">=</span> runState st s </a>
-<a class="sourceLine" id="cb38-4" data-line-number="4">                        <span class="kw">in</span> runState (f x) s')</a>
-<a class="sourceLine" id="cb38-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb38-6" data-line-number="6"><span class="ot">runState ::</span> <span class="dt">ST</span> s a <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> (s, a)</a>
-<a class="sourceLine" id="cb38-7" data-line-number="7">runState (<span class="dt">STC</span> f) s <span class="fu">=</span> f s</a>
-<a class="sourceLine" id="cb38-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb38-9" data-line-number="9"><span class="ot">evalState ::</span> <span class="dt">ST</span> s a <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> a</a>
-<a class="sourceLine" id="cb38-10" data-line-number="10">evalState st s <span class="fu">=</span> snd (runState st s) </a></code></pre></div>
-<p>(<em>exactly</em> the same code as <code class="sourceCode haskell">returnST</code> and <code class="sourceCode haskell">bindST</code>)</p>
+<a class="sourceLine" id="cb38-2" data-line-number="2">  <span class="co">-- return :: a -&gt; ST s a</span></a>
+<a class="sourceLine" id="cb38-3" data-line-number="3">  return val <span class="fu">=</span> <span class="dt">ST0C</span> (\s <span class="ot">-&gt;</span> (s, val)) </a>
+<a class="sourceLine" id="cb38-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb38-5" data-line-number="5">  <span class="co">-- (&gt;&gt;=) :: ST s a -&gt; (a -&gt; ST s b) -&gt; ST s b</span></a>
+<a class="sourceLine" id="cb38-6" data-line-number="6">  (<span class="fu">&gt;&gt;=</span>) sta f <span class="fu">=</span> <span class="dt">ST0C</span> (\s <span class="ot">-&gt;</span> </a>
+<a class="sourceLine" id="cb38-7" data-line-number="7">                       <span class="kw">let</span> (s', va)  <span class="fu">=</span> runState sta s </a>
+<a class="sourceLine" id="cb38-8" data-line-number="8">                           stb       <span class="fu">=</span> f va</a>
+<a class="sourceLine" id="cb38-9" data-line-number="9">                           (s'', vb) <span class="fu">=</span> runState stb s'</a>
+<a class="sourceLine" id="cb38-10" data-line-number="10">                       <span class="kw">in</span> </a>
+<a class="sourceLine" id="cb38-11" data-line-number="11">                           (s'', vb)</a>
+<a class="sourceLine" id="cb38-12" data-line-number="12">                     )</a>
+<a class="sourceLine" id="cb38-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb38-14" data-line-number="14"><span class="ot">runState ::</span> <span class="dt">ST</span> s a <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> (s, a)</a>
+<a class="sourceLine" id="cb38-15" data-line-number="15">runState (<span class="dt">STC</span> f) s <span class="fu">=</span> f s</a>
+<a class="sourceLine" id="cb38-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb38-17" data-line-number="17"><span class="ot">evalState ::</span> <span class="dt">ST</span> s a <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> a</a>
+<a class="sourceLine" id="cb38-18" data-line-number="18">evalState st s <span class="fu">=</span> snd (runState st s) </a></code></pre></div>
+<p>(<strong>exactly</strong> the same code as <code class="sourceCode haskell">returnST</code> and <code class="sourceCode haskell">bindST</code>)</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="lets-implement-keylabel">Lets implement <code class="sourceCode haskell">keyLabel</code></h2>
 <ol type="1">

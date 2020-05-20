@@ -846,9 +846,17 @@ Lets make the above a(n instance of) `Monad`
 
 ```haskell
 instance Monad (ST s) where
-  return x = STC (\s -> (s, x))
-  st >>= f = STC (\s -> let (s', x) = runState st s 
-                        in runState (f x) s')
+  -- return :: a -> ST s a
+  return val = ST0C (\s -> (s, val)) 
+
+  -- (>>=) :: ST s a -> (a -> ST s b) -> ST s b
+  (>>=) sta f = ST0C (\s -> 
+                       let (s', va)  = runState sta s 
+                           stb       = f va
+                           (s'', vb) = runState stb s'
+                       in 
+                           (s'', vb)
+                     )
 
 runState :: ST s a -> s -> (s, a)
 runState (STC f) s = f s
@@ -857,7 +865,7 @@ evalState :: ST s a -> s -> a
 evalState st s = snd (runState st s) 
 ```
 
-(*exactly* the same code as `returnST` and `bindST`)
+(**exactly** the same code as `returnST` and `bindST`)
 
 <br>
 <br>
