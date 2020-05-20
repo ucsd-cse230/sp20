@@ -1309,7 +1309,7 @@ quiz = runParser calc0 "10-5-5"
 <br>
 <br>
 
-## Wat? 
+## Problem: Right-Associativity
 
 Recall 
 
@@ -1331,6 +1331,62 @@ The `calc0` parser implicitly forces each operator to be **right associative**
 - doesn't matter for `+`, `*` 
 
 - but is incorrect for `-`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ
+
+Recall 
+
+```haskell
+binExp :: Parser Int
+binExp = do
+  x <- int 
+  o <- intOp 
+  y <- calc0 
+  return (x `o` y)
+``` 
+
+What does `quiz` get evaluated to?
+
+```haskell
+quiz = runParser calc0 "10*2+100"
+```
+
+**A.** `[(1020,"")]`
+**B.** `[(120,"")]`
+**C.** `[(120,""), (1020, "")]`
+**D.** `[(1020,""), (120, "")]`
+**E.** `[]`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+The `calc0` parser implicitly forces *all operators* to be **right associative** 
+
+- doesn't matter for `+`, `*` 
+
+- but is incorrect for `-`
+
+- does not respect precedence!
 
 <br>
 <br>
@@ -1373,9 +1429,16 @@ but we can add parentheses to get the right result
 
 ```haskell
 >>> runParser calc1 "((10-5)-5)" 
-[0 ,""]
+[(0 ,"")]
+
 >>> runParser calc1 "(10-(5-5))" 
-[10 ,""]
+[(10 ,"")]
+
+>>> runParser calc1 "((10*2)+100)"
+[(120, "")]
+
+>>> runParser calc1 "(10*(2+100))"
+[(1020, "")]
 ```
 
 <br>
@@ -1393,11 +1456,230 @@ but we can add parentheses to get the right result
 
 ## Left Associativity
 
-But how to make the parser *left* associative 
+But how to make the parser *left associative*
+
 - i.e. parse "10-5-5" as `(10 - 5) - 5` ?
 
+Lets flip the order!
+
+```haskell
+calc1      ::  Parser Int
+calc1      = binExp <|> oneInt 
+
+binExp :: Parser Int
+binExp = do 
+  x <- calc1 
+  o <- intOp 
+  y <- int
+  return (x `o` y)
+```
+
+But ...
+
+```haskell
+>>> runParser calc1 "2+2"
+...
+```
+
+Infinite loop! `calc1 --> binExp --> calc1 --> binExp --> ...` 
+
+- without _consuming_ any input :-( 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Solution: Parsing with Multiple *Levels*
+
+Any expression is a **sum-of-products**
+
+```haskell
+  10 * 20 * 30 + 40 * 50 + 60 * 70 * 80
+=> 
+  ((((10 * 20) * 30) + (40 * 50)) + ((60 * 70) * 80))
+=>  
+  ((((base * base) * base)  + (base * base)) + ((base * base) * base))
+=>  
+  (((prod * base) + prod)  + (prod * base))
+=>  
+  ((prod + prod) + prod) 
+=>   
+  (sum + prod)
+=>
+   sum 
+=>   
+   expr
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Parsing with Multiple *Levels*
+
+So lets **layer** our language as
+
+```haskell
+  expr :== sum
+  sum  :== (((prod "+" prod) "+" prod) "+" ... "+" prod)
+  prod :== (((base "*" base) "*" base) "*" ... "*" base) 
+  base :== "(" expr ")" ORELSE int
+```
+
+that is the recursion looks like
+
+```haskell
+  expr = sum
+  sum  = oneOrMore prod "+" 
+  prod = oneOrMore base "*"
+  base = "(" expr ")" <|> int 
+```
+
+No infinite loop!
+
+- `expr --> prod --> base -->* expr` 
+
+- but last step `-->*` _consumes_ a `(` 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Parsing `oneOrMore`
+
+Lets implement `oneOrMore vP oP` as a combinator
+  - `vP` parses a *single* `a` value
+  - `oP` parses an *operator* `a -> a -> a` 
+  - `oneOrMore vP oP` parses and returns the result `((v1 o v2) o v3) o v4) o ... o vn)`
+
+But how?
+
+1. *grab* the first `v1` using `vP` 
+
+2. *continue* by 
+    - either trying `oP` then `v2` ... and recursively continue with `v1 o v2` 
+    - `orElse` (no more `o`) just return `v1`
+
+```haskell
+oneOrMore :: Parser a -> Parser (a -> a -> a) -> Parser a
+oneOrMore vP oP = do {v1 <- vP; continue v1}
+  where 
+    continue v1 = do { o <- oP; v2 <- vP; continue (v1 `o` v2) }
+               <|> return v1
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Implementing Layered Parser
+
+Now we can implement the grammar 
+
+```haskell
+  expr = sum
+  sum  = oneOrMore prod "+" 
+  prod = oneOrMore base "*"
+  base = "(" expr ")" <|> int 
+```
+
+simply as
+
+```haskell
+expr = sum
+sum  = oneOrMore prod addOp
+prod = oneOrMore base mulOp
+base = parens expr <|> int
+```
+
+where `addOp` is `+` or `-` and `mulOp` is `*` or `/`  
+
+```haskell
+sumOp, prodOp :: Parser (Int -> Int -> Int)
+sumOp  = constP "+" (+) <|> constP "-" (-)
+prodOp = constP "*" (*) <|> constP "/" div
+
+constP :: String -> a -> Parser a 
+constP s x = do { _ <- string s; return x }
+```
+
+Lets make sure it works!
+
+```haskell
+>>> doParse sumE2 "10-1-1"
+[(8,"")]
+
+>>> doParse sumE2 "10*2+1"
+[(21,"")]
+
+>>> doParse sumE2 "10+2*1"
+[(12,"")]
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Parser combinators 
+
+That was a taste of Parser Combinators
+
+- Transferred from Haskell to [_many_ other languages][3]. 
+
+Many libraries including [Parsec][3] used in your homework
+  -  `oneOrMore` is called `chainl`
+
+Read more about the *theory* 
+  - in these [recent][4] [papers][5]
+
+Read more about the *practice* 
+  - in this recent post that I like [JSON parsing from scratch][6]
 
 [2]: http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf
 [3]: http://www.haskell.org/haskellwiki/Parsec
 [4]: http://www.cse.chalmers.se/~nad/publications/danielsson-parser-combinators.html
 [5]: http://portal.acm.org/citation.cfm?doid=1706299.1706347
+[6]: https://abhinavsarkar.net/posts/json-parsing-from-scratch-in-haskell/

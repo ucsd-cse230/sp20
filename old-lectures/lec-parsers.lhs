@@ -881,15 +881,23 @@ operator is *right associative* hence the above result.
 I wonder if we can try to fix it just by flipping the order
 
 \begin{code}
-calc1      ::  Parser Int
-calc1      = binExp <|> oneInt 
-  where 
-    binExp = do x <- calc1 
-                o <- intOp 
-                y <- oneInt
-                return $ x `o` y
+calc1 ::  Parser Int
+calc1 = binExp <|> oneInt 
+
+binExp :: Parser Int
+binExp = do 
+  x <- calc1 
+  o <- intOp 
+  y <- int
+  return (x `o` y)
 \end{code}
 
+But ...
+
+```haskell
+>>> runParser calc1 "2+2"
+...
+```
 **QUIZ**
 
 What does the following evaluate to?
@@ -948,19 +956,19 @@ parser into different levels. Here, lets split our operations
 into addition- 
 
 \begin{code}
-addOp       = plus `chooseP` minus 
+addOp     = plus <|> minus 
   where 
-    plus    = char '+' >> return (+)
-    minus   = char '-' >> return (-)
+    plus  = do { _ <- char '+'; return (+) }
+    minus = do { _ <- char '-'; return (-) }
 \end{code}
 
 and multiplication-precedence.
 
 \begin{code}
-mulOp       = times `chooseP` divide 
+mulOp     = times <|> divide 
   where 
-    times   = char '*' >> return (*)
-    divide  = char '/' >> return div
+    times = do { _ <- char '*'; return (*) }
+    divide= do { _ <- char '/'; return div }
 \end{code}
 
 Now, we can stratify our language into (mutually recursive) sub-languages, 
@@ -1160,4 +1168,3 @@ around with in [HW2](/homeworks/Hw2.html).
 [3]: http://www.haskell.org/haskellwiki/Parsec
 [4]: http://www.cse.chalmers.se/~nad/publications/danielsson-parser-combinators.html
 [5]: http://portal.acm.org/citation.cfm?doid=1706299.1706347
-λ> 
