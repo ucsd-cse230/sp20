@@ -710,8 +710,8 @@ satP p = do
 What is the value of
 
 ```haskell
-quiz1 = runParser (\c -> c == 'h') "hellow"
-quiz2 = runParser (\c -> c == 'h') "yellow"
+quiz1 = runParser (satP (\c -> c == 'h')) "hellow"
+quiz2 = runParser (satP (\c -> c == 'h')) "yellow"
 ```
 
 |       | `quiz1`           | `quiz2`              | 
@@ -1198,7 +1198,7 @@ Recall `digitChar :: Parser Char` returned a _single_ numeric `Char`
 What will `quiz` evaluate to?
 
 ```haskell
-quiz = runParser (many digitChar) "123horse"
+quiz = runParser (manyP digitChar) "123horse"
 ```
 
 **A.** `[(""  , "1234horse")]` 
@@ -1235,7 +1235,7 @@ now, we can write an `Int` parser as
 
 ```haskell
 int :: Parser Int
-int = do { xs <- many digitChar; return (read xs) }
+int = do { xs <- manyP digitChar; return (read xs) }
 ```
 
 which will produce
@@ -1633,9 +1633,9 @@ base = parens expr <|> int
 where `addOp` is `+` or `-` and `mulOp` is `*` or `/`  
 
 ```haskell
-sumOp, prodOp :: Parser (Int -> Int -> Int)
-sumOp  = constP "+" (+) <|> constP "-" (-)
-prodOp = constP "*" (*) <|> constP "/" div
+addOp, mulOp :: Parser (Int -> Int -> Int)
+addOp = constP "+" (+) <|> constP "-" (-)
+mulOp = constP "*" (*) <|> constP "/" div
 
 constP :: String -> a -> Parser a 
 constP s x = do { _ <- string s; return x }
