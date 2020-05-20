@@ -800,9 +800,219 @@ quiz2 = runParser digitIntP "cat"
 <br>
 <br>
 
-## EXERCISE 
+## EXERCISE
 
-Use `char` to writ
+Write a function 
+
+```haskell 
+strP :: String -> Parser String 
+strP s = -- parses EXACTLY the String s and nothing else
+```
+
+when you are done, we should get the following behavior
+
+
+```haskell
+>>> dogeP = strP "doge"
+
+>>> runParser dogeP "dogerel"
+[("doge", "rel")]
+
+>>> runParser dogeP "doggoneit"
+[]
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ: A Choice Combinator
+
+Lets write a combinator that **chooses** between two sub-parsers
+
+```haskell
+chooseP :: Parser a -> Parser a -> Parser a
+chooseP p1 p2 = -- produce an 'a' 
+                -- IF p1 OR p2 produce an 'a' 
+```
+
+`chooseP p1 p2` should _produce_ a succesful parse if `p1` _OR_ `p2` succeeds. 
+
+e.g. `chooseP` lets us build a parser that produces an alphabet _OR_ a numeric character
+
+```haskell
+alphaNumChar :: Parser Char
+alphaNumChar = chooseP alphaChar digitChar
+```
+
+Which should produce 
+
+```haskell
+>>> doParse alphaNumChar "cat"
+[('c', "at")]
+
+>>> doParse alphaNumChar "2cat"
+[('2', "cat")]
+
+>>> doParse alphaNumChar "230"
+[('2', "30")]
+```
+
+```haskell
+-- a 
+chooseP p1 p2 = do xs <- p1
+                   ys <- p2
+                   return (x1 ++ x2) 
+-- b
+choose p1 p2  = do xs <- p1 
+                   case xs of 
+                     [] -> p2 
+                     _  -> return xs
+
+-- c
+chooseP p1 p2 = P (\cs -> runParser p1 cs ++ runParser p2 cs)
+
+-- d
+chooseP p1 p2 = P (\cs -> case runParser p1 cs of
+                            [] -> runParser p2 cs
+                            rs -> rs)
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+## QUIZ 
+
+Here's a parser that grabs the first `n` characters
+
+```haskell
+grabN :: Int -> Parser String
+grabN n 
+  | n <= 0    = return ""
+  | otherwise = do {c <- oneChar; cs <- grabN (n-1); return (c:cs) }
+
+grab2or4 = chooseP (grabN 2) (grabN 4)
+
+quiz = runParser grab2or4 "mickeymouse"
+```
+
+**A.** `[]`
+
+**B.** `[("mi","ckeymouse")]`
+
+**C.** `[("mick","eymouse")]`
+
+**D.** `[("mi","ckeymouse"),("mick","eymouse")]`
+
+**E.** `[("mick","eymouse"), ("mi","ckeymouse")]`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+## Choice Combinator
+
+Crucially if _both_ succeed, we end up with _all_ the results
+
+```haskell
+chooseP :: Parser a -> Parser a -> Parser a
+p1 `chooseP` p2 = P (\cs -> doParse p1 cs ++ doParse p2 cs)
+```
+
+and only one result if thats possible
+
+```haskell
+>>> runParser grab2or4 "mic"
+[("mi","c")]
+
+>>> runParser grab2or4 "m"
+[]
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## A Simple Expression Parser
+
+Even with the rudimentary parsers we have at our disposal, we can start
+doing some rather interesting things. For example, here is a little
+calculator. First, we parse the operation
+
+\begin{code}
+intOp      = plus `chooseP` minus `chooseP` times `chooseP` divide 
+  where 
+    plus   = char '+' >> return (+)
+    minus  = char '-' >> return (-)
+    times  = char '*' >> return (*)
+    divide = char '/' >> return div
+\end{code}
+
+**DO IN CLASS** 
+Can you guess the type of the above parser?
+
+
+Next, we can parse the expression
+
+\begin{code}
+calc = do x  <- digitInt
+          op <- intOp
+          y  <- digitInt 
+          return $ x `op` y
+\end{code}
+
+which, when run, will both parse and calculate
+
+~~~~~{.haskell}
+ghci> doParse calc "8/2"
+[(4,"")]
+
+ghci> doParse calc "8+2cat"
+[(10,"cat")]
+
+ghci> doParse calc "8/2cat"
+[(4,"cat")]
+
+ghci> doParse calc "8-2cat"
+[(6,"cat")]
+
+ghci> doParse calc "8*2cat"
+[(16,"cat")]
+~~~~~
 
 [2]: http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf
 [3]: http://www.haskell.org/haskellwiki/Parsec

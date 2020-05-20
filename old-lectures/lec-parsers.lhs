@@ -439,7 +439,6 @@ ghci> doParse (satP ('h' ==)) "hello"
 [('h',"ello")]
 ~~~~~
 
-<!-- HEREHEREHEREHERE -->
 
 The following parse alphabet and numeric characters respectively
 
@@ -494,34 +493,6 @@ ghci> doParse dogeP "doggoneit"
 
 A Nondeterministic Choice Combinator
 ------------------------------------
-
-Next, lets write a combinator that takes two sub-parsers and 
-**non-deterministically chooses** between them. 
-
-~~~~~{.haskell}
-chooseP :: Parser a -> Parser a -> Parser a
-~~~~~
-
-That is, we want `chooseP p1 p2` to return a succesful parse
-if *either* `p1` or `p2` succeeds. 
-
-We can use `chooseP` to build a parser that returns either 
-an alphabet or a numeric character
-
-\begin{code}
-alphaNumChar = alphaChar `chooseP` digitChar
-\end{code}
-
-After defining the above, we should get something like:
-
-~~~~~{.haskell}
-ghci> doParse alphaNumChar "cat"
-[('c', "at")]
-ghci> doParse alphaNumChar "2cat"
-[('2', "cat")]
-ghci> doParse alphaNumChar "230"
-[('2', "30")]
-~~~~~
 
 **QUIZ**
 
