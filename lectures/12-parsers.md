@@ -747,8 +747,8 @@ alphaCharP :: Parser Char
 alphaCharP = satP isAlpha
 
 -- parse ANY NUMERIC DIGIT
-digitCharP :: Parser Char
-digitCharP = satP isDigit
+digitChar :: Parser Char
+digitChar = satP isDigit
 ```
 
 <br>
@@ -769,17 +769,17 @@ digitCharP = satP isDigit
 We can parse a single `Int` digit
 
 ```haskell
-digitIntP :: Parser Int
-digitIntP = do
-  c <- digitCharP      -- parse the Char c
+digitInt :: Parser Int
+digitInt = do
+  c <- digitChar      -- parse the Char c
   return (read [c])   -- convert Char to Int
 ```
 
 What is the result of 
 
 ```haskell
-quiz1 = runParser digitIntP "92"
-quiz2 = runParser digitIntP "cat"
+quiz1 = runParser digitInt "92"
+quiz2 = runParser digitInt "cat"
 ```
 
 |       | `quiz1`           | `quiz2`          | 
@@ -837,15 +837,108 @@ when you are done, we should get the following behavior
 
 ## QUIZ: A Choice Combinator
 
-Lets write a combinator that **chooses** between two sub-parsers
+Lets write a combinator `orElse p1 p2` such that 
+
+- returns the results of `p1` 
+
+**or, else** _if those are empty_
+
+- returns the results of `p2`
 
 ```haskell
-chooseP :: Parser a -> Parser a -> Parser a
-chooseP p1 p2 = -- produce an 'a' 
-                -- IF p1 OR p2 produce an 'a' 
+:: Parser a -> Parser a -> Parser a
+chooseP p1 p2 = -- produce non-empty results of `p1` 
+                -- or-else results of `p2`
 ```
 
-`chooseP p1 p2` should _produce_ a succesful parse if `p1` _OR_ `p2` succeeds. 
+e.g. `chooseP` lets us build a parser that produces an alphabet _OR_ a numeric character
+
+```haskell
+alphaNumChar :: Parser Char
+alphaNumChar = alphaChar `orElse` digitChar
+```
+
+Which should produce 
+
+```haskell
+>>> runParser alphaNumChar "cat"
+[('c', "at")]
+
+>>> runParser alphaNumChar "2cat"
+[('2', "cat")]
+
+>>> runParser alphaNumChar "230"
+[('2', "30")]
+```
+
+```haskell
+-- a 
+orElse p1 p2 = do xs <- p1
+                  ys <- p2
+                  return (x1 ++ x2) 
+-- b
+orElse p1 p2  = do xs <- p1 
+                   case xs of 
+                     [] -> p2 
+                     _  -> return xs
+
+-- c
+orElse p1 p2 = P (\cs -> runParser p1 cs ++ runParser p2 cs)
+
+-- d
+orElse p1 p2 = P (\cs -> case runParser p1 cs of
+                            []  -> runParser p2 cs
+                            r1s -> r1s)
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## An "Operator" for `orElse` 
+
+It will be convenient to have a short "operator" for `orElse`
+
+```haskell
+p1 <|> p2 = orElse p1 p2
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<!--  
+## QUIZ: A Choice Combinator
+
+Lets write an `orElse` combinator such that `orElse p1 p2` 
+- returns the results of `p1` 
+
+**or, else** _if those are empty_
+
+- returns the results of `p2`
+
+
+```haskell
+:: Parser a -> Parser a -> Parser a
+chooseP p1 p2 = -- produce non-empty results of `p1` 
+                -- or-else results of `p2`
+```
 
 e.g. `chooseP` lets us build a parser that produces an alphabet _OR_ a numeric character
 
@@ -857,13 +950,13 @@ alphaNumChar = chooseP alphaChar digitChar
 Which should produce 
 
 ```haskell
->>> doParse alphaNumChar "cat"
+>>> runParser alphaNumChar "cat"
 [('c', "at")]
 
->>> doParse alphaNumChar "2cat"
+>>> runParser alphaNumChar "2cat"
 [('2', "cat")]
 
->>> doParse alphaNumChar "230"
+>>> runParser alphaNumChar "230"
 [('2', "30")]
 ```
 
@@ -886,17 +979,6 @@ chooseP p1 p2 = P (\cs -> case runParser p1 cs of
                             [] -> runParser p2 cs
                             rs -> rs)
 ```
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 
 
 
@@ -943,7 +1025,7 @@ Crucially if _both_ succeed, we end up with _all_ the results
 
 ```haskell
 chooseP :: Parser a -> Parser a -> Parser a
-p1 `chooseP` p2 = P (\cs -> doParse p1 cs ++ doParse p2 cs)
+p1 `chooseP` p2 = P (\cs -> runParser p1 cs ++ runParser p2 cs)
 ```
 
 and only one result if thats possible
@@ -966,53 +1048,354 @@ and only one result if thats possible
 <br>
 <br>
 <br>
+-->
 
 ## A Simple Expression Parser
 
-Even with the rudimentary parsers we have at our disposal, we can start
-doing some rather interesting things. For example, here is a little
-calculator. First, we parse the operation
+Now, lets write a _tiny_ calculator!
 
-\begin{code}
-intOp      = plus `chooseP` minus `chooseP` times `chooseP` divide 
+```haskell
+-- 1. First, parse the operator 
+intOp      :: Parser (Int -> Int -> Int) 
+intOp      = plus <|> minus <|> times <|> divide 
   where 
-    plus   = char '+' >> return (+)
-    minus  = char '-' >> return (-)
-    times  = char '*' >> return (*)
-    divide = char '/' >> return div
-\end{code}
+    plus   = do { _ <- char '+'; return (+) }
+    minus  = do { _ <- char '-'; return (-) }
+    times  = do { _ <- char '*'; return (*) }
+    divide = do { _ <- char '/'; return div }
 
-**DO IN CLASS** 
-Can you guess the type of the above parser?
-
-
-Next, we can parse the expression
-
-\begin{code}
+-- 2. Now parse the expression!
+calc :: Parser Int
 calc = do x  <- digitInt
           op <- intOp
           y  <- digitInt 
-          return $ x `op` y
-\end{code}
+          return (x `op` y)
+```
 
-which, when run, will both parse and calculate
+When `calc` is run, it will both parse _and_ calculate 
 
-~~~~~{.haskell}
-ghci> doParse calc "8/2"
+```haskell
+>>> runParser calc "8/2"
 [(4,"")]
 
-ghci> doParse calc "8+2cat"
+>>> runParser calc "8+2cat"
 [(10,"cat")]
 
-ghci> doParse calc "8/2cat"
+>>> runParser calc "8/2cat"
 [(4,"cat")]
 
-ghci> doParse calc "8-2cat"
+>>> runParser calc "8-2cat"
 [(6,"cat")]
 
-ghci> doParse calc "8*2cat"
+>>> runParser calc "8*2cat"
 [(16,"cat")]
-~~~~~
+```
+
+## QUIZ 
+
+What will `quiz` evaluate to? 
+
+```haskell
+quiz = runParser calc "99bottles"
+```
+
+**A.** Type error
+
+**B.** `[]`
+
+**C.** `[(9, "9bottles")]`
+
+**D.** `[(99, "bottles")]`
+
+**E.** Run-time exception
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Next: Recursive Parsing
+
+Its cool to parse individual `Char` ... 
+
+... but _way_ more interesting to parse recursive structures! 
+
+```haskell
+"((2 + 10) * (7 - 4)) * (5 + 2)"
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## EXERCISE: A "Recursive" String Parser
+
+The parser `string s` parses *exactly* the string `s` 
+  - fails otherwise
+
+```haskell
+>>> runParser (string "mic") "mickeyMouse"
+[("mic","keyMouse")]
+
+>>> runParser (string "mic") "donald duck"
+[]
+```
+
+Here's an implementation
+
+```haskell
+string :: String -> Parser String
+string ""     = return ""
+string (c:cs) = do { _ <- char c; _ <- string cs; return (c:cs) }
+```
+
+Which library function will _eliminate_ the recursion from `string`?
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ: Parsing Many Times
+
+Often we want to _repeat_ parsing some object
+
+```haskell
+-- | `manyP p` repeatedly runs `p` to return a list of [a]
+manyP  :: Parser a -> Parser [a]
+manyP p = m0 <|> m1
+  where
+    m0  = return [] 
+    m1  = do { x <- p; xs <- manyP p; return (x:xs) } 
+```
+
+Recall `digitChar :: Parser Char` returned a _single_ numeric `Char`
+
+What will `quiz` evaluate to?
+
+```haskell
+quiz = runParser (many digitChar) "123horse"
+```
+
+**A.** `[(""  , "1234horse")]` 
+**B.** `[("1" , "234horse")]` 
+**C.** `[("1", "23horse"), ("12", "3horse"), ("123", "horse")]` 
+**D.** `[("123", "horse")]` 
+**E.** `[]` 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Lets fix `manyP`!
+
+Run `p` _first_ and only `return []` if it fails ... 
+  
+```haskell
+-- | `manyP p` repeatedly runs `p` to return a list of [a]
+manyP  :: Parser a -> Parser [a]
+manyP p = m1 <|> m0
+  where
+    m0  = return [] 
+    m1  = do { x <- p; xs <- manyP p; return (x:xs) } 
+```
+
+now, we can write an `Int` parser as
+
+```haskell
+int :: Parser Int
+int = do { xs <- many digitChar; return (read xs) }
+```
+
+which will produce
+
+```haskell
+>>> runParser oneChar "123horse"
+[("123", "horse")]
+
+>>> runParser int "123horse"
+[(123, "horse")]
+```
+
+## Parsing Arithmetic Expressions
+
+_Now_ we can build a proper calculator!
+
+```haskell
+calc0 ::  Parser Int
+calc0 = binExp <|> int 
+
+int :: Parser Int
+int = do 
+  xs <- many digitChar 
+  return (read xs)
+
+binExp :: Parser Int
+binExp = do
+  x <- int 
+  o <- intOp 
+  y <- calc0 
+  return (x `o` y) 
+```
+
+Works pretty well!
+
+```haskell
+>>> runParser calc0 "11+22+33"
+[(66,"")]
+
+ghci> doParse calc0 "11+22-33"
+[(0,"")]
+```
+
+## QUIZ 
+
+What does `quiz` evaluate to? 
+
+```haskell
+quiz = runParser calc0 "10-5-5"
+```
+
+**A.** `[(0, "")]`
+
+**B.** `[]`
+
+**C.** `[(10, "")]`
+
+**D.** `[(10, "-5-5")]`
+
+**E.** `[(5, "-5")]`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Wat? 
+
+Recall 
+
+```haskell
+binExp :: Parser Int
+binExp = do
+  x <- int 
+  o <- intOp 
+  y <- calc0 
+  return (x `o` y)
+``` 
+
+`"10-5-5"` gets parsed as `10 - (5 - 5)` because
+
+![](/static/img/parse-left.png)
+
+The `calc0` parser implicitly forces each operator to be **right associative** 
+
+- doesn't matter for `+`, `*` 
+
+- but is incorrect for `-`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Simple Fix: Parentheses!
+
+Lets write a combinator that parses something within `(...)`
+
+```haskell
+parensP :: Parser a -> Parser a
+parensP p = do 
+  _ <- char '(' 
+  x <- p
+  _ <- char ')'
+  return x 
+```
+
+now we can try 
+
+```haskell
+calc1 :: Parser Int
+calc1 = parens binExp <|> int 
+```
+
+now the original string wont even parse
+
+
+```haskell
+>>> runParser calc1 "10-5-5" 
+[]
+```
+
+but we can add parentheses to get the right result
+
+```haskell
+>>> runParser calc1 "((10-5)-5)" 
+[0 ,""]
+>>> runParser calc1 "(10-(5-5))" 
+[10 ,""]
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Left Associativity
+
+But how to make the parser *left* associative 
+- i.e. parse "10-5-5" as `(10 - 5) - 5` ?
+
 
 [2]: http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf
 [3]: http://www.haskell.org/haskellwiki/Parsec

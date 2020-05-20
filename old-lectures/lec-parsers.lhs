@@ -494,6 +494,34 @@ ghci> doParse dogeP "doggoneit"
 A Nondeterministic Choice Combinator
 ------------------------------------
 
+Next, lets write a combinator that takes two sub-parsers and 
+**non-deterministically chooses** between them. 
+
+~~~~~{.haskell}
+chooseP :: Parser a -> Parser a -> Parser a
+~~~~~
+
+That is, we want `chooseP p1 p2` to return a succesful parse
+if *either* `p1` or `p2` succeeds. 
+
+We can use `chooseP` to build a parser that returns either 
+an alphabet or a numeric character
+
+\begin{code}
+alphaNumChar = alphaChar `chooseP` digitChar
+\end{code}
+
+After defining the above, we should get something like:
+
+~~~~~{.haskell}
+ghci> doParse alphaNumChar "cat"
+[('c', "at")]
+ghci> doParse alphaNumChar "2cat"
+[('2', "cat")]
+ghci> doParse alphaNumChar "230"
+[('2', "30")]
+~~~~~
+
 **QUIZ**
 
 How would we go about encoding **choice** in our parsers? 
@@ -615,7 +643,7 @@ calc = do x  <- digitInt
 
 which, when run, will both parse and calculate
 
-~~~~~{.haskell}
+```haskell
 ghci> doParse calc "8/2"
 [(4,"")]
 
@@ -630,7 +658,7 @@ ghci> doParse calc "8-2cat"
 
 ghci> doParse calc "8*2cat"
 [(16,"cat")]
-~~~~~
+```
 
 **QUIZ**
 
@@ -664,6 +692,7 @@ string (c:cs) = do char c
                    string cs
                    return (c:cs)
 ~~~~~
+
 
 **DO IN CLASS**
 Ewww! Is that explicit recursion ?! Lets try again (can you spot the pattern)
