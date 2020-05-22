@@ -8,171 +8,122 @@ import Data.Char
 
 
 
-
-
-
 data Parser a = P (String -> [(a, String)])
   deriving (Functor) 
+
+
 
 runParser :: Parser a -> String -> [(a, String)]
 runParser (P f) s = f s
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{- 
 oneChar :: Parser Char
+oneChar = P (\cs -> case cs of
+                      [] -> [] 
+                      (c:cs') -> [(c, cs')])
+
+oneCharD = P (\cs -> [(head cs, tail cs)])
+
+-- >>> runParser oneChar "friday"
+-- [('f',"riday")]
+--
+-- >>> runParser oneChar ""
+-- []
+--
+
+{-
+-- A
+oneChar = P (\cs -> head cs)
+
+-- B
 oneChar = P (\cs -> case cs of 
-                      c:cs' -> [(c, cs')]
-                      _     -> [])
+                      []   -> [('', [])] 
+                      c:cs -> (c, cs))
+-- C
+oneChar = P (\cs -> (head cs, tail cs))
 
--- >>> runParser oneChar "foo"
--- [('f',"oo")]
+-- D
+oneChar = P (\cs -> [(head cs, tail cs)])
 
-                    
-twoChars :: Parser (Char, Char)
-twoChars = P (\cs -> case cs of 
-                      c1:c2:cs' -> [((c1, c2), cs')]
-                      _         -> []
-             )
--- >>> runParser twoChars "foo"
--- [(('f','o'),"o")]
-
-
-instance Monad Parser where
-    return x = P (\s -> [(x, s)])
-    p >>= f  = P (\s -> forEach (runParser p s) (\(a, s') ->
-                          forEach (runParser (f a) s') (\(b, s'') ->
-                              [(b, s'')]
-                 ))) 
-
-
-(<|>) :: Parser a -> Parser a -> Parser a
-p1 <|> p2 = P (\s -> case runParser p1 s of
-                            []  -> runParser p2 s
-                            r1s -> r1s)
-
-
-satP :: (Char -> Bool) -> Parser Char
-satP p = do 
-  c <- oneChar
-  if p c then return c else failP
-
-failP :: Parser a
-failP = P (\_ -> [])
-
-char :: Char -> Parser Char
-char c = satP (c ==) 
-
-digitChar :: Parser Char 
-digitChar = satP isDigit
-
-
--- 1. First, parse the operator 
-intOp      :: Parser (Int -> Int -> Int) 
-intOp      = plus <|> minus <|> times <|> divide 
-  where 
-    plus   = do { _ <- char '+'; return (+) }
-    minus  = do { _ <- char '-'; return (-) }
-    times  = do { _ <- char '*'; return (*) }
-    divide = do { _ <- char '/'; return div }
-
--- 2. Now parse the expression!
-calc :: Parser Int
-calc = do x  <- int 
-          op <- intOp
-          y  <- int 
-          return (x `op` y)
-
--- >>> runParser digitInt "1"
--- [(1,"")]
---
-
-string s = mapM char s
-
-parens p = do 
-    string "("
-    x <- p
-    string ")"
-    return x
-
--- | `manyP p` repeatedly runs `p` to return a list of [a]
-manyP  :: Parser a -> Parser [a]
-manyP p = m1 <|> m0
-  where
-    m0  = return [] 
-    m1  = do { x <- p; xs <- manyP p; return (x:xs) } 
-
-int :: Parser Int
-int = do { xs <- manyP digitChar; return (read xs) }
-
--- >>> runParser int "123horse"
--- [(123,"horse")]
-
-
-expr = oneOrMore prod addOp
-prod = oneOrMore base mulOp 
-base = parens expr <|> int
-
--- >>> runParser expr "10-5-5"
--- [(0,"")]
---
--- >>> runParser expr "10*(2+100)"
--- [(1020,"")]
-
-addOp, mulOp :: Parser (Int -> Int -> Int)
-addOp  = constP "+" (+) <|> constP "-" (-)
-mulOp = constP "*" (*) <|> constP "/" div
-
-constP :: String -> a -> Parser a 
-constP s x = do { _ <- string s; return x }
-
-oneOrMore :: Parser a -> Parser (a -> a -> a) -> Parser a
-oneOrMore vP oP = do {v1 <- vP; continue v1}
-  where 
-    continue v1 = do { o <- oP; v2 <- vP; continue (v1 `o` v2) }
-               <|> return v1
-
-
+-- E
+oneChar = P (\cs -> case cs of
+                      [] -> [] 
+                      cs -> [(head cs, tail cs)])
 -}
 
+
+twoChar :: Parser (Char, Char)
+twoChar = P (\cs -> case cs of 
+                      (c1:c2:cs') -> [((c1,c2), cs')]
+                      _           -> []
+            ) 
+
+forEach' :: [a] -> (a -> [b]) -> [b]
+forEach' []     f = []
+forEach' (x:xs) f = f x ++ forEach' xs f 
+
+-- forEach' xs f = concat (map f xs)
+
+example = forEach' [1,2,3] (\n -> 
+            forEach' [0, 1, 2] (\m -> 
+              [n * 100 + m]  
+            )
+          )
+
+-- >>> example
+-- [100,101,102,200,201,202,300,301,302]
+--
+
+-- >>> forEach' [1,2,3] (\n -> [n*100, n*100 + 1, n*100 + 2])
+-- [100,101,102,200,201,202,300,301,302]
+--
+
+
+retP :: a -> Parser a
+retP x = P (\s -> [(x, s)])
+
+bindP :: Parser a -> (a -> Parser b) -> Parser b
+bindP pa f = P (\s ->
+  forEach (runParser pa s) (\(va, s1) -> 
+    forEach (runParser (f va) s1) (\(vb, s2) ->
+      [(vb, s2)]
+      ) 
+    ) 
+  )
+
+instance Monad Parser where
+  return = retP
+  (>>=) = bindP
+
+pairP :: Parser a -> Parser b -> Parser (a, b)
+pairP pa pb = do 
+  va <- pa
+  vb <- pb
+  return (va, vb)
+
+p3 :: Parser a -> Parser (a, a, a)
+p3 p = do
+  x1 <- p
+  x2 <- p
+  x3 <- p
+  return (x1, x2, x3)
+
+-- >>> runParser (p3 oneChar) "fr"
+-- []
+--
+-- >>> runParser (pairP oneChar oneChar) "f"
+-- []
+--
+
+-- >>> runParser twoChar "f"
 
 forEach xs f = concatMap f xs 
 
 instance Applicative Parser where
-    pure x    = P (\s -> [(x, s)])
-    fP <*> vP = P (\s -> forEach (runParser fP s) (\(f, s') ->
-                           forEach (runParser vP s') (\(v, s'') -> 
-                               [(f v, s'')]
-                            )
+  pure x    = P (\s -> [(x, s)])
+  fP <*> vP = P (\s -> forEach (runParser fP s) (\(f, s') ->
+                         forEach (runParser vP s') (\(v, s'') -> 
+                            [(f v, s'')]
                          )
-                  )
+                       )
+                )
+
