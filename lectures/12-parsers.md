@@ -4,6 +4,24 @@ date: 2020-05-22
 headerImg: books.jpg
 --- 
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
 ## Before we continue ... 
 
 A Word from the Sponsor! 
@@ -11,6 +29,21 @@ A Word from the Sponsor!
 			Don't Fear Monads
 
 They are just a versatile abstraction, like `map` or `fold`.
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## Parsers 
 
