@@ -1,14 +1,34 @@
 {-# LANGUAGE DeriveFunctor #-}
 
-module Parsers where
+module Lec_5_22_20 where
 
 import Data.Char
+
+
+
+
+
+
+
 
 data Parser a = P (String -> [(a, String)])
   deriving (Functor) 
 
 runParser :: Parser a -> String -> [(a, String)]
 runParser (P f) s = f s
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
