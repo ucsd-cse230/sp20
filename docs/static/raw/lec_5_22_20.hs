@@ -17,6 +17,19 @@ runParser (P f) s = f s
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+{- 
 oneChar :: Parser Char
 oneChar = P (\cs -> case cs of 
                       c:cs' -> [(c, cs')]
@@ -24,7 +37,7 @@ oneChar = P (\cs -> case cs of
 
 -- >>> runParser oneChar "foo"
 -- [('f',"oo")]
---
+
                     
 twoChars :: Parser (Char, Char)
 twoChars = P (\cs -> case cs of 
@@ -34,7 +47,6 @@ twoChars = P (\cs -> case cs of
 -- >>> runParser twoChars "foo"
 -- [(('f','o'),"o")]
 
-forEach xs f = concatMap f xs 
 
 instance Monad Parser where
     return x = P (\s -> [(x, s)])
@@ -130,6 +142,11 @@ oneOrMore vP oP = do {v1 <- vP; continue v1}
     continue v1 = do { o <- oP; v2 <- vP; continue (v1 `o` v2) }
                <|> return v1
 
+
+-}
+
+
+forEach xs f = concatMap f xs 
 
 instance Applicative Parser where
     pure x    = P (\s -> [(x, s)])

@@ -35,7 +35,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/15*     | State Transformers              | [html][11-state]          | [pdf][11-state-A]    | [code][lec_5_15] |
 | *5/18*     | 				                   |                           | [pdf][11-state-C]    | [code][lec_5_18] |
 | *5/20*     | 				                   |                           | [pdf][11-state-C]    | [code][lec_5_20] |
-|            | Parser Combinators              | [html][12-parsing]        |                      |                  |
+|            | Parser Combinators              | [html][12-parsing]        |                      | [code][lec_5_22] |
 |            | List Monad                      | [html][10-list]           |                      |                  |
 |            | Transformers                    |                           |                      |                  | 
 |            | Concurrency / STM / Async       |                           |                      |                  |
@@ -97,6 +97,7 @@ Liquid    = 3
 [lec_5_15]: static/raw/lec_5_15_20.hs
 [lec_5_18]: static/raw/lec_5_18_20.hs
 [lec_5_20]: static/raw/lec_5_20_20.hs
+[lec_5_22]: static/raw/lec_5_22_20.hs
 
 [05-higher-order]: lectures/05-higher-order.html 
 [06-poly-data]: lectures/06-poly-data.html    
