@@ -3,6 +3,10 @@ title: Lecture Notes
 headerImg: books.jpg
 ---
 
+
+
+
+
 ## Videos
 
 This class will have zoom lectures with live coding. 
