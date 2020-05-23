@@ -35,9 +35,12 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/6*      | Typeclasses                     | [html][08-typeclasses]    | [pdf][08-classes-A]  | [code][lec_5_6]  |
 | *5/8*      | ""                              |                           | [pdf][08-classes-B]  | [code][lec_5_8]  |
 | *5/11*     | Functors & Monads               | [html][09-monads]         | [pdf][09-monads-A]   | [code][lec_5_11] | 
+| *5/13*     | ""                              |                           |                      | [code][lec_5_13] |
+| *5/15*     | State Transformers              | [html][11-state]          | [pdf][11-state-A]    | [code][lec_5_15] |
+| *5/18*     | 				                   |                           | [pdf][11-state-C]    | [code][lec_5_18] |
+| *5/20*     | 				                   |                           | [pdf][11-state-C]    | [code][lec_5_20] |
+|            | Parser Combinators              | [html][12-parsing]        |                      | [code][lec_5_22] |
 |            | List Monad                      | [html][10-list]           |                      |                  |
-|            | State Monad                     | [html][11-state]          |                      |                  |
-|            | Parser Combinators              |                           |                      |                  |
 |            | Transformers                    |                           |                      |                  | 
 |            | Concurrency / STM / Async       |                           |                      |                  |
 |            | Property-based Testing          |                           |                      |                  | 
@@ -91,8 +94,14 @@ Liquid    = 3
 [lec_5_8]: static/raw/lec_5_8_20.hs
 [09-monads-A]: static/raw/09-monads-A.pdf
 [lec_5_11]: static/raw/lec_5_11_20.hs
-
-
+[11-state-A]: static/raw/11-state-A.pdf
+[11-state-B]: static/raw/11-state-B.pdf
+[11-state-C]: static/raw/11-state-C.pdf
+[lec_5_13]: static/raw/lec_5_13_20.hs
+[lec_5_15]: static/raw/lec_5_15_20.hs
+[lec_5_18]: static/raw/lec_5_18_20.hs
+[lec_5_20]: static/raw/lec_5_20_20.hs
+[lec_5_22]: static/raw/lec_5_22_20.hs
 
 [05-higher-order]: lectures/05-higher-order.html 
 [06-poly-data]: lectures/06-poly-data.html    
@@ -100,15 +109,11 @@ Liquid    = 3
 [08-typeclasses]: lectures/08-typeclasses.html  
 [09-monads]: lectures/09-monads.html
 [10-list]: lectures/10-list.html
-
-
-
-
-
+[11-state]: lectures/11-state.html
+[12-parsing]: lectures/12-parsers.html
 
 
 <!-- JUNK -->
-[06-parsers]: lectures/00-intro.html
 [07-testing]: lectures/00-intro.html
 [08-parconc]: lectures/00-intro.html
 [09-types]: lectures/00-intro.html

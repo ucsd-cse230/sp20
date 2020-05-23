@@ -623,6 +623,18 @@ eval (Div e1 e2)  = do v1 <- eval e1
                          else return (v1 `div` v2)
 ```
 
+Which now produces the result
+
+```haskell
+>>> evalR exQuiz
+Error "yikes dbz:Minus (Number 5) (Number 5)"
+```
+
+
+
+
+
+
 <br>
 <br>
 <br>
