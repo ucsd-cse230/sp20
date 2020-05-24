@@ -1345,7 +1345,7 @@ where the function `apply` is just
 
 \begin{code}
 apply :: ST s a -> s -> (a, s)
-apply (STC f) s = f s
+apply (S f) x = f x
 \end{code}
 
 Accessing and Modifying State

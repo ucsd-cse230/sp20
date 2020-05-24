@@ -37,8 +37,6 @@ Recall our expressions with division
 data Expr
   = Number Int            -- ^ 0,1,2,3,4
   | Plus   Expr Expr      -- ^ e1 + e2
-  | Minus  Expr Expr      -- ^ e1 - e2
-  | Mult   Expr Expr      -- ^ e1 * e2
   | Div    Expr Expr      -- ^ e1 / e2
   deriving (Show)
 ```
