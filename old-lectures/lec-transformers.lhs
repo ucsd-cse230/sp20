@@ -24,7 +24,7 @@ Today, we will see how monads can be used to write (and compose)
 
 Remember the vanilla *unsafe* evaluator 
 
-> eval            ::  Expr -> Int
+> eval           ::  Expr -> Int
 > eval (Val n)   =  n
 > eval (Div x y) =  eval x `div` eval y
 

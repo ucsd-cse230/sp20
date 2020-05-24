@@ -37,8 +37,6 @@ Recall our expressions with division
 data Expr
   = Number Int            -- ^ 0,1,2,3,4
   | Plus   Expr Expr      -- ^ e1 + e2
-  | Minus  Expr Expr      -- ^ e1 - e2
-  | Mult   Expr Expr      -- ^ e1 * e2
   | Div    Expr Expr      -- ^ e1 / e2
   deriving (Show)
 ```
@@ -49,11 +47,9 @@ We had a **potentially crashing** evaluator
 eval :: Expr -> Int
 eval (Number n)    = n
 eval (Plus  e1 e2) = eval e1   +   eval e2
-eval (Minus e1 e2) = eval e1   -   eval e2
-eval (Mult  e1 e2) = eval e1   *   eval e2
 eval (Div   e1 e2) = eval e1 `div` eval e2
 
--- >>> eval (Div (Val 10) (Minus (Number 5) (Number 5)))
+-- >>> eval (Div (Val 10) (Plus (Number 5) (Number (-5))))
 -- Exception: Divide by zero
 ```
 
@@ -93,8 +89,6 @@ and then we can write
 eval :: Expr -> Result Int
 eval (Number n)    = return n
 eval (Plus  e1 e2) = do {n1 <- eval e1; n2 <- eval e2; return (n1   +   n2) } 
-eval (Minus e1 e2) = do {n1 <- eval e1; n2 <- eval e2; return (n1   -   n2) } 
-eval (Mult  e1 e2) = do {n1 <- eval e1; n2 <- eval e2; return (n1   *   n2) } 
 eval (Div   e1 e2) = do { n1 <- eval e1; 
                           n2 <- eval e2; 
                           if n2 /= 0 
@@ -196,31 +190,40 @@ instance Monad (Either e) where
 <br>
 <br>
 
-
 ## QUIZ
 
-What does `quiz` evaluate to?
+
+We can rewrite `eval` to return an `Either` 
 
 ```haskell
 eval :: Expr -> Either Expr Int
 eval (Number n)    = return n
-eval (Plus  e1 e2) = do { n1 <- eval e1; n2 <- eval e2; return (n1   +   n2) } 
-eval (Minus e1 e2) = do { n1 <- eval e1; n2 <- eval e2; return (n1   -   n2) } 
-eval (Mult  e1 e2) = do { n1 <- eval e1; n2 <- eval e2; return (n1   *   n2) } 
-eval (Div   e1 e2) = do { n1 <- eval e1; n2 <- eval e2; 
-                          if n2 /= 0 
-                            then return (n1 `div` n2) 
-                            else Left e2
-                        } 
-
-quiz = eval (Div (Val 10) (Minus (Number 5) (Number 5)))
+eval (Plus  e1 e2) = do n1 <- eval e1 
+                        n2 <- eval e2
+                        return (n1+n2)
+eval (Div   e1 e2) = do n1 <- eval e1 
+                        n2 <- eval e2
+                        if n2 /= 0 
+                          then return (n1 `div` n2) 
+                          else Left e2
 ```
 
-**A.** `Err "DBZ: Minus (Number 5) (Number 5)"`
-**B.** `Left "DBZ: Minus (Number 5) (Number 5)"`
+What does `quiz` evaluate to?
+
+```haskell
+quiz = eval (Div (Val 10) (Plus (Number 5) (Number (-5))))
+```
+
+**A.** `Err "DBZ: Plus (Number 5) (Number (-5))"`
+
+**B.** `Left "DBZ: Plus (Number 5) (Number (-5))"`
+
 **C.** Run-time Exception 
-**D.** `Minus (Number 5) (Number 5)`
-**E.** `Left (Minus (Number 5) (Number 5))`
+
+**D.** `Plus (Number 5) (Number (-5))`
+
+**E.** `Left (Plus (Number 5) (Number (-5)))`
+
 
 <br>
 <br>
@@ -238,11 +241,279 @@ quiz = eval (Div (Val 10) (Minus (Number 5) (Number 5)))
 <br>
 <br>
 
-- Try-Catch 
-  - WithDefault Expr Int
-- Yay, monads = exceptions!
+## `Either` is an **Exception** Monad! 
 
-## `Either` is an **exception-handling** Monad! 
+What can you do with exceptions?
+
+1. `throw` an exception (with some value) ... 
+
+2. `catch` an exception (and use its value) ...
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## 1. `throw`ing an Exception
+
+We can simply define 
+
+```haskell
+throw :: e -> Either e a
+throw exn = Left exn
+``` 
+
+and now _voila_
+
+```haskell
+eval :: Expr -> Either Expr Int
+eval (Number n)    = return n
+eval (Plus  e1 e2) = do n1 <- eval e1 
+                        n2 <- eval e2
+                        return (n1+n2)
+eval (Div   e1 e2) = do n1 <- eval e1 
+                        n2 <- eval e2
+                        if n2 /= 0 
+                          then return (n1 `div` n2) 
+                          else throw e2
+```
+
+*Exactly* the same evaluator 
+
+- Result is a `Left` ==> an *exception* came all the way to the top.
+
+- `Either` monad ensures the "exception" shoots to the top! 
+
+```haskell
+>>> eval (Div (Val 10) (Minus (Number 5) (Number 5)))
+Left (Minus (Number 5) (Number 5))
+```
+
+No further evaluation happens after a `throw` because ???
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## `catch`ing an exception
+
+How to _catch_ an exception?
+
+Lets change our `Expr` type to 
+
+```haskell
+data Expr
+  = Number  Int            -- ^ 0,1,2,3,4
+  | Plus    Expr Expr      -- ^ e1 + e2
+  | Div     Expr Expr      -- ^ e1 / e2
+  | Try     Expr Int       
+  deriving (Show)
+```
+
+Informally, `try e n` evaluates to `e` but 
+
+- if `e` is undefined due to *divide-by-zero* 
+
+- then evaluate to `n`
+
+```haskell
+eval :: Expr -> Either Expr Int
+eval (Number n)    = return n
+eval (Plus  e1 e2) = do n1 <- eval e1 
+                        n2 <- eval e2
+                        return (n1+n2)
+eval (Div   e1 e2) = do n1 <- eval e1 
+                        n2 <- eval e2
+                        if n2 /= 0 
+                          then return (n1 `div` n2) 
+                          else throw e2
+eval (Try e n)     = catch (eval e) (\_ -> return n)
+```
+
+## QUIZ 
+
+What should the _type_ of `catch` be?
+
+**A.** `Either e a -> (a -> Either e b) -> Either e b`
+
+**B.** `Either e a -> (e -> Either e b) -> Either e b`
+
+**C.** `Either e a -> (e -> Either e a) -> Either e a`
+
+**D.** `Either e a -> Either e a -> Either e a`
+
+**E.** `Either e a -> Either e b -> Either e b`
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Implementing `catch`
+
+Lets implement the `catch` function!
+
+```haskell
+catch :: Either e a -> (e -> Either e a) -> Either e a
+catch (Left  e) handle  = ???
+catch (Right a) handler = ???
+```
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ
+
+```haskell
+catch :: Either e a -> (e -> Either e a) -> Either e a
+catch (Left  e) handle  = ???
+catch (Right a) handler = ???
+
+eval :: Expr -> Either Expr Int
+eval (Number n)    = return n
+eval (Plus  e1 e2) = do n1 <- eval e1 
+                        n2 <- eval e2
+                        return (n1+n2)
+eval (Div   e1 e2) = do n1 <- eval e1 
+                        n2 <- eval e2
+                        if n2 /= 0 
+                          then return (n1 `div` n2) 
+                          else throw e2
+eval (Try e n)     = catch (eval e) (\_ -> return n)
+
+e1  = Div (Number 10) (Plus (Number 5) (Number (-5)))
+e1' = Try e1 7
+
+quiz = eval (Try e1 7)
+```
+
+What does `quiz` evaluate to?
+
+**A.** `Right 7`
+
+**B.** `Left 7`
+
+**C.** `Right 0`
+
+**D.** `Left 0`
+
+**E.** `Left (Plus (Number 5) (Number (-5)))`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## `Either` is an **Exception** Monad! 
+
+1. `throw` an exception (with some value) ... 
+
+2. `catch` an exception (and use its value) ...
+
+```haskell
+throw :: e -> Either e a
+throw e = Left e
+
+catch :: Either e a -> (e -> Either e a) -> Either e a
+catch (Left  e) handle = handle e
+catch (Right e) _      = Right  e
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Monads Can Be Used for Many Things!
+
+* Partial Functions
+* Global State 
+* Parsing
+* Exceptions
+* Test Generation
+* Concurrency 
+* ... 
+
+... but what if I want *Exceptions* **and** *Global State* ?
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Mixing Monads
+
+What if I want *Exceptions* **and** *Global State* ?
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 
 ## Profiling with the ST Monad
@@ -250,10 +521,6 @@ quiz = eval (Div (Val 10) (Minus (Number 5) (Number 5)))
 - "Profiling"
 - ST 
 - Yay, monads = global state!
-
-## Mixing Monads
-
-What if I want exceptions AND state?
 
 ## Transformers
 
