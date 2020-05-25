@@ -185,15 +185,15 @@ evalThrowCatch = eval
 -- | A State-Transformer with a "global" `Int` counter ------------------------
 type Profile a = State Int a
 
-instance Show a => Show (Profile a) where
-  show st = showValCount (runState st 0)
+runProfile :: (Show a) => Profile a -> String 
+runProfile st = showValCount (runState st 0)
 
 showValCount :: (Show v, Show c) => (v, c) -> String
 showValCount (val, count) = "value: " ++ show val ++ ", count: " ++ show count 
 
--- | A "global" `tick` operator ----------------------------------------------- 
--- tick :: Profile ()
-tick = do
+-- | A "global" `count` operator ----------------------------------------------- 
+-- count :: Profile ()
+count = do
   n <- get
   put (n+1)
 
@@ -205,20 +205,28 @@ evalProf = eval
     eval (Number n)    = return n
     eval (Plus  e1 e2) = do n1 <- eval e1 
                             n2 <- eval e2
-                            tick
+                            count
                             return (n1+n2)
     eval (Div   e1 e2) = do n1 <- eval e1 
                             n2 <- eval e2
-                            tick
+                            count
                             return (n1 `div` n2) 
 
-
--- >>> evalProf e1
--- value: 1, count: 2
+-- >>> e1
+-- Div (Number 10) (Plus (Number 5) (Number 5))
 --
--- >>> evalProf e2
+
+-- >>> runProfile (evalProf e1)
+-- "value: 1, count: 2"
+--
+
+-- >>> e2
+-- Div (Number 10) (Plus (Number 5) (Number (-5)))
+--
+
+-- >>> runProfile (evalProf e2)
 -- *** Exception: divide by zero
--- value: 
+-- "value: 
 --
 
 -------------------------------------------------------------------------------
@@ -241,10 +249,10 @@ evalProf = eval
 
  -}
 
--- Refactor `tick` specification to USE `MonadState Int` ------------------------ 
+-- Refactor `count` specification to USE `MonadState Int` ------------------------ 
 
-tick :: (MonadState Int m) => m ()
--- tick = do
+count :: (MonadState Int m) => m ()
+-- count = do
 --   n <- get
 --   put (n+1)
 
@@ -271,11 +279,11 @@ evalMix = eval
     eval (Number n)    = return n
     eval (Plus  e1 e2) = do n1 <- eval e1 
                             n2 <- eval e2
-                            tick
+                            count
                             return (n1 + n2)
     eval (Div   e1 e2) = do n1 <- eval e1 
                             n2 <- eval e2
-                            tick
+                            count
                             if (n2 /= 0) 
                               then return (n1 `div` n2) 
                               else throwError e2
