@@ -36,10 +36,10 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/18*     | 				                   |                           | [pdf][11-state-C]    | [code][lec_5_18] |
 | *5/20*     | 				                   |                           | [pdf][11-state-C]    | [code][lec_5_20] |
 |            | Parser Combinators              | [html][12-parsing]        |                      | [code][lec_5_22] |
-|            | List Monad                      | [html][10-list]           |                      |                  |
-|            | Transformers                    |                           |                      |                  | 
-|            | Concurrency / STM / Async       |                           |                      |                  |
+|            | Transformers                    | [html][13-transformers]   |                      |                  | 
 |            | Property-based Testing          |                           |                      |                  | 
+|            | List Monad                      | [html][10-list]           |                      |                  |
+|            | Concurrency / STM / Async       |                           |                      |                  |
 |            | Refinement Types                |                           |                      |                  |          
 |            | Proofs as Programs              |                           |                      |                  | 
 
@@ -107,6 +107,7 @@ Liquid    = 3
 [10-list]: lectures/10-list.html
 [11-state]: lectures/11-state.html
 [12-parsing]: lectures/12-parsers.html
+[13-transformers]: lectures/13-transformers.html
 
 
 <!-- JUNK -->
