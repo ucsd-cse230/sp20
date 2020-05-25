@@ -40,7 +40,7 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 |            | Transformers                    | [html][13-transformers]   |                      |                  | 
 |            | Property-based Testing          |                           |                      |                  | 
 |            | List Monad                      | [html][10-list]           |                      |                  |
-|            | Concurrency / STM / Async       |                           |                      |                  |
+|            | Concurrency                     |                           |                      |                  |
 |            | Refinement Types                |                           |                      |                  |          
 |            | Proofs as Programs              |                           |                      |                  | 
 

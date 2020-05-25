@@ -742,8 +742,8 @@ runProfExn st = case (runIdentity (runExceptT (runStateT st 0))) of
   e        -> show e
 -->
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
-<h2 id="summary-combining-monads-with-multiple-features">Summary: Combining Monads with <strong>Multiple Features</strong></h2>
-<h3 id="transformers-let-us-add-capabilities-to-basic-monads">Transformers let us add capabilities to <em>basic</em> Monads</h3>
+<h2 id="summary-mixing-monads-with-many-features">Summary: Mixing Monads with Many Features</h2>
+<h3 id="transformers-add-capabilities-to-monads">1. Transformers add capabilities to Monads</h3>
 <p><img src="../static/img/mtrans_3.png" id="fig:More-Capabilities" class="align-right" style="width:80.0%" /></p>
 <p><code class="sourceCode haskell"><span class="dt">Transform2</span> (<span class="dt">Transform1</span> m)</code> implements</p>
 <ul>
@@ -751,7 +751,7 @@ runProfExn st = case (runIdentity (runExceptT (runStateT st 0))) of
 <li>operations added by <code class="sourceCode haskell"><span class="dt">Transform1</span></code> <strong>and</strong></li>
 <li>operations added by <code class="sourceCode haskell"><span class="dt">Transform2</span></code></li>
 </ul>
-<h3 id="statet-and-exceptt-let-us-combine-state-and-exceptions"><code class="sourceCode haskell"><span class="dt">StateT</span></code> and <code class="sourceCode haskell"><span class="dt">ExceptT</span></code> let us combine state and exceptions</h3>
+<h3 id="statet-and-exceptt-add-state-and-exceptions">2. <code class="sourceCode haskell"><span class="dt">StateT</span></code> and <code class="sourceCode haskell"><span class="dt">ExceptT</span></code> add State and Exceptions</h3>
 <ul>
 <li>Start with a <em>basic</em> monad <code class="sourceCode haskell"><span class="dt">Identity</span></code></li>
 <li>Use <code class="sourceCode haskell"><span class="dt">StateT</span> <span class="dt">Int</span></code> to add global-<code class="sourceCode haskell"><span class="dt">Int</span></code> <em>state-update</em> capabilities</li>

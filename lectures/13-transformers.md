@@ -1149,9 +1149,9 @@ runProfExn st = case (runIdentity (runExceptT (runStateT st 0))) of
 <br>
 <br>
 
-## Summary: Combining Monads with **Multiple Features**
+## Summary: Mixing Monads with Many Features
 
-### Transformers let us add capabilities to _basic_ Monads
+### 1. Transformers add capabilities to Monads
 
 ![](/static/img/mtrans_3.png){#fig:More-Capabilities .align-right width=80%}
 
@@ -1161,7 +1161,7 @@ runProfExn st = case (runIdentity (runExceptT (runStateT st 0))) of
 - operations added by `Transform1` **and** 
 - operations added by `Transform2`
 
-### `StateT` and `ExceptT` let us combine state and exceptions
+### 2. `StateT` and `ExceptT` add State and Exceptions
 
 * Start with a _basic_ monad `Identity` 
 * Use `StateT Int` to add global-`Int` *state-update* capabilities
