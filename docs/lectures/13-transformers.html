@@ -511,145 +511,253 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p><strong>Problem:</strong> How to get <em>global state</em> AND <em>exception handling</em> ?</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="mixing-monads-with-transformers">Mixing Monads with Transformers</h2>
+<h3 id="start-with-a-basic-monad">Start with a <em>Basic</em> Monad</h3>
+<p><img src="../static/img/mtrans_0.png" id="fig:Basic-Monad" class="align-right" style="width:80.0%" /></p>
+<p><code class="sourceCode haskell">m</code> implements</p>
+<ul>
+<li><em>no</em> special operations</li>
+</ul>
+<h3 id="transform-it-to-add-some-capabilities">Transform it to add some <em>Capabilities</em></h3>
+<p><img src="../static/img/mtrans_1.png" id="fig:Add-Capabilities" class="align-right" style="width:80.0%" /></p>
+<p><code class="sourceCode haskell"><span class="dt">Transform1</span> m</code> implements</p>
+<ul>
+<li><code class="sourceCode haskell">m</code> operations <strong>and</strong></li>
+<li>operations added by <code class="sourceCode haskell"><span class="dt">Transform1</span></code></li>
+</ul>
+<h3 id="transform-again-to-add-more-capabilities">Transform again to add <em>more</em> Capabilities</h3>
+<p><img src="../static/img/mtrans_2.png" id="fig:More-Capabilities" class="align-right" style="width:80.0%" /></p>
+<p><code class="sourceCode haskell"><span class="dt">Transform2</span> (<span class="dt">Transform1</span> m)</code> implements</p>
+<ul>
+<li><code class="sourceCode haskell">m</code> operations <strong>and</strong></li>
+<li>operations added by <code class="sourceCode haskell"><span class="dt">Transform1</span></code> <strong>and</strong></li>
+<li>operations added by <code class="sourceCode haskell"><span class="dt">Transform2</span></code></li>
+</ul>
+<h3 id="and-so-on">… And so on</h3>
+<p><img src="../static/img/mtrans_3.png" id="fig:More-Capabilities" class="align-right" style="width:80.0%" /></p>
+<p><code class="sourceCode haskell"><span class="dt">Transform3</span> (<span class="dt">Transform2</span> (<span class="dt">Transform1</span> m))</code> implements</p>
+<ul>
+<li><code class="sourceCode haskell">m</code> operations <strong>and</strong></li>
+<li>operations added by <code class="sourceCode haskell"><span class="dt">Transform1</span></code> <strong>and</strong></li>
+<li>operations added by <code class="sourceCode haskell"><span class="dt">Transform2</span></code> <strong>and</strong></li>
+<li>operations added by <code class="sourceCode haskell"><span class="dt">Transform3</span></code> …</li>
+</ul>
+<p>Reminiscent of the <a href="http://oreilly.com/catalog/hfdesignpat/chapter/ch03.pdf">Decorator Design Pattern</a> or <a href="http://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators">Python’s Decorators</a>.</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="mixing-monads-with-transformers-1">Mixing Monads with Transformers</h2>
 <ul>
 <li><p>Step 1: <strong>Specifying</strong> Monads with Extra Features</p></li>
 <li><p>Step 2: <strong>Implementing</strong> Monads with Extra Features</p></li>
 </ul>
-<div class="sourceCode" id="cb27"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb27-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="co">-------------------------------------------------------------------------------</span></a>
-<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="co">-- | 6. SPECIFYING Monads with Extra Features --------------------------------- </span></a>
-<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="co">-------------------------------------------------------------------------------</span></a>
-<a class="sourceLine" id="cb27-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb27-6" data-line-number="6"><span class="co">{- | `(MonadState s m)` means `m` is ANY &quot;State-Transformer&quot; monad over state `s`</span></a>
-<a class="sourceLine" id="cb27-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb27-8" data-line-number="8"><span class="co">      * Supports `&gt;&gt;=` and `return`    </span></a>
-<a class="sourceLine" id="cb27-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb27-10" data-line-number="10"><span class="co">      * Supports `get :: m s`, `put :: s -&gt; m ()` </span></a>
-<a class="sourceLine" id="cb27-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb27-12" data-line-number="12"><span class="co"> -}</span></a>
-<a class="sourceLine" id="cb27-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb27-14" data-line-number="14"><span class="co">-- Refactor `count` specification to USE `MonadState Int` ------------------------ </span></a>
-<a class="sourceLine" id="cb27-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb27-16" data-line-number="16"><span class="ot">count ::</span> (<span class="dt">MonadState</span> <span class="dt">Int</span> m) <span class="ot">=&gt;</span> m ()</a>
-<a class="sourceLine" id="cb27-17" data-line-number="17"><span class="co">-- count = do</span></a>
-<a class="sourceLine" id="cb27-18" data-line-number="18"><span class="co">--   n &lt;- get</span></a>
-<a class="sourceLine" id="cb27-19" data-line-number="19"><span class="co">--   put (n+1)</span></a>
-<a class="sourceLine" id="cb27-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb27-21" data-line-number="21"></a>
-<a class="sourceLine" id="cb27-22" data-line-number="22"><span class="co">{- | `MonadError e m` means `m` is ANY &quot;Exception&quot; monad where the exception has type `e`</span></a>
-<a class="sourceLine" id="cb27-23" data-line-number="23"></a>
-<a class="sourceLine" id="cb27-24" data-line-number="24"><span class="co">      * Supports `&gt;&gt;=` and `return`    </span></a>
-<a class="sourceLine" id="cb27-25" data-line-number="25"></a>
-<a class="sourceLine" id="cb27-26" data-line-number="26"><span class="co">      * Supports `throwError :: e -&gt; m a `, `catchError :: m a -&gt; (e -&gt; m a) -&gt; m a`</span></a>
-<a class="sourceLine" id="cb27-27" data-line-number="27"></a>
-<a class="sourceLine" id="cb27-28" data-line-number="28"><span class="co">  -}</span> </a>
-<a class="sourceLine" id="cb27-29" data-line-number="29"></a>
-<a class="sourceLine" id="cb27-30" data-line-number="30"><span class="co">-- Refactor `tryCatch` specification to USE `MonadState Int` ------------------- </span></a>
-<a class="sourceLine" id="cb27-31" data-line-number="31"></a>
-<a class="sourceLine" id="cb27-32" data-line-number="32"><span class="ot">tryCatch ::</span> (<span class="dt">MonadError</span> <span class="dt">Expr</span> m) <span class="ot">=&gt;</span> m a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> m a  </a>
-<a class="sourceLine" id="cb27-33" data-line-number="33"><span class="co">-- tryCatch m def = catchError m (\_ -&gt; return def)</span></a>
-<a class="sourceLine" id="cb27-34" data-line-number="34"></a>
-<a class="sourceLine" id="cb27-35" data-line-number="35"><span class="co">-- | Refactor `eval` specification to a monad `m` that implements BOTH of </span></a>
-<a class="sourceLine" id="cb27-36" data-line-number="36"><span class="co">-- `MonadState Int` AND `MonadError Expr`</span></a>
-<a class="sourceLine" id="cb27-37" data-line-number="37"></a>
-<a class="sourceLine" id="cb27-38" data-line-number="38"><span class="ot">evalMix ::</span> (<span class="dt">MonadState</span> <span class="dt">Int</span> m, <span class="dt">MonadError</span> <span class="dt">Expr</span> m) <span class="ot">=&gt;</span> <span class="dt">Expr</span> <span class="ot">-&gt;</span> m <span class="dt">Int</span> </a>
-<a class="sourceLine" id="cb27-39" data-line-number="39">evalMix <span class="fu">=</span> eval </a>
-<a class="sourceLine" id="cb27-40" data-line-number="40">  <span class="kw">where</span> </a>
-<a class="sourceLine" id="cb27-41" data-line-number="41">    eval (<span class="dt">Number</span> n)    <span class="fu">=</span> return n</a>
-<a class="sourceLine" id="cb27-42" data-line-number="42">    eval (<span class="dt">Plus</span>  e1 e2) <span class="fu">=</span> <span class="kw">do</span> n1 <span class="ot">&lt;-</span> eval e1 </a>
-<a class="sourceLine" id="cb27-43" data-line-number="43">                            n2 <span class="ot">&lt;-</span> eval e2</a>
-<a class="sourceLine" id="cb27-44" data-line-number="44">                            count</a>
-<a class="sourceLine" id="cb27-45" data-line-number="45">                            return (n1 <span class="fu">+</span> n2)</a>
-<a class="sourceLine" id="cb27-46" data-line-number="46">    eval (<span class="dt">Div</span>   e1 e2) <span class="fu">=</span> <span class="kw">do</span> n1 <span class="ot">&lt;-</span> eval e1 </a>
-<a class="sourceLine" id="cb27-47" data-line-number="47">                            n2 <span class="ot">&lt;-</span> eval e2</a>
-<a class="sourceLine" id="cb27-48" data-line-number="48">                            count</a>
-<a class="sourceLine" id="cb27-49" data-line-number="49">                            <span class="kw">if</span> (n2 <span class="fu">/=</span> <span class="dv">0</span>) </a>
-<a class="sourceLine" id="cb27-50" data-line-number="50">                              <span class="kw">then</span> return (n1 <span class="ot">`div`</span> n2) </a>
-<a class="sourceLine" id="cb27-51" data-line-number="51">                              <span class="kw">else</span> throwError e2</a>
-<a class="sourceLine" id="cb27-52" data-line-number="52">    eval (<span class="dt">Try</span> e n)     <span class="fu">=</span> tryCatch (eval e) n</a>
-<a class="sourceLine" id="cb27-53" data-line-number="53"></a>
-<a class="sourceLine" id="cb27-54" data-line-number="54"><span class="co">-- &gt;&gt;&gt; evalMix e1 </span></a>
-<a class="sourceLine" id="cb27-55" data-line-number="55"></a>
-<a class="sourceLine" id="cb27-56" data-line-number="56"><span class="co">-- &gt;&gt;&gt; evalMix e2</span></a>
-<a class="sourceLine" id="cb27-57" data-line-number="57"></a>
-<a class="sourceLine" id="cb27-58" data-line-number="58"><span class="co">-------------------------------------------------------------------------------</span></a>
-<a class="sourceLine" id="cb27-59" data-line-number="59"><span class="co">-- GHC: &quot;Sure, but WHAT is this MAGIC MONAD that implements BOTH features?&quot;</span></a>
-<a class="sourceLine" id="cb27-60" data-line-number="60"><span class="co">-------------------------------------------------------------------------------</span></a>
-<a class="sourceLine" id="cb27-61" data-line-number="61"></a>
-<a class="sourceLine" id="cb27-62" data-line-number="62"><span class="co">-------------------------------------------------------------------------------</span></a>
-<a class="sourceLine" id="cb27-63" data-line-number="63"><span class="co">-- | 7. IMPLEMENTING Monads with Extra Features -------------------------------</span></a>
-<a class="sourceLine" id="cb27-64" data-line-number="64"><span class="co">-------------------------------------------------------------------------------</span></a>
-<a class="sourceLine" id="cb27-65" data-line-number="65"></a>
-<a class="sourceLine" id="cb27-66" data-line-number="66"><span class="co">{- | `Identity a`  is a BASIC monad with NO features</span></a>
-<a class="sourceLine" id="cb27-67" data-line-number="67"></a>
-<a class="sourceLine" id="cb27-68" data-line-number="68"><span class="co">      data Identity a = Id a</span></a>
-<a class="sourceLine" id="cb27-69" data-line-number="69"></a>
-<a class="sourceLine" id="cb27-70" data-line-number="70"><span class="co">      instance Monad Identity where</span></a>
-<a class="sourceLine" id="cb27-71" data-line-number="71"><span class="co">        return a     = Id a</span></a>
-<a class="sourceLine" id="cb27-72" data-line-number="72"><span class="co">        (Id a) &gt;&gt;= f = f a</span></a>
-<a class="sourceLine" id="cb27-73" data-line-number="73"></a>
-<a class="sourceLine" id="cb27-74" data-line-number="74"><span class="co">     `StateT s m` takes a monad `m` and TRANSFORMS it into a NEW monad m' with</span></a>
-<a class="sourceLine" id="cb27-75" data-line-number="75"></a>
-<a class="sourceLine" id="cb27-76" data-line-number="76"><span class="co">      - whatever `m` implements</span></a>
-<a class="sourceLine" id="cb27-77" data-line-number="77"><span class="co">      - PLUS adds State-transformer capabilities (MonadState s m')</span></a>
-<a class="sourceLine" id="cb27-78" data-line-number="78"></a>
-<a class="sourceLine" id="cb27-79" data-line-number="79"><span class="co">     `ExceptT e m` takes a monad `m` and TRANSFORMS it into a NEW monad m' with </span></a>
-<a class="sourceLine" id="cb27-80" data-line-number="80"></a>
-<a class="sourceLine" id="cb27-81" data-line-number="81"><span class="co">      - whatever `m` implements</span></a>
-<a class="sourceLine" id="cb27-82" data-line-number="82"><span class="co">      - PLUS adds Exception-handling capabilities (MonadError e m')</span></a>
-<a class="sourceLine" id="cb27-83" data-line-number="83"></a>
-<a class="sourceLine" id="cb27-84" data-line-number="84"><span class="co"> -}</span></a>
-<a class="sourceLine" id="cb27-85" data-line-number="85"></a>
-<a class="sourceLine" id="cb27-86" data-line-number="86"><span class="co">-- The following implements &quot;State-transformer over `Int` states&quot;</span></a>
-<a class="sourceLine" id="cb27-87" data-line-number="87"><span class="kw">type</span> <span class="dt">Prof</span> <span class="fu">=</span> <span class="dt">StateT</span> <span class="dt">Int</span> <span class="dt">Identity</span> </a>
-<a class="sourceLine" id="cb27-88" data-line-number="88"></a>
-<a class="sourceLine" id="cb27-89" data-line-number="89"><span class="co">-- We can go back and give `evalProf` the type</span></a>
-<a class="sourceLine" id="cb27-90" data-line-number="90"></a>
-<a class="sourceLine" id="cb27-91" data-line-number="91"><span class="co">--   evalProf :: Expr -&gt; Prof Int</span></a>
-<a class="sourceLine" id="cb27-92" data-line-number="92"></a>
-<a class="sourceLine" id="cb27-93" data-line-number="93"></a>
-<a class="sourceLine" id="cb27-94" data-line-number="94"><span class="co">-- The following implements &quot;Exception-handling over `Expr` exceptions&quot;</span></a>
-<a class="sourceLine" id="cb27-95" data-line-number="95"><span class="kw">type</span> <span class="dt">Exn</span> <span class="fu">=</span> <span class="dt">ExceptT</span> <span class="dt">Expr</span> <span class="dt">Identity</span> </a>
-<a class="sourceLine" id="cb27-96" data-line-number="96"></a>
-<a class="sourceLine" id="cb27-97" data-line-number="97"><span class="co">-- We can go back and give `evalThrowCatch` the type</span></a>
-<a class="sourceLine" id="cb27-98" data-line-number="98"></a>
-<a class="sourceLine" id="cb27-99" data-line-number="99"><span class="co">--   evalThrowCatch :: Expr -&gt; Exn Int</span></a>
-<a class="sourceLine" id="cb27-100" data-line-number="100"></a>
-<a class="sourceLine" id="cb27-101" data-line-number="101"><span class="co">-- TRANSFORMERS COMPOSE! We can &quot;layer&quot; the transformers to get BOTH powers! </span></a>
-<a class="sourceLine" id="cb27-102" data-line-number="102"></a>
-<a class="sourceLine" id="cb27-103" data-line-number="103"><span class="co">-- The following implements a &quot;State-transformer-over Int&quot; AND &quot;Exception-handling-over-`Expr`-Expressions&quot;</span></a>
-<a class="sourceLine" id="cb27-104" data-line-number="104"></a>
-<a class="sourceLine" id="cb27-105" data-line-number="105"><span class="kw">type</span> <span class="dt">ProfExn</span> a <span class="fu">=</span> <span class="dt">StateT</span> <span class="dt">Int</span> <span class="dt">Exn</span> a       <span class="co">-- StateT ( ExceptT ( Identity ) )</span></a>
-<a class="sourceLine" id="cb27-106" data-line-number="106"></a>
-<a class="sourceLine" id="cb27-107" data-line-number="107"></a>
-<a class="sourceLine" id="cb27-108" data-line-number="108"><span class="ot">runProfExn ::</span> (<span class="dt">Show</span> a) <span class="ot">=&gt;</span> <span class="dt">ProfExn</span> a <span class="ot">-&gt;</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb27-109" data-line-number="109">runProfExn st <span class="fu">=</span> <span class="kw">case</span> (runIdentity (runExceptT (runStateT st <span class="dv">0</span>))) <span class="kw">of</span></a>
-<a class="sourceLine" id="cb27-110" data-line-number="110">  <span class="dt">Right</span> vc <span class="ot">-&gt;</span> showValCount vc</a>
-<a class="sourceLine" id="cb27-111" data-line-number="111">  e        <span class="ot">-&gt;</span> show e</a>
-<a class="sourceLine" id="cb27-112" data-line-number="112"></a>
-<a class="sourceLine" id="cb27-113" data-line-number="113"></a>
-<a class="sourceLine" id="cb27-114" data-line-number="114"><span class="co">-- &gt;&gt;&gt; runProfExn (evalMix e1) </span></a>
-<a class="sourceLine" id="cb27-115" data-line-number="115"><span class="co">-- &quot;value: 1, count: 2&quot;</span></a>
-<a class="sourceLine" id="cb27-116" data-line-number="116"><span class="co">--</span></a>
-<a class="sourceLine" id="cb27-117" data-line-number="117"><span class="co">-- &gt;&gt;&gt; runProfExn (evalMix e2) </span></a>
-<a class="sourceLine" id="cb27-118" data-line-number="118"><span class="co">-- &quot;Left (Plus (Number 5) (Number (-5)))&quot;</span></a>
-<a class="sourceLine" id="cb27-119" data-line-number="119"><span class="co">--</span></a>
-<a class="sourceLine" id="cb27-120" data-line-number="120"></a>
-<a class="sourceLine" id="cb27-121" data-line-number="121"><span class="kw">type</span> <span class="dt">ExnProf</span> a <span class="fu">=</span> <span class="dt">ExceptT</span> <span class="dt">Expr</span> <span class="dt">Prof</span> a    <span class="co">-- ExceptT (StateT (Identity))</span></a>
-<a class="sourceLine" id="cb27-122" data-line-number="122"></a>
-<a class="sourceLine" id="cb27-123" data-line-number="123"><span class="ot">runExnProf ::</span> (<span class="dt">Show</span> a) <span class="ot">=&gt;</span> <span class="dt">ExnProf</span> a <span class="ot">-&gt;</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb27-124" data-line-number="124">runExnProf m <span class="fu">=</span> <span class="kw">case</span> (runIdentity (runStateT (runExceptT m) <span class="dv">0</span>)) <span class="kw">of</span></a>
-<a class="sourceLine" id="cb27-125" data-line-number="125">                 (<span class="dt">Right</span> v, c) <span class="ot">-&gt;</span> showValCount (v, c)</a>
-<a class="sourceLine" id="cb27-126" data-line-number="126">                 (<span class="dt">Left</span> e, c)  <span class="ot">-&gt;</span> show e <span class="fu">++</span> <span class="st">&quot; after &quot;</span> <span class="fu">++</span> show c <span class="fu">++</span> <span class="st">&quot; operations&quot;</span></a>
-<a class="sourceLine" id="cb27-127" data-line-number="127"></a>
-<a class="sourceLine" id="cb27-128" data-line-number="128"></a>
-<a class="sourceLine" id="cb27-129" data-line-number="129"><span class="co">-- &gt;&gt;&gt; runExnProf (evalMix e1) </span></a>
-<a class="sourceLine" id="cb27-130" data-line-number="130"><span class="co">-- &quot;value: 1, count: 2&quot;</span></a>
-<a class="sourceLine" id="cb27-131" data-line-number="131"><span class="co">--</span></a>
-<a class="sourceLine" id="cb27-132" data-line-number="132"></a>
-<a class="sourceLine" id="cb27-133" data-line-number="133"><span class="co">-- &gt;&gt;&gt; runExnProf (evalMix e2) </span></a>
-<a class="sourceLine" id="cb27-134" data-line-number="134"><span class="co">-- &quot;Plus (Number 5) (Number (-5)) after 2 operations&quot;</span></a>
-<a class="sourceLine" id="cb27-135" data-line-number="135"><span class="co">--</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="specifying-monads-with-extra-features">Specifying Monads with Extra Features</h2>
+<p>First, instead of using <em>concrete</em> monads</p>
+<ul>
+<li>e.g. <code class="sourceCode haskell"><span class="dt">Profile</span></code> or <code class="sourceCode haskell"><span class="dt">Either</span></code></li>
+</ul>
+<p>We will use <strong>type-classes</strong> to <em>abstractly</em> specify a monad’s <em>capabilities</em></p>
+<ul>
+<li>e.g. <code class="sourceCode haskell"><span class="dt">MonadState</span> s m</code> or <code class="sourceCode haskell"><span class="dt">MonadError</span> e m</code></li>
+</ul>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="a-class-for-state-transformers-monads">A Class for State-Transformers Monads</h2>
+<p>The class <code class="sourceCode haskell"><span class="dt">MonadState</span> s m</code> defined in the <a href="http://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Except.html"><code class="sourceCode haskell"><span class="dt">Control.Monad.State</span></code></a> says</p>
+<ul>
+<li><code class="sourceCode haskell">m</code> is a <em>State-Transformer</em> monad with state type <code class="sourceCode haskell">s</code></li>
+</ul>
+<div class="sourceCode" id="cb27"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">class</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">MonadState</span> s m <span class="kw">where</span></a>
+<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="ot">  get ::</span> m s</a>
+<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="ot">  put ::</span> s <span class="ot">-&gt;</span> m ()</a></code></pre></div>
+<p>That is to say, <code class="sourceCode haskell">m</code> implements</p>
+<ul>
+<li><p><code class="sourceCode haskell"><span class="fu">&gt;&gt;=</span></code> and <code class="sourceCode haskell">return</code> operations specified by <code class="sourceCode haskell"><span class="dt">Monad</span></code> <em>and</em></p></li>
+<li><p><code class="sourceCode haskell">get</code> and <code class="sourceCode haskell">put</code> operations specified by <code class="sourceCode haskell"><span class="dt">MonadState</span></code>!</p></li>
+</ul>
+<h3 id="generalize-types-to-use-classes">Generalize Types to use Classes</h3>
+<p>So we can <em>generalize</em> the type of <code class="sourceCode haskell">count</code> to use <code class="sourceCode haskell"><span class="dt">MonadState</span> <span class="dt">Int</span> m</code></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="ot">count ::</span> (<span class="dt">MonadState</span> <span class="dt">Int</span> m) <span class="ot">=&gt;</span> m ()</a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">count <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">  n <span class="ot">&lt;-</span> get</a>
+<a class="sourceLine" id="cb28-4" data-line-number="4">  put (n<span class="fu">+</span><span class="dv">1</span>)</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="a-class-for-exception-handling-monads">A Class for Exception Handling Monads</h2>
+<p>The class <code class="sourceCode haskell"><span class="dt">MonadError</span> e m</code> defined in [<code class="sourceCode haskell"><span class="dt">Control.Monad.Except</span></code>][6] says</p>
+<ul>
+<li><code class="sourceCode haskell">m</code> is a <em>Exception-Handling</em> monad with exception type <code class="sourceCode haskell">e</code></li>
+</ul>
+<div class="sourceCode" id="cb29"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">class</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">MonadError</span> e m <span class="kw">where</span></a>
+<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="ot">  throwError ::</span> e <span class="ot">-&gt;</span> m a</a>
+<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="ot">  catchError ::</span> m a <span class="ot">-&gt;</span> (e <span class="ot">-&gt;</span> m a) <span class="ot">-&gt;</span> m a</a></code></pre></div>
+<p>That is to say, <code class="sourceCode haskell">m</code> implements</p>
+<ul>
+<li><p><code class="sourceCode haskell"><span class="fu">&gt;&gt;=</span></code> and <code class="sourceCode haskell">return</code> operations specified by <code class="sourceCode haskell"><span class="dt">Monad</span></code> <em>and</em></p></li>
+<li><p><code class="sourceCode haskell">throwError</code> and <code class="sourceCode haskell">catchError</code> operations specified by <code class="sourceCode haskell"><span class="dt">MonadError</span></code>!</p></li>
+</ul>
+<h3 id="generalize-types-to-use-classes-1">Generalize Types to use Classes</h3>
+<p>So we can <em>generalize</em> the type of <code class="sourceCode haskell">tryCatch</code> to use <code class="sourceCode haskell"><span class="dt">MonadError</span> e m</code></p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="ot">tryCatch ::</span> (<span class="dt">MonadError</span> e m) <span class="ot">=&gt;</span> m a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> m a  </a>
+<a class="sourceLine" id="cb30-2" data-line-number="2">tryCatch m def <span class="fu">=</span> catchError m (\_ <span class="ot">-&gt;</span> return def)</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="generalize-eval-to-use-constraints">Generalize <code class="sourceCode haskell">eval</code> to use Constraints</h2>
+<p>We can now <em>specify</em> that <code class="sourceCode haskell">eval</code> uses a monad <code class="sourceCode haskell">m</code> that implements</p>
+<ul>
+<li><code class="sourceCode haskell"><span class="dt">MonadState</span> <span class="dt">Int</span></code> <strong>and</strong> <code class="sourceCode haskell"><span class="dt">MonadError</span> <span class="dt">Expr</span></code></li>
+</ul>
+<div class="sourceCode" id="cb31"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="ot">eval ::</span> (<span class="dt">MonadState</span> <span class="dt">Int</span> m, <span class="dt">MonadError</span> <span class="dt">Expr</span> m) <span class="ot">=&gt;</span> <span class="dt">Expr</span> <span class="ot">-&gt;</span> m <span class="dt">Int</span> </a>
+<a class="sourceLine" id="cb31-2" data-line-number="2">eval (<span class="dt">Number</span> n)    <span class="fu">=</span> return n</a>
+<a class="sourceLine" id="cb31-3" data-line-number="3">eval (<span class="dt">Plus</span>  e1 e2) <span class="fu">=</span> <span class="kw">do</span> n1 <span class="ot">&lt;-</span> eval e1 </a>
+<a class="sourceLine" id="cb31-4" data-line-number="4">                        n2 <span class="ot">&lt;-</span> eval e2</a>
+<a class="sourceLine" id="cb31-5" data-line-number="5">                        count</a>
+<a class="sourceLine" id="cb31-6" data-line-number="6">                        return (n1 <span class="fu">+</span> n2)</a>
+<a class="sourceLine" id="cb31-7" data-line-number="7">eval (<span class="dt">Div</span>   e1 e2) <span class="fu">=</span> <span class="kw">do</span> n1 <span class="ot">&lt;-</span> eval e1 </a>
+<a class="sourceLine" id="cb31-8" data-line-number="8">                        n2 <span class="ot">&lt;-</span> eval e2</a>
+<a class="sourceLine" id="cb31-9" data-line-number="9">                        count</a>
+<a class="sourceLine" id="cb31-10" data-line-number="10">                        <span class="kw">if</span> (n2 <span class="fu">/=</span> <span class="dv">0</span>) </a>
+<a class="sourceLine" id="cb31-11" data-line-number="11">                          <span class="kw">then</span> return (n1 <span class="ot">`div`</span> n2) </a>
+<a class="sourceLine" id="cb31-12" data-line-number="12">                          <span class="kw">else</span> throwError e2</a>
+<a class="sourceLine" id="cb31-13" data-line-number="13">eval (<span class="dt">Try</span> e n)     <span class="fu">=</span> tryCatch (eval e) n</a></code></pre></div>
+<p>Lets try to run it!</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> e1</a>
+<a class="sourceLine" id="cb32-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb32-3" data-line-number="3"><span class="fu">&gt;&gt;&gt;</span> evalMix e1</a>
+<a class="sourceLine" id="cb32-4" data-line-number="4"><span class="fu">...</span> <span class="dt">GHC</span> yells <span class="st">&quot;please IMPLEMENT this MAGIC monad that implements BOTH features&quot;</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="mixing-monads-with-transformers-2">Mixing Monads with Transformers</h2>
+<ul>
+<li><p>Step 1: <strong>Specifying</strong> Monads with Extra Features</p></li>
+<li><p>Step 2: <strong>Implementing</strong> Monads with Extra Features</p></li>
+</ul>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="implementing-monads-with-extra-features">Implementing Monads with <strong>Extra Features</strong></h2>
+<p><img src="../static/img/mtrans_2.png" id="fig:More-Capabilities" class="align-right" style="width:80.0%" /></p>
+<p><code class="sourceCode haskell"><span class="dt">Transform2</span> (<span class="dt">Transform1</span> m)</code> implements</p>
+<ul>
+<li><code class="sourceCode haskell">m</code> operations <strong>and</strong></li>
+<li>operations added by <code class="sourceCode haskell"><span class="dt">Transform1</span></code> <strong>and</strong></li>
+<li>operations added by <code class="sourceCode haskell"><span class="dt">Transform2</span></code></li>
+</ul>
+<p>We require</p>
+<ul>
+<li>A <em>basic</em> monad <code class="sourceCode haskell">m</code></li>
+<li>A <em>Transform1</em> that adds <code class="sourceCode haskell"><span class="dt">State</span></code> capabilities</li>
+<li>A <em>Transform2</em> that adds <code class="sourceCode haskell"><span class="dt">Exception</span></code> capabilities</li>
+</ul>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="a-basic-monad">A Basic Monad</h2>
+<p>First, lets make a <strong>basic</strong> monad</p>
+<ul>
+<li>only implements <code class="sourceCode haskell"><span class="fu">&gt;&gt;=</span></code> and <code class="sourceCode haskell">return</code></li>
+</ul>
+<div class="sourceCode" id="cb33"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Identity</span> a <span class="fu">=</span> <span class="dt">Id</span> a</a>
+<a class="sourceLine" id="cb33-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb33-3" data-line-number="3"><span class="kw">instance</span> <span class="dt">Monad</span> <span class="dt">Identity</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb33-4" data-line-number="4">  return a     <span class="fu">=</span> <span class="dt">Id</span> a</a>
+<a class="sourceLine" id="cb33-5" data-line-number="5">  (<span class="dt">Id</span> a) <span class="fu">&gt;&gt;=</span> f <span class="fu">=</span> f a</a></code></pre></div>
+<p>A very <em>basic</em> monad: just a <strong>wrapper</strong> (<code class="sourceCode haskell"><span class="dt">Id</span></code>) around the value (<code class="sourceCode haskell">a</code>)</p>
+<ul>
+<li><em>No</em> extra features</li>
+</ul>
+<p><img src="../static/img/mtrans_id.png" /></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="a-transform-that-adds-state-capabilities">A Transform that adds <code class="sourceCode haskell"><span class="dt">State</span></code> Capabilities</h2>
+<p>The transformer <code class="sourceCode haskell"><span class="dt">StateT</span> s m</code> defined in the <code class="sourceCode haskell"><span class="dt">Control.Monad.State</span></code> <a href="http://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Except.html">module</a> - <em>takes</em> as input monad <code class="sourceCode haskell">m</code> and</p>
+<ul>
+<li><em>transforms</em> it into a new monad <code class="sourceCode haskell">m'</code></li>
+</ul>
+<p>such that <code class="sourceCode haskell">m'</code> implements</p>
+<ul>
+<li><p>all the operations that <code class="sourceCode haskell">m</code> implements</p></li>
+<li><p><em>and adds</em> State-transformer capabilities</p></li>
+</ul>
+<p><code class="sourceCode haskell"><span class="dt">StateT</span> s m</code> satisfies the constraint <code class="sourceCode haskell">(<span class="dt">MonadState</span> s (<span class="dt">StateT</span> s m))</code></p>
+<h3 id="a-state-transformer-over-int-states">A <em>State-transformer over <code class="sourceCode haskell"><span class="dt">Int</span></code> states</em></h3>
+<div class="sourceCode" id="cb34"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">type</span> <span class="dt">Prof</span> <span class="fu">=</span> <span class="dt">StateT</span> <span class="dt">Int</span> <span class="dt">Identity</span> </a></code></pre></div>
+<p><img src="../static/img/mtrans_state_id.png" /></p>
+<p>We can go back and give <code class="sourceCode haskell">evalProf</code> the type</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="ot">evalProf ::</span> <span class="dt">Expr</span> <span class="ot">-&gt;</span> <span class="dt">Prof</span> <span class="dt">Int</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="a-transform-that-adds-exception-capabilities">A Transform that adds <code class="sourceCode haskell"><span class="dt">Except</span></code>ion Capabilities</h2>
+<p>The transformer <code class="sourceCode haskell"><span class="dt">ExceptT</span> e m</code></p>
+<ul>
+<li>takes as <em>input</em> a monad <code class="sourceCode haskell">m</code> and</li>
+<li><em>transforms</em> it into a new monad <code class="sourceCode haskell">m'</code></li>
+</ul>
+<p>such that <code class="sourceCode haskell">m'</code> implements</p>
+<ul>
+<li><p>all the operations that <code class="sourceCode haskell">m</code> implements</p></li>
+<li><p><em>and adds</em> Exception-handling capabilities</p></li>
+</ul>
+<p><code class="sourceCode haskell"><span class="dt">ExceptT</span> e m</code> satisfies the constraint <code class="sourceCode haskell">(<span class="dt">MonadError</span> e (<span class="dt">ExceptT</span> e m))</code></p>
+<h3 id="an-exception-handler-monad-with-expr-typed-exceptions">An Exception Handler Monad with <code class="sourceCode haskell"><span class="dt">Expr</span></code>-typed exceptions</h3>
+<div class="sourceCode" id="cb36"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="kw">type</span> <span class="dt">Exn</span> <span class="fu">=</span> <span class="dt">ExceptT</span> <span class="dt">Expr</span> <span class="dt">Identity</span> </a></code></pre></div>
+<p><img src="../static/img/mtrans_except_id.png" /></p>
+<p>We can go back and give <code class="sourceCode haskell">evalThrowCatch</code> the type</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="ot">evalThrowCatch ::</span> <span class="dt">Expr</span> <span class="ot">-&gt;</span> <span class="dt">Exn</span> <span class="dt">Int</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="composing-transformers">Composing Transformers</h2>
+<p>We can use <em>both</em> transformers to get <em>both</em> powers!</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="kw">type</span> <span class="dt">ExnProf</span> a <span class="fu">=</span> <span class="dt">ExceptT</span> <span class="dt">Expr</span> (<span class="dt">StateT</span> <span class="dt">Int</span> (<span class="dt">Identity</span>)) a</a></code></pre></div>
+<p><img src="../static/img/mtrans_except_state_id.png" /></p>
+<p><code class="sourceCode haskell"><span class="dt">ExnProf</span></code> implements <em>State-transformer-over</em> <code class="sourceCode haskell"><span class="dt">Int</span></code> <strong>and</strong> <em>Exception-handling-over-<code class="sourceCode haskell"><span class="dt">Expr</span></code></em></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="exercise-executing-the-combined-transformer">EXERCISE: Executing the Combined Transformer</h2>
+<p>Recall that</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="kw">type</span> <span class="dt">ExnProf</span> a <span class="fu">=</span> <span class="dt">ExceptT</span> <span class="dt">Expr</span> (<span class="dt">StateT</span> <span class="dt">Int</span> (<span class="dt">Identity</span>)) a</a></code></pre></div>
+<p>Lets write a function</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="ot">runExnProf ::</span> (<span class="dt">Show</span> a) <span class="ot">=&gt;</span> <span class="dt">ExnProf</span> a <span class="ot">-&gt;</span> <span class="dt">String</span></a>
+<a class="sourceLine" id="cb40-2" data-line-number="2">runExnProf epm <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p>such that</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> runExnProf (eval e1) </a>
+<a class="sourceLine" id="cb41-2" data-line-number="2"><span class="st">&quot;value: 1, count: 2&quot;</span></a>
+<a class="sourceLine" id="cb41-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb41-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span> runExnProf (eval e2) </a>
+<a class="sourceLine" id="cb41-5" data-line-number="5"><span class="st">&quot;Plus (Number 5) (Number (-5)) after 2 operations&quot;</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<!--
+
+```haskell
+runExnProf :: (Show a) => ExnProf a -> String
+runExnProf m = case runIdentity (runStateT (runExceptT m) 0) of
+                 (Right v, c) -> showValCount (v, c)
+                 (Left e, c)  -> show e ++ " after " ++ show c ++ " operations"
+```
+
+-->
+<h2 id="try-at-home-combining-in-a-different-order">TRY AT HOME: Combining in a Different Order</h2>
+<p>We can also combine the transformers in a <em>different</em> order</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="kw">type</span> <span class="dt">ProfExn</span> a <span class="fu">=</span> <span class="dt">StateT</span> <span class="dt">Int</span> (<span class="dt">ExceptT</span> <span class="dt">Expr</span> (<span class="dt">Identity</span>)) a</a></code></pre></div>
+<p><img src="../static/img/mtrans_state_except_id.png" /></p>
+<p><code class="sourceCode haskell"><span class="dt">ExnProf</span></code> implements <em>State-transformer-over</em> <code class="sourceCode haskell"><span class="dt">Int</span></code> <strong>and</strong> <em>Exception-handling-over-<code class="sourceCode haskell"><span class="dt">Expr</span></code></em></p>
+<p>Can you implement the function</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="ot">runProfExn ::</span> (<span class="dt">Show</span> a) <span class="ot">=&gt;</span> <span class="dt">ProfExn</span> a <span class="ot">-&gt;</span> <span class="dt">String</span></a></code></pre></div>
+<p>such that when you are done, we can get the following behavior?</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> runProfExn (eval e1) </a>
+<a class="sourceLine" id="cb44-2" data-line-number="2"><span class="st">&quot;value: 1, count: 2&quot;</span></a>
+<a class="sourceLine" id="cb44-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb44-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span> runProfExn (eval e2) </a>
+<a class="sourceLine" id="cb44-5" data-line-number="5"><span class="st">&quot;Left (Plus (Number 5) (Number (-5)))&quot;</span></a></code></pre></div>
+<!--
+runProfExn :: (Show a) => ProfExn a -> String
+runProfExn st = case (runIdentity (runExceptT (runStateT st 0))) of
+  Right vc -> showValCount vc
+  e        -> show e
+-->
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="summary-combining-monads-with-multiple-features">Summary: Combining Monads with <strong>Multiple Features</strong></h2>
+<h3 id="transformers-let-us-add-capabilities-to-basic-monads">Transformers let us add capabilities to <em>basic</em> Monads</h3>
+<p><img src="../static/img/mtrans_3.png" id="fig:More-Capabilities" class="align-right" style="width:80.0%" /></p>
+<p><code class="sourceCode haskell"><span class="dt">Transform2</span> (<span class="dt">Transform1</span> m)</code> implements</p>
+<ul>
+<li><code class="sourceCode haskell">m</code> operations <strong>and</strong></li>
+<li>operations added by <code class="sourceCode haskell"><span class="dt">Transform1</span></code> <strong>and</strong></li>
+<li>operations added by <code class="sourceCode haskell"><span class="dt">Transform2</span></code></li>
+</ul>
+<h3 id="statet-and-exceptt-let-us-combine-state-and-exceptions"><code class="sourceCode haskell"><span class="dt">StateT</span></code> and <code class="sourceCode haskell"><span class="dt">ExceptT</span></code> let us combine state and exceptions</h3>
+<ul>
+<li>Start with a <em>basic</em> monad <code class="sourceCode haskell"><span class="dt">Identity</span></code></li>
+<li>Use <code class="sourceCode haskell"><span class="dt">StateT</span> <span class="dt">Int</span></code> to add global-<code class="sourceCode haskell"><span class="dt">Int</span></code> <em>state-update</em> capabilities</li>
+<li>Use <code class="sourceCode haskell"><span class="dt">ExceptT</span> <span class="dt">Expr</span></code> to add <em>exception-handling</em> capabilities</li>
+</ul>
+<p>Play around with this in your homework assignment!</p>
                 <hr>
             </div>
         </div>
