@@ -80,7 +80,7 @@ made it a `Monad`
 instance Monad Result where
   return x      = Ok x
   (Ok v)  >>= f = f v
-  (Err s) >>= _ = s
+  (Err s) >>= _ = Err s
 ```
 
 and then we can write
@@ -94,20 +94,20 @@ eval (Div   e1 e2) = do { n1 <- eval e1;
                           if n2 /= 0 
                             then return (n1 `div` n2) 
                             else Err ("DBZ: " ++ show e2)
-                        } 
+                        }
 ```
 
 which doesn't crash but returns an `Err`
 
 ```haskell
->>> eval (Div (Val 10) (Minus (Number 5) (Number 5)))
-Err "DBZ: Minus (Number 5) (Number 5)"
+>>> eval (Div (Number 10) (Plus (Number 5) (Number (-5))))
+Err "DBZ: Plus (Number 5) (Number (-5))"
 ```
 
 and when it succeeds it returns an `Ok`
 
 ```haskell
->>> eval (Div (Val 10) (Plus (Number 5) (Number 5)))
+>>> eval (Div (Number 10) (Plus (Number 5) (Number (-5))))
 Ok 1
 ```
 
@@ -245,9 +245,9 @@ quiz = eval (Div (Val 10) (Plus (Number 5) (Number (-5))))
 
 What can you do with exceptions?
 
-1. `throw` an exception (with some value) ... 
+1. `throwError` an exception (with some value) ... 
 
-2. `catch` an exception (and use its value) ...
+2. `catchError` an exception (and use its value) ...
 
 <br>
 <br>
@@ -281,7 +281,7 @@ eval :: Expr -> Either Expr Int
 eval (Number n)    = return n
 eval (Plus  e1 e2) = do n1 <- eval e1 
                         n2 <- eval e2
-                        return (n1+n2)
+                        return (n1 + n2)
 eval (Div   e1 e2) = do n1 <- eval e1 
                         n2 <- eval e2
                         if n2 /= 0 
@@ -296,7 +296,7 @@ eval (Div   e1 e2) = do n1 <- eval e1
 - `Either` monad ensures the "exception" shoots to the top! 
 
 ```haskell
->>> eval (Div (Val 10) (Minus (Number 5) (Number 5)))
+>>> eval (Div (Numer 10) (Plus (Number 5) (Number (-5))))
 Left (Minus (Number 5) (Number 5))
 ```
 
@@ -327,7 +327,6 @@ Lets change our `Expr` type to
 data Expr
   = Number  Int            -- ^ 0,1,2,3,4
   | Plus    Expr Expr      -- ^ e1 + e2
-  | Div     Expr Expr      -- ^ e1 / e2
   | Try     Expr Int       
   deriving (Show)
 ```
@@ -387,7 +386,7 @@ Lets implement the `catch` function!
 
 ```haskell
 catch :: Either e a -> (e -> Either e a) -> Either e a
-catch (Left  e) handle  = ???
+catch (Left  e) handler = ???
 catch (Right a) handler = ???
 ```
 
@@ -515,7 +514,6 @@ What if I want *Exceptions* **and** *Global State* ?
 <br>
 <br>
 
-
 ## Profiling with the ST Monad
 
 - "Profiling"
@@ -524,9 +522,9 @@ What if I want *Exceptions* **and** *Global State* ?
 
 ## Transformers
 
-* Step 1: **Specifying** Monads with Extra Features
-* Step 2: **Using**      Monads with Extra Features
-* Step 3: **Creating**   Monads with Extra Features 
+* Step 1: **Specifying**   Monads with Extra Features
+
+* Step 2: **Implementing** Monads with Extra Features 
 
 ## FIXME
 
