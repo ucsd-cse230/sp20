@@ -21,4 +21,5 @@ executable homepage
                        pandoc,
                        pandoc-types,
                        containers, 
+                       QuickCheck,
                        mtl
