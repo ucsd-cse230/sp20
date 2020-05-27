@@ -73,4 +73,6 @@ prop_qsort_nn_min xs =
   not (null xs) ==> head (qsort xs) == minimum xs
 
 -- >>> quickCheck prop_qsort_nn_min
+-- +++ OK, passed 100 tests.
+--
 
