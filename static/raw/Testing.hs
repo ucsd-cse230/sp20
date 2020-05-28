@@ -76,3 +76,35 @@ prop_qsort_nn_min xs =
 -- +++ OK, passed 100 tests.
 --
 
+prop_qsort_sort    :: [Int] -> Bool
+prop_qsort_sort xs =  qsort xs == sort xs
+
+-- >>> quickCheck prop_qsort_sort
+-- *** Failed! Falsifiable (after 6 tests and 3 shrinks):
+-- [-3,-3]
+
+noDuplicates ::(Eq a) => [a] -> Bool
+noDuplicates (x:xs) = not (x `elem` xs) && noDuplicates xs
+noDuplicates _      = True
+
+prop_qsort_distinct :: [Int] -> Bool 
+prop_qsort_distinct xs = noDuplicates (qsort xs)  
+
+-- >>> quickCheck prop_qsort_distinct
+-- +++ OK, passed 100 tests.
+--
+
+prop_qsort_distinct_sort :: [Int] -> Property 
+prop_qsort_distinct_sort xs = (noDuplicates xs) ==> (qsort xs == sort xs)
+
+-- >>> quickCheck prop_qsort_distinct_sort
+-- +++ OK, passed 10000 tests.
+--
+
+randomThings :: (Arbitrary a) => IO [a]
+randomThings = sample' arbitrary
+
+-- >>> randomThings :: IO [(Int, Bool)] 
+-- ["","G","){","\DEL\ETBa\1082578\DC3","\DC3(\NUL|a","l\1001112\713550DHt\EM\848209\t","\295936","","\450593&_}E\b\EMp\844487Z","\ETX\USc^\1010059\20023\626811sd","G\NAK\b"]
+--
+

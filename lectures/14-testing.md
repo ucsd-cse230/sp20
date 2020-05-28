@@ -39,6 +39,26 @@ PBT used in basically all kinds of software...
 <br>
 <br>
 
+## Plan
+
+1. **Property-based Testing**
+
+2. Random Test Generation
+
+3. Case-Study
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 ## Property-based Testing
 
 **Don't** (only) write individual *unit-tests* 
@@ -441,7 +461,245 @@ The *implies* operator `==>` is one of many
 <br>
 <br>
 
-## Testing with A Model/Golden/Reference Implementation
+## QUIZ 
+
+Lets test that our `qsort` is *identical* to a *trusted reference implementation* 
+
+- may be too *slow* to deploy but ok to use for checking correctness
+
+Lets use the standard library's `Data.List.sort` function
+
+- (_Much_ faster than ours... but just for illustration!)
+
+```haskell
+prop_qsort_sort    :: [Int] -> Bool
+prop_qsort_sort xs =  qsort xs == sort xs
+```
+
+What is the result of
+
+```haskell
+qsort        :: (Ord a) => [a] -> [a]
+qsort []     = []
+qsort (x:xs) = qsort ls ++ [x] ++ qsort rs
+  where 
+    ls       = [y | y <- xs, y < x]  -- elems in xs < x 
+    rs       = [z | z <- xs, z > x]  -- elems in xs > x
+
+>>> quickCheck prop_qsort_sort
+```
+
+**A.** `OK` after 100 tests
+
+**B.** `Failed! Falsifiable...`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Lets Check 
+
+```haskell
+>>> quickCheck prop_qsort_sort
+*** Failed! Falsifiable (after 6 tests and 3 shrinks):
+[-3,-3]
+```
+
+Oops? What?
+
+```haskell
+>>> sort [-3, -3]
+[-3, -3]
+
+>>> qsort [-3, -3]
+[-3]
+```
+
+Ugh! So close, and yet ... Can you spot the bug in our code?
+
+```haskell
+qsort        :: (Ord a) => [a] -> [a]
+qsort []     = []
+qsort (x:xs) = qsort ls ++ [x] ++ qsort rs
+  where 
+    ls       = [y | y <- xs, y < x]  -- elems in xs < x 
+    rs       = [z | z <- xs, z > x]  -- elems in xs > x
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Specifying No-Duplicates
+
+We assumed that the input has **no duplicates**
+
+- **Values equal to** `x` are thrown out from `ls` and `rs`
+
+Is this a *bug*? Maybe? Maybe not?
+
+- But at least its something we should be *aware* of!
+
+Lets specify that a list has no-duplicates 
+
+```haskell
+noDuplicates ::(Eq a) => [a] -> Bool
+noDuplicates (x:xs) = not (x `elem` xs) && noDuplicates xs
+noDuplicates _      = True
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Specifying a Post-Condition
+
+We can now check that `qsort` **outputs** a list with no-duplicates
+
+```haskell
+prop_qsort_distinct :: [Int] -> Bool 
+prop_qsort_distinct xs = noDuplicates (qsort xs)  
+
+-- >>> quickCheck prop_qsort_distinct
+-- +++ OK, passed 100 tests.
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Specifying a Pre-Condition
+
+Also, `qsort` is identical to `sort` on **inputs with no duplicates**
+
+```haskell
+prop_qsort_distinct_sort :: [Int] -> Property 
+prop_qsort_distinct_sort xs = 
+  (isDistinct xs) ==> (qsort xs == sort xs)
+
+-- >>> quickCheck prop_qsort_distinct_sort
+-- +++ OK, passed 100 tests.
+--
+```
+
+## Plan
+
+1. **Property-based Testing**
+    - Properties are boolean-functions
+    - Generate inputs, run function, check if result is `False`
+
+2. Random Test Generation
+
+3. Case-Study
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Plan
+
+1. Property-based Testing
+    - Properties are boolean-functions
+    - Generate inputs, run function, check if result is `False`
+
+2. **Test Generation**
+
+3. Case-Study
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+## Test Generation
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Case Study: Compiler Optimizations
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 
 
 [0]: http://www.cse.chalmers.se/~koen/
