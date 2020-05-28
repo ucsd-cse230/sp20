@@ -11,12 +11,12 @@ Lets look at [QuickCheck][1]
 
         Typeclasses + Monads + "cleverness" = Automatic Testing
 
-- Developed by [Koen Claessen][0] and [John Hughes][11] in 2000 
+- Developed by [Koen Claessen][0] and [John Hughes][11] in 2000
 
-Ported to [40 other languages](https://en.wikipedia.org/wiki/QuickCheck) 
+Ported to [40 other languages](https://en.wikipedia.org/wiki/QuickCheck)
 
 - [JSVerify](http://jsverify.github.io/), 
-  [JUNIT-quickcheck](https://github.com/pholser/junit-quickcheck), 
+  [JUNIT-quickcheck](https://github.com/pholser/junit-quickcheck),
   [hypothesis](https://github.com/HypothesisWorks/hypothesis)
 
 PBT used in basically all kinds of software...
@@ -663,14 +663,359 @@ prop_qsort_distinct_sort xs =
 <br>
 <br>
 
-
 ## Test Generation
 
+Lets notice something about `quickCheck`
+
+If you run it once ...
+
+```haskell
+>>> quickCheck prop_qsort_sort
+*** Failed! Falsifiable (after 6 tests and 2 shrinks):
+[5,5]
+```
+
+and if you run it again ...
+
+```haskell
+>>> quickCheck prop_qsort_sort
+*** Failed! Falsifiable (after 4 tests and 1 shrink):
+[1,1]
+```
+
+The *falsifying tests* are different! 
+
+How is this possible?
+
 <br>
 <br>
 <br>
 <br>
 <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Generators
+
+QC defines a special *Generator* data type
+
+```haskell
+data Gen a = MkGen (StdGen -> Int -> a)
+```
+
+A `Gen a` is a function that takes as *input*
+
+- a random number generator `StdGen`
+- a "seed" `Int`
+
+and returns as *output*
+
+- a **value** of type `a`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Creating `Gen`erators
+
+There are some functions to *create* generators, e.g.
+
+```haskell
+choose :: (Int, Int) -> Gen Int
+```
+
+which 
+
+- takes a pair of `(lo, hi)`
+
+- returns a random generator for values between `lo` and `hi`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Running `Gen`erators
+
+To *execute* the `Gen` we need access to the system's "randomness"
+
+Done via an `IO` "recipe"
+
+```haskell
+sample' :: Gen a -> IO [a]
+```
+
+Which 
+
+- takes a `Gen`erator of `a` values and
+- returns a *recipe* that produces a list of (10) `a` values
+
+We can *run* the recipe in `ghci`
+
+```haskell
+>>> sample' (choose (0, 5))
+[4,2,5,3,2,2,2,3,0,0,0]
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## EXERCISE 
+
+Lets write a function that returns a `Gen`erator over a list of `elements`
+
+```haskell
+elements :: [a] -> Gen a
+elements = ???
+```
+
+So `elements [x0,x1,...,xn]` returns a `Gen`erator that randomly produces 
+values from `x0`, `x1`, ... `xn`.
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## PROBLEM: How to *combine* `Gen`erators?
+
+Suppose I have a generator of positive `Int`
+
+```haskell
+pos :: Gen Int
+pos = sample (0, 100)
+```
+
+How can I create a generator of a *pair* of positive `Int`s?
+
+```haskell
+posPair :: Gen (Int, Int)
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ 
+
+`Gen`erator is a Monad! (you can [see details here][12])
+
+- This will let us *combine* generators (like combining parsers...)
+
+Which of the below implements `posPair :: Gen (Int, Int)` ?
+
+- given `pos :: Gen Int` and `sample :: (Int, Int) -> Gen Int` 
+
+```haskell
+-- A
+posPair = do { x1 <- pos; x2 <- pos; return (x1, x2) }
+
+-- B
+posPair = (pos, pos)
+
+-- C
+posPair = do { x <- pos; return (x, x) }  
+
+-- D
+posPair = Gen (4, 5)
+
+-- E 
+posPair = (sample (0, 100), sample (0, 100))
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+```haskell
+posPair = do { x1 <- pos; x2 <- pos; return (x1, x2) }
+
+-- >>> sample' posPair
+-- [(29,71),(48,74),(89,53),(73,93),(0,40),(71,35),(23,69),(93,49),(59,58),(27,32),(88,45)]
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## EXERCISE
+
+Lets write a function that *mixes* a list of `Gen`erators
+
+```haskell
+oneOf :: [Gen a] -> Gen a
+oneOf = ???
+```
+
+`oneOf [g0,g1,...,gn]` should be a generator that
+
+- randomly selects *one of* `g0`,...`gn`
+
+- randomly generates a value from the chosen generator
+
+```haskell
+>>> sample' (oneOf [choose (0,2), choose (10,12)])
+[2,2,1,1,12,10,2,2,11,0,11]
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+`oneOf` is generalized into the `frequency` combinator
+
+```haskell
+frequency :: [(Int, Gen a)] -> Gen a
+```
+
+which builds *weighted mixtures* of individual `Gen`erators
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Types that can be `Gen`erated
+
+QC has a `class` for types whose values can be randomly `Gen`erated
+
+```haskell
+class Arbitrary a where
+  arbitrary :: Gen a
+```
+
+`T` is an instance of `Arbitrary` if there is `Gen T` function
+
+- i.e. there is a generator of `T` values!
+
+```haskell
+randomThings :: (Arbitrary a) => IO [a]
+randomThings = sample' arbitrary
+```
+
+Many standard types have `Arbitrary` instances
+
+- Users write their own instances when testing their own types
+
+```haskell
+>>> randomThings :: IO [Int]
+[0,-2,-2,0,-1,8,1,-14,-13,5,19]
+
+>>> randomThings :: IO [(Int, Bool)] 
+[(0,True),(1,True),(0,True),(6,False),(-5,True),(4,False),(-12,False),(-8,False),(5,False),(-9,False),(-7,False)]
+-
+>>> randomThings :: IO [String]
+["","\a","\f","\779257W\SUBA","\84573","D\ACK\365059S","9W\554735G","g\SYN~W\62120\&4&[","\NULsc\18427fy(","Q`TI \n/TH","\461027\ESCZ`u\783094\&4B\SOHT\424692"]
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Plan
+
+1. Property-based Testing
+    - Properties are `Bool`ean-functions
+    - Generate inputs, run function, check if result is `False`
+
+2. Test Generation
+    - `Gen a` is a monadic *generator* of `a` values
+    - `Arbitrary` is a class for types with generators
+
+3. **Case-Study**
+
 <br>
 <br>
 <br>
@@ -684,6 +1029,14 @@ prop_qsort_distinct_sort xs =
 
 ## Case Study: Compiler Optimizations
 
+Lets use QC to test *compiler optimizations*
+
+- Learn how to *generate* structure data (*programs*)
+
+- Learn how to *specify* fancy properties (*equivalence*)
+
+Using the `WHILE` language from your HW assignment.
+
 <br>
 <br>
 <br>
@@ -699,6 +1052,44 @@ prop_qsort_distinct_sort xs =
 <br>
 <br>
 <br>
+
+## WHILE: Syntax
+TODO
+
+## WHILE: Semantics
+TODO
+
+## Generating WHILE Programs
+TODO
+
+## Specification: Program Equivalence
+TODO
+
+## Checking an Optimization: Zero-Add-Elimination
+TODO
+
+## Checking an Optimization: Constant-Folding-ish
+TODO
+
+## Shrinking
+TODO
+
+## Recap: Property-Based Testing
+TODO
+
+## Recap: Property-Based Testing
+
+1. Property-based Testing
+    - Properties are `Bool`ean-functions
+    - Generate inputs, run function, check if result is `False`
+
+2. Test Generation
+    - `Gen a` is a monadic *generator* of `a` values
+    - `Arbitrary` is a class for types with generators
+
+3. **Case-Study**
+
+
 
 
 
@@ -714,3 +1105,4 @@ prop_qsort_distinct_sort xs =
 [9]: http://www.haskell.org/haskellwiki/QuickCheck_as_a_test_set_generator
 [10]: http://community.moertel.com/~thor/talks/pgh-pm-talk-lectrotest.pdf
 [11]: http://www.cse.chalmers.se/~rjmh
+[12]: https://hackage.haskell.org/package/QuickCheck-2.14/docs/src/Test.QuickCheck.Gen.html#line-76
