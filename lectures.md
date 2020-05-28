@@ -23,10 +23,10 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *4/6*      | ""                              |                           | [pdf][01-lambda-C]   |                  | 
 | *4/8*      | ""                              |                           | [pdf][01-lambda-D]   |                  | 
 | *4/10*     | ""                              |                           | [pdf][01-lambda-E]   |                  | 
-| *4/13*     | Haskell: Basics        	       | [html][02-hs-basic]       | [pdf][02-hs-basic-A] | [code][lec_4_13] |
+| *4/13*     | Haskell Basics                  | [html][02-hs-basic]       | [pdf][02-hs-basic-A] | [code][lec_4_13] |
 | *4/15*     | ""                              |                           | [pdf][02-hs-basic-B] | [code][lec_4_15] |
 | *4/20*     | ""                              |                           | [pdf][02-hs-basic-C] | [code][lec_4_20] |
-| *4/22*     | Haskell: Types                  | [html][03-hs-types]       | [pdf][03-hs-types-A] | [code][lec_4_22] |
+| *4/22*     | Haskell  Types                  | [html][03-hs-types]       | [pdf][03-hs-types-A] | [code][lec_4_22] |
 | *4/24*     | ""                              |                           | ""                   | [code][lec_4_24] |
 | *4/27*     | Polymorphism                    | [html][06-poly-data]      | [pdf][06-poly-A]     | [code][lec_4_27] | 
 | *4/29*     | Higher Order Functions          | [html][07-patterns]       | [pdf][07-bottling-A] | [code][lec_4_29] |
@@ -37,13 +37,14 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/11*     | Functors & Monads               | [html][09-monads]         | [pdf][09-monads-A]   | [code][lec_5_11] | 
 | *5/13*     | ""                              |                           |                      | [code][lec_5_13] |
 | *5/15*     | State Transformers              | [html][11-state]          | [pdf][11-state-A]    | [code][lec_5_15] |
-| *5/18*     | 				                   |                           | [pdf][11-state-C]    | [code][lec_5_18] |
-| *5/20*     | 				                   |                           | [pdf][11-state-C]    | [code][lec_5_20] |
-|            | Parser Combinators              | [html][12-parsing]        |                      | [code][lec_5_22] |
-|            | List Monad                      | [html][10-list]           |                      |                  |
-|            | Transformers                    |                           |                      |                  | 
-|            | Concurrency / STM / Async       |                           |                      |                  |
+| *5/18*     | ""		                       |                           | [pdf][11-state-C]    | [code][lec_5_18] |
+| *5/20*     | ""			                   |                           | [pdf][11-state-C]    | [code][lec_5_20] |
+| *5/22*     | Parser Combinators              | [html][12-parsers]        | [pdf][12-parsers-A]  | [code][lec_5_22] |
+| *5/27*     | ""                              |                           |                      |                  | 
+|            | Transformers                    | [html][13-transformers]   |                      |                  | 
 |            | Property-based Testing          |                           |                      |                  | 
+|            | List Monad                      | [html][10-list]           |                      |                  |
+|            | Concurrency                     |                           |                      |                  |
 |            | Refinement Types                |                           |                      |                  |          
 |            | Proofs as Programs              |                           |                      |                  | 
 
@@ -101,6 +102,8 @@ Liquid    = 3
 [lec_5_15]: static/raw/lec_5_15_20.hs
 [lec_5_18]: static/raw/lec_5_18_20.hs
 [lec_5_20]: static/raw/lec_5_20_20.hs
+
+[12-parsers-A]: static/raw/12-parsers-A.pdf
 [lec_5_22]: static/raw/lec_5_22_20.hs
 
 [05-higher-order]: lectures/05-higher-order.html 
@@ -110,7 +113,8 @@ Liquid    = 3
 [09-monads]: lectures/09-monads.html
 [10-list]: lectures/10-list.html
 [11-state]: lectures/11-state.html
-[12-parsing]: lectures/12-parsers.html
+[12-parsers]: lectures/12-parsers.html
+[13-transformers]: lectures/13-transformers.html
 
 
 <!-- JUNK -->

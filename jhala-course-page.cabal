@@ -20,4 +20,6 @@ executable homepage
                        hakyll,
                        pandoc,
                        pandoc-types,
-                       containers
+                       containers, 
+                       QuickCheck,
+                       mtl

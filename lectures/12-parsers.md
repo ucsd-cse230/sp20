@@ -474,8 +474,6 @@ quiz = forEach [10, 20, 30] (\i ->
 <br>
 
 
-
-
 ## A `pairP` Combinator
 
 Lets implement the above as `pairP`
@@ -719,7 +717,7 @@ pairP aP bP = do
 <br>
 <br>
 
-## A Failure Parser
+## Failures are the Pillars of Success!
 
 Surprisingly useful, always _fails_ 
 
@@ -880,7 +878,7 @@ when you are done, we should get the following behavior
 <br>
 <br>
 
-## QUIZ: A Choice Combinator
+## A Choice Combinator
 
 Lets write a combinator `orElse p1 p2` such that 
 
@@ -892,11 +890,11 @@ Lets write a combinator `orElse p1 p2` such that
 
 ```haskell
 :: Parser a -> Parser a -> Parser a
-chooseP p1 p2 = -- produce non-empty results of `p1` 
-                -- or-else results of `p2`
+orElse p1 p2 = -- produce results of `p1` if non-empty
+               -- OR-ELSE results of `p2`
 ```
 
-e.g. `chooseP` lets us build a parser that produces an alphabet _OR_ a numeric character
+e.g. `orElseP` lets us build a parser that produces an alphabet _OR_ a numeric character
 
 ```haskell
 alphaNumChar :: Parser Char
@@ -916,24 +914,57 @@ Which should produce
 [('2', "30")]
 ```
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ 
+
+```haskell
+orElse :: Parser a -> Parser a -> Parser a
+orElse p1 p2 = -- produce results of `p1` if non-empty
+               -- OR-ELSE results of `p2`
+```
+
+Which of the following implements `orElse`?
+
 ```haskell
 -- a 
-orElse p1 p2 = do xs <- p1
-                  ys <- p2
-                  return (x1 ++ x2) 
+orElse p1 p2 = do 
+  r1s <- p1
+  r2s <- p2
+  return (r1s ++ r2s) 
+
 -- b
-orElse p1 p2  = do xs <- p1 
-                   case xs of 
-                     [] -> p2 
-                     _  -> return xs
+orElse p1 p2 = do 
+  r1s <- p1 
+  case r1s of 
+    [] -> p2 
+    _  -> return r1s
 
 -- c
-orElse p1 p2 = P (\cs -> runParser p1 cs ++ runParser p2 cs)
+orElse p1 p2 = P (\cs -> 
+  runParser p1 cs ++ runParser p2 cs
+  )
 
 -- d
-orElse p1 p2 = P (\cs -> case runParser p1 cs of
-                            []  -> runParser p2 cs
-                            r1s -> r1s)
+orElse p1 p2 = P (\cs -> 
+  case runParser p1 cs of
+    []  -> runParser p2 cs
+    r1s -> r1s
+  )
 ```
 
 <br>
@@ -1136,11 +1167,32 @@ When `calc` is run, it will both parse _and_ calculate
 [(16,"cat")]
 ```
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 ## QUIZ 
 
 What will `quiz` evaluate to? 
 
 ```haskell
+calc :: Parser Int
+calc = do x  <- digitInt
+          op <- intOp
+          y  <- digitInt 
+          return (x `op` y)
+
 quiz = runParser calc "99bottles"
 ```
 
@@ -1201,12 +1253,11 @@ The parser `string s` parses *exactly* the string `s`
 []
 ```
 
-Here's an implementation
+Lets fill in an implementation
 
 ```haskell
 string :: String -> Parser String
-string ""     = return ""
-string (c:cs) = do { _ <- char c; _ <- string cs; return (c:cs) }
+string s = ???
 ```
 
 Which library function will _eliminate_ the recursion from `string`?
@@ -1247,10 +1298,16 @@ quiz = runParser (manyP digitChar) "123horse"
 ```
 
 **A.** `[(""  , "1234horse")]` 
+
 **B.** `[("1" , "234horse")]` 
-**C.** `[("1", "23horse"), ("12", "3horse"), ("123", "horse")]` 
+
+**C.** `[("1", "23horse"), ("12", "3horse"), ("123", "horse )]` 
+
+
 **D.** `[("123", "horse")]` 
+
 **E.** `[]` 
+
 
 <br>
 <br>
@@ -1292,6 +1349,24 @@ which will produce
 >>> runParser int "123horse"
 [(123, "horse")]
 ```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## Parsing Arithmetic Expressions
 
@@ -1406,10 +1481,15 @@ quiz = runParser calc0 "10*2+100"
 ```
 
 **A.** `[(1020,"")]`
+
 **B.** `[(120,"")]`
+
 **C.** `[(120,""), (1020, "")]`
+
 **D.** `[(1020,""), (120, "")]`
+
 **E.** `[]`
+
 
 <br>
 <br>
