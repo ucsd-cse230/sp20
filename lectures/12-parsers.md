@@ -1399,7 +1399,41 @@ ghci> doParse calc0 "11+22-33"
 [(0,"")]
 ```
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 ## QUIZ 
+
+```haskell
+calc0 ::  Parser Int
+calc0 = binExp <|> int 
+
+int :: Parser Int
+int = do 
+  xs <- many digitChar 
+  return (read xs)
+
+binExp :: Parser Int
+binExp = do
+  x <- int 
+  o <- intOp 
+  y <- calc0 
+  return (x `o` y) 
+```
 
 What does `quiz` evaluate to? 
 
@@ -1505,14 +1539,22 @@ quiz = runParser calc0 "10*2+100"
 <br>
 <br>
 
-The `calc0` parser implicitly forces *all operators* to be **right associative** 
+The `calc0` parser implicitly forces *all operators* to be *right associative* 
 
 - doesn't matter for `+`, `*` 
 
 - but is incorrect for `-`
 
-- does not respect precedence!
+**Does not respect precedence!**
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>
@@ -1540,6 +1582,13 @@ now we can try
 ```haskell
 calc1 :: Parser Int
 calc1 = parens binExp <|> int 
+
+binExp :: Parser Int
+binExp = do
+  x <- int 
+  o <- intOp 
+  y <- calc1 
+  return (x `o` y)
 ```
 
 now the original string wont even parse
@@ -1610,6 +1659,16 @@ Infinite loop! `calc1 --> binExp --> calc1 --> binExp --> ...`
 
 - without _consuming_ any input :-( 
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>

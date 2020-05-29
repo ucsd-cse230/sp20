@@ -4,7 +4,6 @@ date: 2020-05-28
 headerImg: books.jpg
 ---
 
-
 ## Property-based Testing
 
 Lets look at [QuickCheck][1]
@@ -1054,28 +1053,660 @@ Using the `WHILE` language from your HW assignment.
 <br>
 
 ## WHILE: Syntax
-TODO
+
+Recall the definition of `Variable` and `Value`
+
+```haskell
+data Variable 
+  = V String 
+
+data Value 
+  = IntVal Int
+  | BoolVal Bool
+```
+
+which we used to define `Expression`
+
+```haskell
+data Expression 
+  = Var   Variable
+  | Val   Value
+  | Plus  Expression Expression
+  | Minus Expression Expression
+```
+
+and `Statement`
+
+
+
+```haskell
+data Statement
+  = Assign   Variable   Expression
+  | If       Expression Statement  Statement
+  | While    Expression Statement
+  | Sequence Statement  Statement
+  | Skip
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 
 ## WHILE: Semantics
-TODO
+
+Next, we defined the *behavior* of programs as 
+
+- functions from *starting* state to *final* state 
+
+- where *state* was defined as a map from `Variable` to `Value`
+
+```haskell
+type WState = M.Map Variable Value
+```
+
+and then you wrote a function
+
+```haskell
+execute ::  WState -> Statement -> WState
+execute s0 stmt = execState (evalS stmt) s0
+```
+
+(We can skip the details of `evalS` because *you* wrote it... right?)
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## Generating WHILE Programs
-TODO
+
+Lets write a *program generator* 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ
+
+But first, what is the type of
+
+```haskell
+quiz f m = do
+  x <- m
+  return (f x)
+```
+
+**A.** `             (a -> a) -> m a -> m a`
+
+**B.** `             (a -> b) -> m a -> m b`
+
+**C.** `             (a -> b) -> [a] -> [b]`
+
+**D.** `             (a -> b) -> Gen a -> Gen b`
+
+**E.** `(Monad m) => (a -> b) -> m a -> m b`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## A Common Pattern?
+
+Note that if `Monad m` then `Functor m` so ... 
+
+What other *operator* / *function* has the type 
+
+```
+(a -> b) -> m a -> m b
+```
+
+???
+
+
+### Generating Variables
+
+```haskell
+instance Arbitrary Variable where
+  arbitrary = do
+    x <- elements ['A'..'Z'] 
+    return (V [x])
+```
+
+We can rewrite the above to
+
+```haskell
+instance Arbitrary Variable where
+  arbitrary = (\x -> V [x]) <$> elements ['A'..'Z'] 
+```
+
+and we get
+
+```haskell
+>>> randomThings :: IO [Variable]
+[V "G",V "U",V "Z",V "F",V "Z",V "K",V "P",V "D",V "Y",V "M",V "H"]
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+### Generating Values
+
+```haskell
+instance Arbitrary Value where
+  arbitrary = oneOf [ IntVal  <$> arbitrary 
+                    , BoolVal <$> arbitrary ]
+```
+
+and we get
+
+```haskell
+>>> randomThings :: IO [Value]
+[IntVal 0,BoolVal False,BoolVal True,IntVal 3
+,IntVal (-8),IntVal (-3),IntVal 1,BoolVal False
+,IntVal 6,BoolVal True,BoolVal False]
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+### Generating Expressions
+
+```haskell
+instance Arbitrary Expression where
+  arbitrary = expr
+
+expr :: Gen Expression
+expr     = oneof [base, bin] 
+  where 
+    base = oneOf [ Var <$> arbitrary, Val <$> arbitrary ]
+    bin  = do {o <- op; e1 <- expr; e2 <- expr; return (o e1 e2)} 
+    op   = elements [Plus, Minus]
+```
+
+which gives us
+
+```haskell
+>>> randomThings :: IO [Expression]
+... -- lots of expressions! 
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+## Generating States 
+
+QC already has an way to automatically generate `Map`s 
+
+```haskell
+instance (Ord k, Arbitrary k, Arbitrary v) =>  Arbitrary (M.Map k v) where
+  arbitrary = M.fromList <$> arbitrary
+```
+
+So for free we get a generator for `WState`
+
+```haskell
+>>> randomThings :: IO [WState]
+...
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## Specification: Program Equivalence
-TODO
+
+Next, lets specify the **properties**
+
+Let `p1` and `p2` be two *While* programs. 
+
+Program `p1` is *equivalent to* `p2` written `p1 === p2` if
+
+```haskell
+(===) ::  Statement -> Statement -> Property
+p1 === p2 = forAll arbitrary (\st -> execute st p1 == execute st p2)
+```
+
+That is, for all *input* states `st`
+
+- executing `p1` from `st` and 
+
+- executing `p2` from `st`
+
+produce the _same_ state.
+
+## QUIZ 
+
+For example, suppose that
+
+```haskell
+-- X := 10; Y := 20
+prog1 = Sequence 
+  (Assign (V "X") (Val (IntVal 10)))
+  (Assign (V "Y") (Val (IntVal 20)))
+
+--  Y := 20; X := 10
+prog2 = Sequence 
+  (Assign (V "Y") (Val (IntVal 20)))
+  (Assign (V "X") (Val (IntVal 10))
+
+--  Y := 20; X := 20
+prog3 = Sequence 
+  (Assign (V "Y") (Val (IntVal 20)))
+  (Assign (V "X") (Val (IntVal 20)))
+```
+
+then what do the following two queries return?
+
+```haskell
+>>> quickCheck (prog1 === prog2)
+>>> quickCheck (prog1 === prog3)
+```
+
+**A.** FAIL, FAIL 
+
+**B.** FAIL, PASS
+
+**C.** PASS, FAIL
+
+**D.** PASS, PASS 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Checking Compiler Optimizations
+
+A **compiler optimization** can be viewed as a **pair** of programs
+
+- *input* written by human `p_in`
+- *output* optimized by compiler `p_out` 
+
+An optimization is **correct** if `p_in === p_out`
+
+- Compiler should not *change behavior* of the code
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## Checking an Optimization: Zero-Add-Elimination
-TODO
+
+Here's a simple optimization 
+
+| **In**       | **Out**   |
+|:-------------|:----------|
+| `X := E + 0` | `X := E`  | 
+| `X := E - 0` | `X := E`  | 
+|              |           |
+
+Should be correct because adding `0` doesn't change anything...
+
+We can write this as a QC **property**
+
+```haskell
+prop_add_zero_elim :: Variable -> Expression -> Property
+prop_add_zero_elim x e = 
+   (x `Assign` (e `Plus` Val (IntVal 0))) === (x `Assign` e) 
+
+prop_sub_zero_elim :: Variable -> Expression -> Property
+prop_sub_zero_elim x e =
+  (x `Assign` (e `Minus` Val (IntVal 0))) === (x `Assign` e)
+```
+
+So what does QC say?
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+```haskell
+-- >>> quickCheck prop_add_zero_elim
+-- *** Failed! Falsifiable (after 1 test):
+-- W
+-- True
+-- fromList []
+```
+
+What's that? Lets see is `W := True` equivalent to `W := True + 0` ?
+
+Forgot about those pesky boolean expressions! 
+
+If you recall `W := True` will just assign `True` to `W`
+
+```haskell
+>>> execute M.empty ((V "W") `Assign` (Val (BoolVal True)))
+fromList [(W,True)]
+```
+
+but `W := True + 0` will have a "type error" so will assign `0` to `W`!
+
+```haskell
+>>> execute M.empty (V "W") `Assign` ((Val (BoolVal True) `Plus` Val (IntVal 0)))
+fromList [(W,0)]
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+## Fix: Restrict Optimizations to `Int` Expressions
+
+Problem was expressions like `True`
+
+- Caused strange behaviors due to "type errors" 
+
+Lets *restrict* to **only integer-valued expressions**
+
+```haskell
+intExpr :: Gen Expression
+intExpr     = oneof [base, bin] 
+  where 
+    base = oneOf [ Var <$> arbitrary, Val . IntVal <$> arbitrary ]
+    bin  = do {o <- op; e1 <- expr; e2 <- expr; return (o e1 e2)} 
+    op   = elements [Plus, Minus]
+```
+
+Now we can restrict the property to
+
+```haskell
+prop_add_zero_elim'   :: Variable -> Property
+prop_add_zero_elim' x = 
+  forAll intExpr (\e -> (x `Assign` (e `Plus` Val (IntVal 0))) === (x `Assign` e))
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ
+
+Consider the property 
+
+```haskell
+prop_add_zero_elim'   :: Variable -> Property
+prop_add_zero_elim' x = 
+  forAll intExpr (\e -> (x `Assign` (e `Plus` Val (IntVal 0))) === (x `Assign` e))
+```
+
+What will be the result of 
+
+```haskell
+>>> quickCheck prop_add_zero_elim'
+```
+
+**A.** PASS
+
+**B.** FAIL
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+```haskell
+>>> quickCheck prop_add_zero_elim'
+*** Failed! Falsifiable (after 11 tests):
+Z
+G
+fromList [(B,False),(F,-4),(G,True),(K,8),(M,True),(N,False),(R,3),(T,False),(V,True)]
+```
+
+Oops, the counterexample is `Z := G` and `Z := G + 0` 
+
+- *but* now the _starting_ state maps `(G, True)` 
+
+Pesky `Bool` sneaked right back in ... 
+
+**Moral:** Even simple optimizations are _really_ tricky without types!
+
+**Try at home** Can you fix this property so it passes?
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 
 ## Checking an Optimization: Constant-Folding-ish
-TODO
 
-## Shrinking
-TODO
+Lets try another optimization that doesn't use any *arithmetic* 
 
-## Recap: Property-Based Testing
-TODO
+- So should not have any problems with `Int`-vs-`Bool`
+
+Suppose you have two back-to-back assignments
+
+```haskell
+X := E;   Y := E
+```
+
+Why *recompute* `E`? Result is already stored in `X`! So optimize the above to
+
+```haskell
+X := E;   Y := X
+```
+
+We can specify this transformation as the QC property
+
+```haskell
+prop_const_prop :: Variable -> Variable -> Expression -> Property
+prop_const_prop x y e = 
+  ((x `Assign` e) `Sequence` (y `Assign` e))
+  ===
+  ((x `Assign` e) `Sequence` (y `Assign` Var x))
+```
+
+Mighty QC, do you agree ?
+
+```haskell
+>>> quickCheck prop_const_prop 
+*Testing> quickCheck prop_const_prop
+*** Failed! Falsifiable (after 82 tests):
+D
+B
+True + N + L + M + True + -45 + H + -9 + 70 + True + -68 + N + -29 + I + True + G + O + P + True + Q + False + False + True + True + True + True + X + I + False + 81 + -42 + False + 31 + -13 + T + 23 + True + S + True + I + M + True + True + True + Z + H + -65 + G + K + -22 + D
+fromList [(A,True),(B,-72),(C,-19),(D,-34),(E,50),(F,True),(G,True),(H,-21),(I,5),(J,3),(K,True),(L,-20),(M,True),(N,-10),(O,-20),(P,False),(Q,-10),(R,-78),(S,True),(T,70),(U,False),(V,-55),(W,True),(X,True),(Y,True),(Z,-56)]
+``` 
+
+![](/static/img/thinking-face.png)
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Shrinking Tests
+
+The property *fails* ... but the *counterexample* is very long!
+
+![](/static/img/crying-face.png)
+
+QC has a **test shrinking** mechanism ... also in the `Arbitrary` class 
+
+```haskell
+shrink :: a -> [a]
+```
+
+`shrink t` 
+
+- takes as *input* a **candidate** `t` and  
+- returns as *output* a list of **smaller candidates** 
+
+That QC will systematically search with to find a **minimally** failing test!
+
+```haskell
+instance Arbitrary Expression where
+  arbitrary = expr
+
+  -- shrink :: Expression -> [Expression]
+  shrink (Plus e1 e2)  = [e1, e2]
+  shrink (Minus e1 e2) = [e1, e2]
+  shrink _             = []
+```
+
+We should just keep shrinking each `Expression` to its *sub*-`Expressions`.
+
+```haskell
+>>> quickCheck prop_const_prop 
+*** Failed! Falsifiable (after 26 tests and 4 shrinks):    
+D
+U
+A + D
+fromList [(D,-638),(G,256),(H,False),(K,False),(O,True),(R,True),(S,-81),(T,926)]
+~~~~~
+
+Aha! Consider the two programs
+
+```haskell
+D := A + D;   
+U := A + D
+``` 
+
+and 
+
+```haskell
+D := A + D; 
+U := D
+```
+
+are they equivalent? Pretty subtle, eh. 
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## Recap: Property-Based Testing
 
@@ -1088,9 +1719,44 @@ TODO
     - `Arbitrary` is a class for types with generators
 
 3. **Case-Study**
+    - Compiler optimizations are very tricky 
+    - QC-inspired methods have found serious bugs in many compilers & databases & ...
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
+## Recap: Property-Based Testing
 
+QuickCheck is awesome! 
+
+- **Simple:** typeclasses + monads
+
+- **Useful**: Can find subtle bugs or inconsistencies in your code. 
+
+Lots of literature on QC and techniques it has [inspired][13]
+
+- Can even use QC to generate [test data][9] systems in *other* languages 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 
 [0]: http://www.cse.chalmers.se/~koen/
@@ -1106,3 +1772,4 @@ TODO
 [10]: http://community.moertel.com/~thor/talks/pgh-pm-talk-lectrotest.pdf
 [11]: http://www.cse.chalmers.se/~rjmh
 [12]: https://hackage.haskell.org/package/QuickCheck-2.14/docs/src/Test.QuickCheck.Gen.html#line-76
+[13]: https://arxiv.org/pdf/1812.00078.pdf

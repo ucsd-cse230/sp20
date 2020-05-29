@@ -126,38 +126,17 @@ digitChar = satP isDigit
 -- 9
 --
 
-{- 
- "hello"
-
- [c1,c2,c3,c4,c5]
-
- do char c1 
-    char c2 
-    char c3 
-    char c4 
-    char c5 
-    return [c1,c2,c3,c4,c5]
-
-
-   map char [c1,c2,c3] 
-
-   [char c1, char c2, char c3] :: [Parser Char]
-
-
-
- -}
+-- string   []    = return []
+-- string   (h:t) = do { c <- char h; cs <- string t; return (h:t) }
 
 string :: String -> Parser String 
-string cs = mapM char cs -- sequ (map char cs) 
+string cs = mapM char cs 
 
 -- >>> :t mapM 
 -- mapM :: (a -> Parser b) -> [a] -> Parser [b]
 --
 
 
-
--- string   []    = return []
--- string   (h:t) = do { c <- char h; cs <- string t; return (h:t) }
 
 sequ :: [Parser a] -> Parser [a]
 sequ []     = return []
@@ -174,15 +153,6 @@ sequ (p:ps) = do { v <- p; vs <- sequ ps; return (v:vs) }
 -- []
 --
 
-
-
-
--- string         [c5] = do {                 char c5; return         [c5] }
--- string     [c4, c5] = do {        char c4; char c5; return     [c4, c5] }
--- string (c3: cs)     = do { char c3; out <- string cs; return (c3:cs) }
--- string [c3; c4; c5] = do { char3; char c4; char c5; return [c3, c4, c5] }
-
--- string s = undefined -- char 
 
 
 -- parses EXACTLY the String s and nothing else

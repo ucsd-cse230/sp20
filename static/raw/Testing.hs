@@ -1,5 +1,7 @@
 
-{-# LANGUAGE NoMonomorphismRestriction, FlexibleInstances, TypeSynonymInstances #-}
+{-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE FlexibleInstances #-} 
+{-# LANGUAGE TypeSynonymInstances #-}
 
 module Testing where 
 
@@ -9,7 +11,6 @@ import Data.List
 import qualified Data.Map as M 
 import Control.Monad.State hiding (when)
 import Control.Applicative ((<$>))
-import Test.QuickCheck
 
 
 incr :: Int -> Int
@@ -152,4 +153,216 @@ randomThings = sample' arbitrary
 -- >>> randomThings :: IO [(Int, Bool)] 
 -- [(0,True),(1,True),(0,True),(6,False),(-5,True),(4,False),(-12,False),(-8,False),(5,False),(-9,False),(-7,False)]
 --
+
+data Variable 
+  = V String 
+  deriving (Eq, Ord)
+
+data Value 
+  = IntVal Int
+  | BoolVal Bool
+  deriving (Eq, Ord)
+
+data Expression 
+  = Var   Variable
+  | Val   Value
+  | Plus  Expression Expression
+  | Minus Expression Expression
+
+data Statement
+  = Assign   Variable   Expression
+  | If       Expression Statement  Statement
+  | While    Expression Statement
+  | Sequence Statement  Statement
+  | Skip
+
+type WState = M.Map Variable Value
+
+instance Arbitrary Variable where
+  arbitrary = do
+    x <- elements ['A'..'Z'] 
+    return (V [x])
+
+-- >>> randomThings :: IO [Variable]
+-- [V "X",V "V",V "W",V "C",V "J",V "G",V "H",V "I",V "D",V "T",V "R"]
+--
+
+instance Arbitrary Value where
+  arbitrary = oneOf 
+    [ IntVal <$> arbitrary
+    , BoolVal <$> arbitrary
+    ]
+
+instance Arbitrary Expression where
+  arbitrary = expr
+  -- shrink :: Expression -> [Expression]
+  shrink (Plus e1 e2)  = [e1, e2]
+  shrink (Minus e1 e2) = [e1, e2]
+  shrink _             = []
+
+
+
+expr :: Gen Expression
+expr     = oneof [base, bin] 
+  where 
+    base = oneOf [ Var <$> arbitrary, Val <$> arbitrary ]
+    bin  = do {o <- op; e1 <- expr; e2 <- expr; return (o e1 e2)} 
+    op   = elements [Plus, Minus]
+
+-- >>> randomThings :: IO [WState]
+-- [fromList [],fromList [(V "P",IntVal 0)],fromList [(V "M",IntVal 0),(V "Z",IntVal 1)],fromList [(V "E",BoolVal False),(V "J",BoolVal False),(V "X",IntVal 6)],fromList [(V "J",IntVal (-8)),(V "U",IntVal 3),(V "Z",BoolVal True)],fromList [(V "A",BoolVal False),(V "I",BoolVal False),(V "J",BoolVal False)],fromList [(V "H",BoolVal True),(V "J",IntVal (-9)),(V "K",IntVal (-12)),(V "L",BoolVal True),(V "U",BoolVal False),(V "V",IntVal (-4)),(V "W",IntVal (-9))],fromList [(V "A",BoolVal True),(V "C",BoolVal False),(V "E",IntVal 1),(V "K",BoolVal False),(V "N",IntVal (-7)),(V "P",BoolVal True),(V "R",IntVal (-2)),(V "T",BoolVal True),(V "V",IntVal (-1)),(V "Z",BoolVal True)],fromList [(V "A",BoolVal True),(V "M",BoolVal True),(V "O",BoolVal True),(V "S",IntVal 14),(V "W",IntVal 3)],fromList [(V "D",BoolVal True),(V "E",IntVal (-5)),(V "F",BoolVal True),(V "L",BoolVal False),(V "M",IntVal (-13)),(V "T",BoolVal True),(V "V",IntVal (-3)),(V "Z",BoolVal True)],fromList [(V "D",IntVal 13),(V "F",IntVal 16),(V "I",IntVal (-14)),(V "M",IntVal 11),(V "O",BoolVal True),(V "P",BoolVal False),(V "Q",BoolVal False),(V "R",BoolVal False),(V "S",BoolVal False),(V "U",BoolVal True),(V "Y",IntVal 15)]]
+--
+
+execute ::  WState -> Statement -> WState
+execute s0 stmt = execState (evalS stmt) s0
+
+(===) ::  Statement -> Statement -> Property
+p1 === p2 = forAll arbitrary (\st -> execute st p1 == execute st p2)
+
+
+-- X := 10; Y := 20
+prog1 = Sequence 
+  (Assign (V "X") (Val (IntVal 10)))
+  (Assign (V "Y") (Val (IntVal 20)))
+
+--  Y := 20; X := 10
+prog2 = Sequence 
+  (Assign (V "Y") (Val (IntVal 20)))
+  (Assign (V "X") (Val (IntVal 10)))
+
+--  Y := 20; X := 20
+prog3 = Sequence 
+  (Assign (V "Y") (Val (IntVal 20)))
+  (Assign (V "X") (Val (IntVal 20)))
+
+-- >>> quickCheck (prog1 === prog2)
+
+-- >>> quickCheck (prog1 === prog3)
+
+prop_add_zero_elim :: Variable -> Expression -> Property
+prop_add_zero_elim x e = 
+   (x `Assign` (e `Plus` Val (IntVal 0))) === (x `Assign` e) 
+
+prop_sub_zero_elim :: Variable -> Expression -> Property
+prop_sub_zero_elim x e =
+  (x `Assign` (e `Minus` Val (IntVal 0))) === (x `Assign` e)
+
+-- >>> quickCheck prop_add_zero_elim
+-- *** Failed! Falsifiable (after 1 test):
+-- W
+-- True
+-- fromList []
+--
+
+p1  = (V "W") `Assign` (Val (BoolVal True))
+p2  = (V "W") `Assign` ((Val (BoolVal True) `Plus` Val (IntVal 0)))
+st0 = M.fromList []
+
+-- >>> execute st0 p1
+-- fromList [(W,True)]
+--
+
+-- >>> execute st0 p2
+-- fromList [(W,0)]
+--
+
+intExpr :: Gen Expression
+intExpr     = oneof [base, bin] 
+  where 
+    base = oneOf [ Var <$> arbitrary, Val . IntVal <$> arbitrary ]
+    bin  = do {o <- op; e1 <- expr; e2 <- expr; return (o e1 e2)} 
+    op   = elements [Plus, Minus]
+
+prop_add_zero_elim'   :: Variable -> Property
+prop_add_zero_elim' x = 
+  forAll intExpr (\e -> (x `Assign` (e `Plus` Val (IntVal 0))) === (x `Assign` e))
+
+
+-- >>> quickCheck prop_add_zero_elim'
+-- *** Failed! Falsifiable (after 11 tests):
+-- Z
+-- G
+-- fromList [(B,False),(F,-4),(G,True),(K,8),(M,True),(N,False),(R,3),(T,False),(V,True)]
+--
+
+-- HEREHEREHEREHEREHERE
+
+
+prop_const_prop :: Variable -> Variable -> Expression -> Property
+prop_const_prop x y e = 
+  ((x `Assign` e) `Sequence` (y `Assign` e))
+  ===
+  ((x `Assign` e) `Sequence` (y `Assign` Var x))
+
+
+-- >>> quickCheck prop_const_prop 
+
+
+
+
+
+
+
+evalE :: Expression -> State WState Value
+evalE (Var x)       = get >>= return . M.findWithDefault (IntVal 0) x
+evalE (Val v)       = return v
+evalE (Plus e1 e2)  = return (intOp (+) 0 IntVal) `ap` evalE e1 `ap` evalE e2
+evalE (Minus e1 e2) = return (intOp (-) 0 IntVal) `ap` evalE e1 `ap` evalE e2
+
+evalS :: Statement -> State WState ()
+evalS w@(While e s)    = evalS (If e (Sequence s w) Skip)
+evalS Skip             = return ()
+evalS (Sequence s1 s2) = evalS s1 >> evalS s2
+evalS (Assign x e )    = do v <- evalE e
+                            m <- get
+                            put $ M.insert x v m
+                            return ()
+evalS (If e s1 s2)     = do v <- evalE e
+                            case v of 
+                              BoolVal True  -> evalS s1
+                              BoolVal False -> evalS s2
+                              _             -> return ()
+
+
+intOp :: (Int -> Int -> a) -> a -> (a -> Value) -> Value -> Value -> Value
+intOp op _ c (IntVal x) (IntVal y) = c $ x `op` y
+intOp _  d c _          _          = c d 
+
+
+blank   :: Int -> String 
+blank n = replicate n ' '
+
+instance Show Variable where
+  show (V x) = x
+
+instance Show Value where
+  show (IntVal  i) = show i
+  show (BoolVal b) = show b
+
+instance Show Expression where
+  show (Var v)       = show v
+  show (Val v)       = show v
+  show (Plus e1 e2)  = show e1 ++ " + " ++ show e2
+  show (Minus e1 e2) = show e1 ++ " + " ++ show e2
+
+instance Show Statement where
+  show = showi 0
+
+showi :: Int -> Statement -> String 
+showi n (Skip)       = blank n ++ "skip"
+showi n (Assign x e) = blank n ++ show x ++ " := " ++ show e
+showi n (If e s1 s2) = blank n ++ "if " ++ show e ++ " then\n" ++ 
+                       showi (n+2) s1 ++
+                       blank n ++ "else\n" ++ showi (n+2) s2 ++ blank n ++ "endif"
+
+showi n (While e s)  = blank n ++ "while " ++ show e ++ " do\n" ++ 
+                       showi (n+2) s
+showi n (Sequence s1 s2) = showi n s1 ++ "\n" ++ showi n s2 
+
+instance Arbitrary Statement where
+  arbitrary = oneof [ liftM2 Assign   arbitrary arbitrary
+                    , liftM3 If       arbitrary arbitrary arbitrary
+                    , liftM2 While    arbitrary arbitrary
+              , liftM2 Sequence arbitrary arbitrary
+                    , return Skip ]
 

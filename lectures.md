@@ -41,15 +41,16 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/20*     | ""			                   |                           | [pdf][11-state-C]    | [code][lec_5_20] |
 | *5/22*     | Parser Combinators              | [html][12-parsers]        | [pdf][12-parsers-A]  | [code][lec_5_22] |
 | *5/27*     | ""                              |                           |                      |                  | 
+| *5/29*     | ""                              |                           |                      |                  | 
 |            | Transformers                    | [html][13-transformers]   |                      |                  | 
-|            | Property-based Testing          |                           |                      |                  | 
+|            | Property-based Testing          | [html][14-testing]        |                      |                  | 
 |            | List Monad                      | [html][10-list]           |                      |                  |
+
+<!--
 |            | Concurrency                     |                           |                      |                  |
 |            | Refinement Types                |                           |                      |                  |          
 |            | Proofs as Programs              |                           |                      |                  | 
 
-
-<!--
 TC+monoid = 2
 Func+App  = 2
 Monad     = 3
@@ -115,7 +116,7 @@ Liquid    = 3
 [11-state]: lectures/11-state.html
 [12-parsers]: lectures/12-parsers.html
 [13-transformers]: lectures/13-transformers.html
-
+[14-testing]: lectures/14-testing.html
 
 <!-- JUNK -->
 [07-testing]: lectures/00-intro.html

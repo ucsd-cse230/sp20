@@ -246,6 +246,13 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 </ul>
 <p>PBT used in basically all kinds of software…</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="plan">Plan</h2>
+<ol type="1">
+<li><p><strong>Property-based Testing</strong></p></li>
+<li><p>Random Test Generation</p></li>
+<li><p>Case-Study</p></li>
+</ol>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="property-based-testing-1">Property-based Testing</h2>
 <p><strong>Don’t</strong> (only) write individual <em>unit-tests</em></p>
 <ul>
@@ -401,7 +408,570 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <li>that allow the construction of rich properties.</li>
 </ul>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
-<h2 id="testing-with-a-modelgoldenreference-implementation">Testing with A Model/Golden/Reference Implementation</h2>
+<h2 id="quiz-2">QUIZ</h2>
+<p>Lets test that our <code class="sourceCode haskell">qsort</code> is <em>identical</em> to a <em>trusted reference implementation</em></p>
+<ul>
+<li>may be too <em>slow</em> to deploy but ok to use for checking correctness</li>
+</ul>
+<p>Lets use the standard library’s <code class="sourceCode haskell">Data.List.sort</code> function</p>
+<ul>
+<li>(<em>Much</em> faster than ours… but just for illustration!)</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="ot">prop_qsort_sort    ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">Bool</span></a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">prop_qsort_sort xs <span class="fu">=</span>  qsort xs <span class="fu">==</span> sort xs</a></code></pre></div>
+<p>What is the result of</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="ot">qsort        ::</span> (<span class="dt">Ord</span> a) <span class="ot">=&gt;</span> [a] <span class="ot">-&gt;</span> [a]</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">qsort []     <span class="fu">=</span> []</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3">qsort (x<span class="fu">:</span>xs) <span class="fu">=</span> qsort ls <span class="fu">++</span> [x] <span class="fu">++</span> qsort rs</a>
+<a class="sourceLine" id="cb22-4" data-line-number="4">  <span class="kw">where</span> </a>
+<a class="sourceLine" id="cb22-5" data-line-number="5">    ls       <span class="fu">=</span> [y <span class="fu">|</span> y <span class="ot">&lt;-</span> xs, y <span class="fu">&lt;</span> x]  <span class="co">-- elems in xs &lt; x </span></a>
+<a class="sourceLine" id="cb22-6" data-line-number="6">    rs       <span class="fu">=</span> [z <span class="fu">|</span> z <span class="ot">&lt;-</span> xs, z <span class="fu">&gt;</span> x]  <span class="co">-- elems in xs &gt; x</span></a>
+<a class="sourceLine" id="cb22-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb22-8" data-line-number="8"><span class="fu">&gt;&gt;&gt;</span> quickCheck prop_qsort_sort</a></code></pre></div>
+<p><strong>A.</strong> <code class="sourceCode haskell"><span class="dt">OK</span></code> after 100 tests</p>
+<p><strong>B.</strong> <code class="sourceCode haskell"><span class="dt">Failed</span><span class="fu">!</span> <span class="fu">Falsifiable...</span></code></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="lets-check">Lets Check</h2>
+<div class="sourceCode" id="cb23"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> quickCheck prop_qsort_sort</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="fu">***</span> <span class="dt">Failed</span><span class="fu">!</span> <span class="dt">Falsifiable</span> (after <span class="dv">6</span> tests and <span class="dv">3</span> shrinks)<span class="fu">:</span></a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">[<span class="fu">-</span><span class="dv">3</span>,<span class="fu">-</span><span class="dv">3</span>]</a></code></pre></div>
+<p>Oops? What?</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> sort [<span class="fu">-</span><span class="dv">3</span>, <span class="fu">-</span><span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">[<span class="fu">-</span><span class="dv">3</span>, <span class="fu">-</span><span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span> qsort [<span class="fu">-</span><span class="dv">3</span>, <span class="fu">-</span><span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">[<span class="fu">-</span><span class="dv">3</span>]</a></code></pre></div>
+<p>Ugh! So close, and yet … Can you spot the bug in our code?</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="ot">qsort        ::</span> (<span class="dt">Ord</span> a) <span class="ot">=&gt;</span> [a] <span class="ot">-&gt;</span> [a]</a>
+<a class="sourceLine" id="cb25-2" data-line-number="2">qsort []     <span class="fu">=</span> []</a>
+<a class="sourceLine" id="cb25-3" data-line-number="3">qsort (x<span class="fu">:</span>xs) <span class="fu">=</span> qsort ls <span class="fu">++</span> [x] <span class="fu">++</span> qsort rs</a>
+<a class="sourceLine" id="cb25-4" data-line-number="4">  <span class="kw">where</span> </a>
+<a class="sourceLine" id="cb25-5" data-line-number="5">    ls       <span class="fu">=</span> [y <span class="fu">|</span> y <span class="ot">&lt;-</span> xs, y <span class="fu">&lt;</span> x]  <span class="co">-- elems in xs &lt; x </span></a>
+<a class="sourceLine" id="cb25-6" data-line-number="6">    rs       <span class="fu">=</span> [z <span class="fu">|</span> z <span class="ot">&lt;-</span> xs, z <span class="fu">&gt;</span> x]  <span class="co">-- elems in xs &gt; x</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="specifying-no-duplicates">Specifying No-Duplicates</h2>
+<p>We assumed that the input has <strong>no duplicates</strong></p>
+<ul>
+<li><strong>Values equal to</strong> <code class="sourceCode haskell">x</code> are thrown out from <code class="sourceCode haskell">ls</code> and <code class="sourceCode haskell">rs</code></li>
+</ul>
+<p>Is this a <em>bug</em>? Maybe? Maybe not?</p>
+<ul>
+<li>But at least its something we should be <em>aware</em> of!</li>
+</ul>
+<p>Lets specify that a list has no-duplicates</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="ot">noDuplicates ::</span>(<span class="dt">Eq</span> a) <span class="ot">=&gt;</span> [a] <span class="ot">-&gt;</span> <span class="dt">Bool</span></a>
+<a class="sourceLine" id="cb26-2" data-line-number="2">noDuplicates (x<span class="fu">:</span>xs) <span class="fu">=</span> not (x <span class="ot">`elem`</span> xs) <span class="fu">&amp;&amp;</span> noDuplicates xs</a>
+<a class="sourceLine" id="cb26-3" data-line-number="3">noDuplicates _      <span class="fu">=</span> <span class="dt">True</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="specifying-a-post-condition">Specifying a Post-Condition</h2>
+<p>We can now check that <code class="sourceCode haskell">qsort</code> <strong>outputs</strong> a list with no-duplicates</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="ot">prop_qsort_distinct ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">Bool</span> </a>
+<a class="sourceLine" id="cb27-2" data-line-number="2">prop_qsort_distinct xs <span class="fu">=</span> noDuplicates (qsort xs)  </a>
+<a class="sourceLine" id="cb27-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="co">-- &gt;&gt;&gt; quickCheck prop_qsort_distinct</span></a>
+<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="co">-- +++ OK, passed 100 tests.</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="specifying-a-pre-condition">Specifying a Pre-Condition</h2>
+<p>Also, <code class="sourceCode haskell">qsort</code> is identical to <code class="sourceCode haskell">sort</code> on <strong>inputs with no duplicates</strong></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="ot">prop_qsort_distinct_sort ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">Property</span> </a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">prop_qsort_distinct_sort xs <span class="fu">=</span> </a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">  (isDistinct xs) <span class="fu">==&gt;</span> (qsort xs <span class="fu">==</span> sort xs)</a>
+<a class="sourceLine" id="cb28-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb28-5" data-line-number="5"><span class="co">-- &gt;&gt;&gt; quickCheck prop_qsort_distinct_sort</span></a>
+<a class="sourceLine" id="cb28-6" data-line-number="6"><span class="co">-- +++ OK, passed 100 tests.</span></a>
+<a class="sourceLine" id="cb28-7" data-line-number="7"><span class="co">--</span></a></code></pre></div>
+<h2 id="plan-1">Plan</h2>
+<ol type="1">
+<li><strong>Property-based Testing</strong>
+<ul>
+<li>Properties are boolean-functions</li>
+<li>Generate inputs, run function, check if result is <code class="sourceCode haskell"><span class="dt">False</span></code></li>
+</ul></li>
+<li><p>Random Test Generation</p></li>
+<li><p>Case-Study</p></li>
+</ol>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="plan-2">Plan</h2>
+<ol type="1">
+<li>Property-based Testing
+<ul>
+<li>Properties are boolean-functions</li>
+<li>Generate inputs, run function, check if result is <code class="sourceCode haskell"><span class="dt">False</span></code></li>
+</ul></li>
+<li><p><strong>Test Generation</strong></p></li>
+<li><p>Case-Study</p></li>
+</ol>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="test-generation">Test Generation</h2>
+<p>Lets notice something about <code class="sourceCode haskell">quickCheck</code></p>
+<p>If you run it once …</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> quickCheck prop_qsort_sort</a>
+<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="fu">***</span> <span class="dt">Failed</span><span class="fu">!</span> <span class="dt">Falsifiable</span> (after <span class="dv">6</span> tests and <span class="dv">2</span> shrinks)<span class="fu">:</span></a>
+<a class="sourceLine" id="cb29-3" data-line-number="3">[<span class="dv">5</span>,<span class="dv">5</span>]</a></code></pre></div>
+<p>and if you run it again …</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> quickCheck prop_qsort_sort</a>
+<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="fu">***</span> <span class="dt">Failed</span><span class="fu">!</span> <span class="dt">Falsifiable</span> (after <span class="dv">4</span> tests and <span class="dv">1</span> shrink)<span class="fu">:</span></a>
+<a class="sourceLine" id="cb30-3" data-line-number="3">[<span class="dv">1</span>,<span class="dv">1</span>]</a></code></pre></div>
+<p>The <em>falsifying tests</em> are different!</p>
+<p>How is this possible?</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="generators">Generators</h2>
+<p>QC defines a special <em>Generator</em> data type</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Gen</span> a <span class="fu">=</span> <span class="dt">MkGen</span> (<span class="dt">StdGen</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> a)</a></code></pre></div>
+<p>A <code class="sourceCode haskell"><span class="dt">Gen</span> a</code> is a function that takes as <em>input</em></p>
+<ul>
+<li>a random number generator <code class="sourceCode haskell"><span class="dt">StdGen</span></code></li>
+<li>a “seed” <code class="sourceCode haskell"><span class="dt">Int</span></code></li>
+</ul>
+<p>and returns as <em>output</em></p>
+<ul>
+<li>a <strong>value</strong> of type <code class="sourceCode haskell">a</code></li>
+</ul>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="creating-generators">Creating <code class="sourceCode haskell"><span class="dt">Gen</span></code>erators</h2>
+<p>There are some functions to <em>create</em> generators, e.g.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="ot">choose ::</span> (<span class="dt">Int</span>, <span class="dt">Int</span>) <span class="ot">-&gt;</span> <span class="dt">Gen</span> <span class="dt">Int</span></a></code></pre></div>
+<p>which</p>
+<ul>
+<li><p>takes a pair of <code class="sourceCode haskell">(lo, hi)</code></p></li>
+<li><p>returns a random generator for values between <code class="sourceCode haskell">lo</code> and <code class="sourceCode haskell">hi</code></p></li>
+</ul>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="running-generators">Running <code class="sourceCode haskell"><span class="dt">Gen</span></code>erators</h2>
+<p>To <em>execute</em> the <code class="sourceCode haskell"><span class="dt">Gen</span></code> we need access to the system’s “randomness”</p>
+<p>Done via an <code class="sourceCode haskell"><span class="dt">IO</span></code> “recipe”</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="ot">sample' ::</span> <span class="dt">Gen</span> a <span class="ot">-&gt;</span> <span class="dt">IO</span> [a]</a></code></pre></div>
+<p>Which</p>
+<ul>
+<li>takes a <code class="sourceCode haskell"><span class="dt">Gen</span></code>erator of <code class="sourceCode haskell">a</code> values and</li>
+<li>returns a <em>recipe</em> that produces a list of (10) <code class="sourceCode haskell">a</code> values</li>
+</ul>
+<p>We can <em>run</em> the recipe in <code class="sourceCode haskell">ghci</code></p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> sample' (choose (<span class="dv">0</span>, <span class="dv">5</span>))</a>
+<a class="sourceLine" id="cb34-2" data-line-number="2">[<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>]</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="exercise-1">EXERCISE</h2>
+<p>Lets write a function that returns a <code class="sourceCode haskell"><span class="dt">Gen</span></code>erator over a list of <code class="sourceCode haskell">elements</code></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="ot">elements ::</span> [a] <span class="ot">-&gt;</span> <span class="dt">Gen</span> a</a>
+<a class="sourceLine" id="cb35-2" data-line-number="2">elements <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p>So <code class="sourceCode haskell">elements [x0,x1,<span class="fu">...</span>,xn]</code> returns a <code class="sourceCode haskell"><span class="dt">Gen</span></code>erator that randomly produces values from <code class="sourceCode haskell">x0</code>, <code class="sourceCode haskell">x1</code>, … <code class="sourceCode haskell">xn</code>.</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="problem-how-to-combine-generators">PROBLEM: How to <em>combine</em> <code class="sourceCode haskell"><span class="dt">Gen</span></code>erators?</h2>
+<p>Suppose I have a generator of positive <code class="sourceCode haskell"><span class="dt">Int</span></code></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="ot">pos ::</span> <span class="dt">Gen</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb36-2" data-line-number="2">pos <span class="fu">=</span> sample (<span class="dv">0</span>, <span class="dv">100</span>)</a></code></pre></div>
+<p>How can I create a generator of a <em>pair</em> of positive <code class="sourceCode haskell"><span class="dt">Int</span></code>s?</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="ot">posPair ::</span> <span class="dt">Gen</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="quiz-3">QUIZ</h2>
+<p><code class="sourceCode haskell"><span class="dt">Gen</span></code>erator is a Monad! (you can <a href="https://hackage.haskell.org/package/QuickCheck-2.14/docs/src/Test.QuickCheck.Gen.html#line-76">see details here</a>)</p>
+<ul>
+<li>This will let us <em>combine</em> generators (like combining parsers…)</li>
+</ul>
+<p>Which of the below implements <code class="sourceCode haskell"><span class="ot">posPair ::</span> <span class="dt">Gen</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</code> ?</p>
+<ul>
+<li>given <code class="sourceCode haskell"><span class="ot">pos ::</span> <span class="dt">Gen</span> <span class="dt">Int</span></code> and <code class="sourceCode haskell"><span class="ot">sample ::</span> (<span class="dt">Int</span>, <span class="dt">Int</span>) <span class="ot">-&gt;</span> <span class="dt">Gen</span> <span class="dt">Int</span></code></li>
+</ul>
+<div class="sourceCode" id="cb38"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co">-- A</span></a>
+<a class="sourceLine" id="cb38-2" data-line-number="2">posPair <span class="fu">=</span> <span class="kw">do</span> { x1 <span class="ot">&lt;-</span> pos; x2 <span class="ot">&lt;-</span> pos; return (x1, x2) }</a>
+<a class="sourceLine" id="cb38-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb38-4" data-line-number="4"><span class="co">-- B</span></a>
+<a class="sourceLine" id="cb38-5" data-line-number="5">posPair <span class="fu">=</span> (pos, pos)</a>
+<a class="sourceLine" id="cb38-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb38-7" data-line-number="7"><span class="co">-- C</span></a>
+<a class="sourceLine" id="cb38-8" data-line-number="8">posPair <span class="fu">=</span> <span class="kw">do</span> { x <span class="ot">&lt;-</span> pos; return (x, x) }  </a>
+<a class="sourceLine" id="cb38-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb38-10" data-line-number="10"><span class="co">-- D</span></a>
+<a class="sourceLine" id="cb38-11" data-line-number="11">posPair <span class="fu">=</span> <span class="dt">Gen</span> (<span class="dv">4</span>, <span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb38-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb38-13" data-line-number="13"><span class="co">-- E </span></a>
+<a class="sourceLine" id="cb38-14" data-line-number="14">posPair <span class="fu">=</span> (sample (<span class="dv">0</span>, <span class="dv">100</span>), sample (<span class="dv">0</span>, <span class="dv">100</span>))</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb39-1" data-line-number="1">posPair <span class="fu">=</span> <span class="kw">do</span> { x1 <span class="ot">&lt;-</span> pos; x2 <span class="ot">&lt;-</span> pos; return (x1, x2) }</a>
+<a class="sourceLine" id="cb39-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb39-3" data-line-number="3"><span class="co">-- &gt;&gt;&gt; sample' posPair</span></a>
+<a class="sourceLine" id="cb39-4" data-line-number="4"><span class="co">-- [(29,71),(48,74),(89,53),(73,93),(0,40),(71,35),(23,69),(93,49),(59,58),(27,32),(88,45)]</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="exercise-2">EXERCISE</h2>
+<p>Lets write a function that <em>mixes</em> a list of <code class="sourceCode haskell"><span class="dt">Gen</span></code>erators</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="ot">oneOf ::</span> [<span class="dt">Gen</span> a] <span class="ot">-&gt;</span> <span class="dt">Gen</span> a</a>
+<a class="sourceLine" id="cb40-2" data-line-number="2">oneOf <span class="fu">=</span> <span class="fu">???</span></a></code></pre></div>
+<p><code class="sourceCode haskell">oneOf [g0,g1,<span class="fu">...</span>,gn]</code> should be a generator that</p>
+<ul>
+<li><p>randomly selects <em>one of</em> <code class="sourceCode haskell">g0</code>,…<code class="sourceCode haskell">gn</code></p></li>
+<li><p>randomly generates a value from the chosen generator</p></li>
+</ul>
+<div class="sourceCode" id="cb41"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> sample' (oneOf [choose (<span class="dv">0</span>,<span class="dv">2</span>), choose (<span class="dv">10</span>,<span class="dv">12</span>)])</a>
+<a class="sourceLine" id="cb41-2" data-line-number="2">[<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">12</span>,<span class="dv">10</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">11</span>,<span class="dv">0</span>,<span class="dv">11</span>]</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<p><code class="sourceCode haskell">oneOf</code> is generalized into the <code class="sourceCode haskell">frequency</code> combinator</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="ot">frequency ::</span> [(<span class="dt">Int</span>, <span class="dt">Gen</span> a)] <span class="ot">-&gt;</span> <span class="dt">Gen</span> a</a></code></pre></div>
+<p>which builds <em>weighted mixtures</em> of individual <code class="sourceCode haskell"><span class="dt">Gen</span></code>erators</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="types-that-can-be-generated">Types that can be <code class="sourceCode haskell"><span class="dt">Gen</span></code>erated</h2>
+<p>QC has a <code class="sourceCode haskell"><span class="kw">class</span></code> for types whose values can be randomly <code class="sourceCode haskell"><span class="dt">Gen</span></code>erated</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">class</span> <span class="dt">Arbitrary</span> a <span class="kw">where</span></a>
+<a class="sourceLine" id="cb43-2" data-line-number="2"><span class="ot">  arbitrary ::</span> <span class="dt">Gen</span> a</a></code></pre></div>
+<p><code class="sourceCode haskell"><span class="dt">T</span></code> is an instance of <code class="sourceCode haskell"><span class="dt">Arbitrary</span></code> if there is <code class="sourceCode haskell"><span class="dt">Gen</span> <span class="dt">T</span></code> function</p>
+<ul>
+<li>i.e. there is a generator of <code class="sourceCode haskell"><span class="dt">T</span></code> values!</li>
+</ul>
+<div class="sourceCode" id="cb44"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="ot">randomThings ::</span> (<span class="dt">Arbitrary</span> a) <span class="ot">=&gt;</span> <span class="dt">IO</span> [a]</a>
+<a class="sourceLine" id="cb44-2" data-line-number="2">randomThings <span class="fu">=</span> sample' arbitrary</a></code></pre></div>
+<p>Many standard types have <code class="sourceCode haskell"><span class="dt">Arbitrary</span></code> instances</p>
+<ul>
+<li>Users write their own instances when testing their own types</li>
+</ul>
+<div class="sourceCode" id="cb45"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span><span class="ot"> randomThings ::</span> <span class="dt">IO</span> [<span class="dt">Int</span>]</a>
+<a class="sourceLine" id="cb45-2" data-line-number="2">[<span class="dv">0</span>,<span class="fu">-</span><span class="dv">2</span>,<span class="fu">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="fu">-</span><span class="dv">1</span>,<span class="dv">8</span>,<span class="dv">1</span>,<span class="fu">-</span><span class="dv">14</span>,<span class="fu">-</span><span class="dv">13</span>,<span class="dv">5</span>,<span class="dv">19</span>]</a>
+<a class="sourceLine" id="cb45-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb45-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span><span class="ot"> randomThings ::</span> <span class="dt">IO</span> [(<span class="dt">Int</span>, <span class="dt">Bool</span>)] </a>
+<a class="sourceLine" id="cb45-5" data-line-number="5">[(<span class="dv">0</span>,<span class="dt">True</span>),(<span class="dv">1</span>,<span class="dt">True</span>),(<span class="dv">0</span>,<span class="dt">True</span>),(<span class="dv">6</span>,<span class="dt">False</span>),(<span class="fu">-</span><span class="dv">5</span>,<span class="dt">True</span>),(<span class="dv">4</span>,<span class="dt">False</span>),(<span class="fu">-</span><span class="dv">12</span>,<span class="dt">False</span>),(<span class="fu">-</span><span class="dv">8</span>,<span class="dt">False</span>),(<span class="dv">5</span>,<span class="dt">False</span>),(<span class="fu">-</span><span class="dv">9</span>,<span class="dt">False</span>),(<span class="fu">-</span><span class="dv">7</span>,<span class="dt">False</span>)]</a>
+<a class="sourceLine" id="cb45-6" data-line-number="6"><span class="fu">-</span></a>
+<a class="sourceLine" id="cb45-7" data-line-number="7"><span class="fu">&gt;&gt;&gt;</span><span class="ot"> randomThings ::</span> <span class="dt">IO</span> [<span class="dt">String</span>]</a>
+<a class="sourceLine" id="cb45-8" data-line-number="8">[<span class="st">&quot;&quot;</span>,<span class="st">&quot;\a&quot;</span>,<span class="st">&quot;\f&quot;</span>,<span class="st">&quot;\779257W\SUBA&quot;</span>,<span class="st">&quot;\84573&quot;</span>,<span class="st">&quot;D\ACK\365059S&quot;</span>,<span class="st">&quot;9W\554735G&quot;</span>,<span class="st">&quot;g\SYN~W\62120\&amp;4&amp;[&quot;</span>,<span class="st">&quot;\NULsc\18427fy(&quot;</span>,<span class="st">&quot;Q`TI \n/TH&quot;</span>,<span class="st">&quot;\461027\ESCZ`u\783094\&amp;4B\SOHT\424692&quot;</span>]</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="plan-3">Plan</h2>
+<ol type="1">
+<li>Property-based Testing
+<ul>
+<li>Properties are <code class="sourceCode haskell"><span class="dt">Bool</span></code>ean-functions</li>
+<li>Generate inputs, run function, check if result is <code class="sourceCode haskell"><span class="dt">False</span></code></li>
+</ul></li>
+<li>Test Generation
+<ul>
+<li><code class="sourceCode haskell"><span class="dt">Gen</span> a</code> is a monadic <em>generator</em> of <code class="sourceCode haskell">a</code> values</li>
+<li><code class="sourceCode haskell"><span class="dt">Arbitrary</span></code> is a class for types with generators</li>
+</ul></li>
+<li><strong>Case-Study</strong></li>
+</ol>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="case-study-compiler-optimizations">Case Study: Compiler Optimizations</h2>
+<p>Lets use QC to test <em>compiler optimizations</em></p>
+<ul>
+<li><p>Learn how to <em>generate</em> structure data (<em>programs</em>)</p></li>
+<li><p>Learn how to <em>specify</em> fancy properties (<em>equivalence</em>)</p></li>
+</ul>
+<p>Using the <code class="sourceCode haskell"><span class="dt">WHILE</span></code> language from your HW assignment.</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="while-syntax">WHILE: Syntax</h2>
+<p>Recall the definition of <code class="sourceCode haskell"><span class="dt">Variable</span></code> and <code class="sourceCode haskell"><span class="dt">Value</span></code></p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Variable</span> </a>
+<a class="sourceLine" id="cb46-2" data-line-number="2">  <span class="fu">=</span> <span class="dt">V</span> <span class="dt">String</span> </a>
+<a class="sourceLine" id="cb46-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb46-4" data-line-number="4"><span class="kw">data</span> <span class="dt">Value</span> </a>
+<a class="sourceLine" id="cb46-5" data-line-number="5">  <span class="fu">=</span> <span class="dt">IntVal</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb46-6" data-line-number="6">  <span class="fu">|</span> <span class="dt">BoolVal</span> <span class="dt">Bool</span></a></code></pre></div>
+<p>which we used to define <code class="sourceCode haskell"><span class="dt">Expression</span></code></p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Expression</span> </a>
+<a class="sourceLine" id="cb47-2" data-line-number="2">  <span class="fu">=</span> <span class="dt">Var</span>   <span class="dt">Variable</span></a>
+<a class="sourceLine" id="cb47-3" data-line-number="3">  <span class="fu">|</span> <span class="dt">Val</span>   <span class="dt">Value</span></a>
+<a class="sourceLine" id="cb47-4" data-line-number="4">  <span class="fu">|</span> <span class="dt">Plus</span>  <span class="dt">Expression</span> <span class="dt">Expression</span></a>
+<a class="sourceLine" id="cb47-5" data-line-number="5">  <span class="fu">|</span> <span class="dt">Minus</span> <span class="dt">Expression</span> <span class="dt">Expression</span></a></code></pre></div>
+<p>and <code class="sourceCode haskell"><span class="dt">Statement</span></code></p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Statement</span></a>
+<a class="sourceLine" id="cb48-2" data-line-number="2">  <span class="fu">=</span> <span class="dt">Assign</span>   <span class="dt">Variable</span>   <span class="dt">Expression</span></a>
+<a class="sourceLine" id="cb48-3" data-line-number="3">  <span class="fu">|</span> <span class="dt">If</span>       <span class="dt">Expression</span> <span class="dt">Statement</span>  <span class="dt">Statement</span></a>
+<a class="sourceLine" id="cb48-4" data-line-number="4">  <span class="fu">|</span> <span class="dt">While</span>    <span class="dt">Expression</span> <span class="dt">Statement</span></a>
+<a class="sourceLine" id="cb48-5" data-line-number="5">  <span class="fu">|</span> <span class="dt">Sequence</span> <span class="dt">Statement</span>  <span class="dt">Statement</span></a>
+<a class="sourceLine" id="cb48-6" data-line-number="6">  <span class="fu">|</span> <span class="dt">Skip</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="while-semantics">WHILE: Semantics</h2>
+<p>Next, we defined the <em>behavior</em> of programs as</p>
+<ul>
+<li><p>functions from <em>starting</em> state to <em>final</em> state</p></li>
+<li><p>where <em>state</em> was defined as a map from <code class="sourceCode haskell"><span class="dt">Variable</span></code> to <code class="sourceCode haskell"><span class="dt">Value</span></code></p></li>
+</ul>
+<div class="sourceCode" id="cb49"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="kw">type</span> <span class="dt">WState</span> <span class="fu">=</span> <span class="dt">M.Map</span> <span class="dt">Variable</span> <span class="dt">Value</span></a></code></pre></div>
+<p>and then you wrote a function</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="ot">execute ::</span>  <span class="dt">WState</span> <span class="ot">-&gt;</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">WState</span></a>
+<a class="sourceLine" id="cb50-2" data-line-number="2">execute s0 stmt <span class="fu">=</span> execState (evalS stmt) s0</a></code></pre></div>
+<p>(We can skip the details of <code class="sourceCode haskell">evalS</code> because <em>you</em> wrote it… right?)</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="generating-while-programs">Generating WHILE Programs</h2>
+<p>Lets write a <em>program generator</em></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="quiz-4">QUIZ</h2>
+<p>But first, what is the type of</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb51-1" data-line-number="1">quiz f m <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb51-2" data-line-number="2">  x <span class="ot">&lt;-</span> m</a>
+<a class="sourceLine" id="cb51-3" data-line-number="3">  return (f x)</a></code></pre></div>
+<p><strong>A.</strong> <code class="sourceCode haskell">(a <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> m a <span class="ot">-&gt;</span> m a</code></p>
+<p><strong>B.</strong> <code class="sourceCode haskell">(a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> m a <span class="ot">-&gt;</span> m b</code></p>
+<p><strong>C.</strong> <code class="sourceCode haskell">(a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [b]</code></p>
+<p><strong>D.</strong> <code class="sourceCode haskell">(a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Gen</span> a <span class="ot">-&gt;</span> <span class="dt">Gen</span> b</code></p>
+<p><strong>E.</strong> <code class="sourceCode haskell">(<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> m a <span class="ot">-&gt;</span> m b</code></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="a-common-pattern">A Common Pattern?</h2>
+<p>Note that if <code class="sourceCode haskell"><span class="dt">Monad</span> m</code> then <code class="sourceCode haskell"><span class="dt">Functor</span> m</code> so …</p>
+<p>What other <em>operator</em> / <em>function</em> has the type</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb52-1" data-line-number="1">(a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> m a <span class="ot">-&gt;</span> m b</a></code></pre></div>
+<p>???</p>
+<h3 id="generating-variables">Generating Variables</h3>
+<div class="sourceCode" id="cb53"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">Arbitrary</span> <span class="dt">Variable</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb53-2" data-line-number="2">  arbitrary <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb53-3" data-line-number="3">    x <span class="ot">&lt;-</span> elements [<span class="ch">'A'</span><span class="fu">..</span><span class="ch">'Z'</span>] </a>
+<a class="sourceLine" id="cb53-4" data-line-number="4">    return (<span class="dt">V</span> [x])</a></code></pre></div>
+<p>We can rewrite the above to</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb54-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">Arbitrary</span> <span class="dt">Variable</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb54-2" data-line-number="2">  arbitrary <span class="fu">=</span> (\x <span class="ot">-&gt;</span> <span class="dt">V</span> [x]) <span class="fu">&lt;$&gt;</span> elements [<span class="ch">'A'</span><span class="fu">..</span><span class="ch">'Z'</span>] </a></code></pre></div>
+<p>and we get</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb55-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span><span class="ot"> randomThings ::</span> <span class="dt">IO</span> [<span class="dt">Variable</span>]</a>
+<a class="sourceLine" id="cb55-2" data-line-number="2">[<span class="dt">V</span> <span class="st">&quot;G&quot;</span>,<span class="dt">V</span> <span class="st">&quot;U&quot;</span>,<span class="dt">V</span> <span class="st">&quot;Z&quot;</span>,<span class="dt">V</span> <span class="st">&quot;F&quot;</span>,<span class="dt">V</span> <span class="st">&quot;Z&quot;</span>,<span class="dt">V</span> <span class="st">&quot;K&quot;</span>,<span class="dt">V</span> <span class="st">&quot;P&quot;</span>,<span class="dt">V</span> <span class="st">&quot;D&quot;</span>,<span class="dt">V</span> <span class="st">&quot;Y&quot;</span>,<span class="dt">V</span> <span class="st">&quot;M&quot;</span>,<span class="dt">V</span> <span class="st">&quot;H&quot;</span>]</a></code></pre></div>
+<p><br> <br> <br> <br> <br></p>
+<h3 id="generating-values">Generating Values</h3>
+<div class="sourceCode" id="cb56"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb56-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">Arbitrary</span> <span class="dt">Value</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb56-2" data-line-number="2">  arbitrary <span class="fu">=</span> oneOf [ <span class="dt">IntVal</span>  <span class="fu">&lt;$&gt;</span> arbitrary </a>
+<a class="sourceLine" id="cb56-3" data-line-number="3">                    , <span class="dt">BoolVal</span> <span class="fu">&lt;$&gt;</span> arbitrary ]</a></code></pre></div>
+<p>and we get</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span><span class="ot"> randomThings ::</span> <span class="dt">IO</span> [<span class="dt">Value</span>]</a>
+<a class="sourceLine" id="cb57-2" data-line-number="2">[<span class="dt">IntVal</span> <span class="dv">0</span>,<span class="dt">BoolVal</span> <span class="dt">False</span>,<span class="dt">BoolVal</span> <span class="dt">True</span>,<span class="dt">IntVal</span> <span class="dv">3</span></a>
+<a class="sourceLine" id="cb57-3" data-line-number="3">,<span class="dt">IntVal</span> (<span class="fu">-</span><span class="dv">8</span>),<span class="dt">IntVal</span> (<span class="fu">-</span><span class="dv">3</span>),<span class="dt">IntVal</span> <span class="dv">1</span>,<span class="dt">BoolVal</span> <span class="dt">False</span></a>
+<a class="sourceLine" id="cb57-4" data-line-number="4">,<span class="dt">IntVal</span> <span class="dv">6</span>,<span class="dt">BoolVal</span> <span class="dt">True</span>,<span class="dt">BoolVal</span> <span class="dt">False</span>]</a></code></pre></div>
+<p><br> <br> <br> <br> <br></p>
+<h3 id="generating-expressions">Generating Expressions</h3>
+<div class="sourceCode" id="cb58"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb58-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">Arbitrary</span> <span class="dt">Expression</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb58-2" data-line-number="2">  arbitrary <span class="fu">=</span> expr</a>
+<a class="sourceLine" id="cb58-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb58-4" data-line-number="4"><span class="ot">expr ::</span> <span class="dt">Gen</span> <span class="dt">Expression</span></a>
+<a class="sourceLine" id="cb58-5" data-line-number="5">expr     <span class="fu">=</span> oneof [base, bin] </a>
+<a class="sourceLine" id="cb58-6" data-line-number="6">  <span class="kw">where</span> </a>
+<a class="sourceLine" id="cb58-7" data-line-number="7">    base <span class="fu">=</span> oneOf [ <span class="dt">Var</span> <span class="fu">&lt;$&gt;</span> arbitrary, <span class="dt">Val</span> <span class="fu">&lt;$&gt;</span> arbitrary ]</a>
+<a class="sourceLine" id="cb58-8" data-line-number="8">    bin  <span class="fu">=</span> <span class="kw">do</span> {o <span class="ot">&lt;-</span> op; e1 <span class="ot">&lt;-</span> expr; e2 <span class="ot">&lt;-</span> expr; return (o e1 e2)} </a>
+<a class="sourceLine" id="cb58-9" data-line-number="9">    op   <span class="fu">=</span> elements [<span class="dt">Plus</span>, <span class="dt">Minus</span>]</a></code></pre></div>
+<p>which gives us</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb59-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span><span class="ot"> randomThings ::</span> <span class="dt">IO</span> [<span class="dt">Expression</span>]</a>
+<a class="sourceLine" id="cb59-2" data-line-number="2"><span class="fu">...</span> <span class="co">-- lots of expressions! </span></a></code></pre></div>
+<p><br> <br> <br> <br> <br></p>
+<h2 id="generating-states">Generating States</h2>
+<p>QC already has an way to automatically generate <code class="sourceCode haskell"><span class="dt">Map</span></code>s</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb60-1" data-line-number="1"><span class="kw">instance</span> (<span class="dt">Ord</span> k, <span class="dt">Arbitrary</span> k, <span class="dt">Arbitrary</span> v) <span class="ot">=&gt;</span>  <span class="dt">Arbitrary</span> (<span class="dt">M.Map</span> k v) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb60-2" data-line-number="2">  arbitrary <span class="fu">=</span> M.fromList <span class="fu">&lt;$&gt;</span> arbitrary</a></code></pre></div>
+<p>So for free we get a generator for <code class="sourceCode haskell"><span class="dt">WState</span></code></p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span><span class="ot"> randomThings ::</span> <span class="dt">IO</span> [<span class="dt">WState</span>]</a>
+<a class="sourceLine" id="cb61-2" data-line-number="2"><span class="fu">...</span></a></code></pre></div>
+<p><br> <br> <br> <br> <br></p>
+<h2 id="specification-program-equivalence">Specification: Program Equivalence</h2>
+<p>Next, lets specify the <strong>properties</strong></p>
+<p>Let <code class="sourceCode haskell">p1</code> and <code class="sourceCode haskell">p2</code> be two <em>While</em> programs.</p>
+<p>Program <code class="sourceCode haskell">p1</code> is <em>equivalent to</em> <code class="sourceCode haskell">p2</code> written <code class="sourceCode haskell">p1 <span class="fu">===</span> p2</code> if</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb62-1" data-line-number="1"><span class="ot">(===) ::</span>  <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">Property</span></a>
+<a class="sourceLine" id="cb62-2" data-line-number="2">p1 <span class="fu">===</span> p2 <span class="fu">=</span> forAll arbitrary (\st <span class="ot">-&gt;</span> execute st p1 <span class="fu">==</span> execute st p2)</a></code></pre></div>
+<p>That is, for all <em>input</em> states <code class="sourceCode haskell">st</code></p>
+<ul>
+<li><p>executing <code class="sourceCode haskell">p1</code> from <code class="sourceCode haskell">st</code> and</p></li>
+<li><p>executing <code class="sourceCode haskell">p2</code> from <code class="sourceCode haskell">st</code></p></li>
+</ul>
+<p>produce the <em>same</em> state.</p>
+<h2 id="quiz-5">QUIZ</h2>
+<p>For example, suppose that</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="co">-- X := 10; Y := 20</span></a>
+<a class="sourceLine" id="cb63-2" data-line-number="2">prog1 <span class="fu">=</span> <span class="dt">Sequence</span> </a>
+<a class="sourceLine" id="cb63-3" data-line-number="3">  (<span class="dt">Assign</span> (<span class="dt">V</span> <span class="st">&quot;X&quot;</span>) (<span class="dt">Val</span> (<span class="dt">IntVal</span> <span class="dv">10</span>)))</a>
+<a class="sourceLine" id="cb63-4" data-line-number="4">  (<span class="dt">Assign</span> (<span class="dt">V</span> <span class="st">&quot;Y&quot;</span>) (<span class="dt">Val</span> (<span class="dt">IntVal</span> <span class="dv">20</span>)))</a>
+<a class="sourceLine" id="cb63-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb63-6" data-line-number="6"><span class="co">--  Y := 20; X := 10</span></a>
+<a class="sourceLine" id="cb63-7" data-line-number="7">prog2 <span class="fu">=</span> <span class="dt">Sequence</span> </a>
+<a class="sourceLine" id="cb63-8" data-line-number="8">  (<span class="dt">Assign</span> (<span class="dt">V</span> <span class="st">&quot;Y&quot;</span>) (<span class="dt">Val</span> (<span class="dt">IntVal</span> <span class="dv">20</span>)))</a>
+<a class="sourceLine" id="cb63-9" data-line-number="9">  (<span class="dt">Assign</span> (<span class="dt">V</span> <span class="st">&quot;X&quot;</span>) (<span class="dt">Val</span> (<span class="dt">IntVal</span> <span class="dv">10</span>))</a>
+<a class="sourceLine" id="cb63-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb63-11" data-line-number="11"><span class="co">--  Y := 20; X := 20</span></a>
+<a class="sourceLine" id="cb63-12" data-line-number="12">prog3 <span class="fu">=</span> <span class="dt">Sequence</span> </a>
+<a class="sourceLine" id="cb63-13" data-line-number="13">  (<span class="dt">Assign</span> (<span class="dt">V</span> <span class="st">&quot;Y&quot;</span>) (<span class="dt">Val</span> (<span class="dt">IntVal</span> <span class="dv">20</span>)))</a>
+<a class="sourceLine" id="cb63-14" data-line-number="14">  (<span class="dt">Assign</span> (<span class="dt">V</span> <span class="st">&quot;X&quot;</span>) (<span class="dt">Val</span> (<span class="dt">IntVal</span> <span class="dv">20</span>)))</a></code></pre></div>
+<p>then what do the following two queries return?</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb64-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> quickCheck (prog1 <span class="fu">===</span> prog2)</a>
+<a class="sourceLine" id="cb64-2" data-line-number="2"><span class="fu">&gt;&gt;&gt;</span> quickCheck (prog1 <span class="fu">===</span> prog3)</a></code></pre></div>
+<p><strong>A.</strong> FAIL, FAIL</p>
+<p><strong>B.</strong> FAIL, PASS</p>
+<p><strong>C.</strong> PASS, FAIL</p>
+<p><strong>D.</strong> PASS, PASS</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="checking-compiler-optimizations">Checking Compiler Optimizations</h2>
+<p>A <strong>compiler optimization</strong> can be viewed as a <strong>pair</strong> of programs</p>
+<ul>
+<li><em>input</em> written by human <code class="sourceCode haskell">p_in</code></li>
+<li><em>output</em> optimized by compiler <code class="sourceCode haskell">p_out</code></li>
+</ul>
+<p>An optimization is <strong>correct</strong> if <code class="sourceCode haskell">p_in <span class="fu">===</span> p_out</code></p>
+<ul>
+<li>Compiler should not <em>change behavior</em> of the code</li>
+</ul>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="checking-an-optimization-zero-add-elimination">Checking an Optimization: Zero-Add-Elimination</h2>
+<p>Here’s a simple optimization</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>In</strong></th>
+<th style="text-align: left;"><strong>Out</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code class="sourceCode haskell"><span class="dt">X</span> <span class="fu">:=</span> <span class="dt">E</span> <span class="fu">+</span> <span class="dv">0</span></code></td>
+<td style="text-align: left;"><code class="sourceCode haskell"><span class="dt">X</span> <span class="fu">:=</span> <span class="dt">E</span></code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code class="sourceCode haskell"><span class="dt">X</span> <span class="fu">:=</span> <span class="dt">E</span> <span class="fu">-</span> <span class="dv">0</span></code></td>
+<td style="text-align: left;"><code class="sourceCode haskell"><span class="dt">X</span> <span class="fu">:=</span> <span class="dt">E</span></code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<p>Should be correct because adding <code class="sourceCode haskell"><span class="dv">0</span></code> doesn’t change anything…</p>
+<p>We can write this as a QC <strong>property</strong></p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb65-1" data-line-number="1"><span class="ot">prop_add_zero_elim ::</span> <span class="dt">Variable</span> <span class="ot">-&gt;</span> <span class="dt">Expression</span> <span class="ot">-&gt;</span> <span class="dt">Property</span></a>
+<a class="sourceLine" id="cb65-2" data-line-number="2">prop_add_zero_elim x e <span class="fu">=</span> </a>
+<a class="sourceLine" id="cb65-3" data-line-number="3">   (x <span class="ot">`Assign`</span> (e <span class="ot">`Plus`</span> <span class="dt">Val</span> (<span class="dt">IntVal</span> <span class="dv">0</span>))) <span class="fu">===</span> (x <span class="ot">`Assign`</span> e) </a>
+<a class="sourceLine" id="cb65-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb65-5" data-line-number="5"><span class="ot">prop_sub_zero_elim ::</span> <span class="dt">Variable</span> <span class="ot">-&gt;</span> <span class="dt">Expression</span> <span class="ot">-&gt;</span> <span class="dt">Property</span></a>
+<a class="sourceLine" id="cb65-6" data-line-number="6">prop_sub_zero_elim x e <span class="fu">=</span></a>
+<a class="sourceLine" id="cb65-7" data-line-number="7">  (x <span class="ot">`Assign`</span> (e <span class="ot">`Minus`</span> <span class="dt">Val</span> (<span class="dt">IntVal</span> <span class="dv">0</span>))) <span class="fu">===</span> (x <span class="ot">`Assign`</span> e)</a></code></pre></div>
+<p>So what does QC say?</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb66-1" data-line-number="1"><span class="co">-- &gt;&gt;&gt; quickCheck prop_add_zero_elim</span></a>
+<a class="sourceLine" id="cb66-2" data-line-number="2"><span class="co">-- *** Failed! Falsifiable (after 1 test):</span></a>
+<a class="sourceLine" id="cb66-3" data-line-number="3"><span class="co">-- W</span></a>
+<a class="sourceLine" id="cb66-4" data-line-number="4"><span class="co">-- True</span></a>
+<a class="sourceLine" id="cb66-5" data-line-number="5"><span class="co">-- fromList []</span></a></code></pre></div>
+<p>What’s that? Lets see is <code class="sourceCode haskell"><span class="dt">W</span> <span class="fu">:=</span> <span class="dt">True</span></code> equivalent to <code class="sourceCode haskell"><span class="dt">W</span> <span class="fu">:=</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dv">0</span></code> ?</p>
+<p>Forgot about those pesky boolean expressions!</p>
+<p>If you recall <code class="sourceCode haskell"><span class="dt">W</span> <span class="fu">:=</span> <span class="dt">True</span></code> will just assign <code class="sourceCode haskell"><span class="dt">True</span></code> to <code class="sourceCode haskell"><span class="dt">W</span></code></p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb67-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> execute M.empty ((<span class="dt">V</span> <span class="st">&quot;W&quot;</span>) <span class="ot">`Assign`</span> (<span class="dt">Val</span> (<span class="dt">BoolVal</span> <span class="dt">True</span>)))</a>
+<a class="sourceLine" id="cb67-2" data-line-number="2">fromList [(<span class="dt">W</span>,<span class="dt">True</span>)]</a></code></pre></div>
+<p>but <code class="sourceCode haskell"><span class="dt">W</span> <span class="fu">:=</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dv">0</span></code> will have a “type error” so will assign <code class="sourceCode haskell"><span class="dv">0</span></code> to <code class="sourceCode haskell"><span class="dt">W</span></code>!</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb68-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> execute M.empty (<span class="dt">V</span> <span class="st">&quot;W&quot;</span>) <span class="ot">`Assign`</span> ((<span class="dt">Val</span> (<span class="dt">BoolVal</span> <span class="dt">True</span>) <span class="ot">`Plus`</span> <span class="dt">Val</span> (<span class="dt">IntVal</span> <span class="dv">0</span>)))</a>
+<a class="sourceLine" id="cb68-2" data-line-number="2">fromList [(<span class="dt">W</span>,<span class="dv">0</span>)]</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="fix-restrict-optimizations-to-int-expressions">Fix: Restrict Optimizations to <code class="sourceCode haskell"><span class="dt">Int</span></code> Expressions</h2>
+<p>Problem was expressions like <code class="sourceCode haskell"><span class="dt">True</span></code></p>
+<ul>
+<li>Caused strange behaviors due to “type errors”</li>
+</ul>
+<p>Lets <em>restrict</em> to <strong>only integer-valued expressions</strong></p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb69-1" data-line-number="1"><span class="ot">intExpr ::</span> <span class="dt">Gen</span> <span class="dt">Expression</span></a>
+<a class="sourceLine" id="cb69-2" data-line-number="2">intExpr     <span class="fu">=</span> oneof [base, bin] </a>
+<a class="sourceLine" id="cb69-3" data-line-number="3">  <span class="kw">where</span> </a>
+<a class="sourceLine" id="cb69-4" data-line-number="4">    base <span class="fu">=</span> oneOf [ <span class="dt">Var</span> <span class="fu">&lt;$&gt;</span> arbitrary, <span class="dt">Val</span> <span class="fu">.</span> <span class="dt">IntVal</span> <span class="fu">&lt;$&gt;</span> arbitrary ]</a>
+<a class="sourceLine" id="cb69-5" data-line-number="5">    bin  <span class="fu">=</span> <span class="kw">do</span> {o <span class="ot">&lt;-</span> op; e1 <span class="ot">&lt;-</span> expr; e2 <span class="ot">&lt;-</span> expr; return (o e1 e2)} </a>
+<a class="sourceLine" id="cb69-6" data-line-number="6">    op   <span class="fu">=</span> elements [<span class="dt">Plus</span>, <span class="dt">Minus</span>]</a></code></pre></div>
+<p>Now we can restrict the property to</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb70-1" data-line-number="1"><span class="ot">prop_add_zero_elim'   ::</span> <span class="dt">Variable</span> <span class="ot">-&gt;</span> <span class="dt">Property</span></a>
+<a class="sourceLine" id="cb70-2" data-line-number="2">prop_add_zero_elim' x <span class="fu">=</span> </a>
+<a class="sourceLine" id="cb70-3" data-line-number="3">  forAll intExpr (\e <span class="ot">-&gt;</span> (x <span class="ot">`Assign`</span> (e <span class="ot">`Plus`</span> <span class="dt">Val</span> (<span class="dt">IntVal</span> <span class="dv">0</span>))) <span class="fu">===</span> (x <span class="ot">`Assign`</span> e))</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="quiz-6">QUIZ</h2>
+<p>Consider the property</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb71-1" data-line-number="1"><span class="ot">prop_add_zero_elim'   ::</span> <span class="dt">Variable</span> <span class="ot">-&gt;</span> <span class="dt">Property</span></a>
+<a class="sourceLine" id="cb71-2" data-line-number="2">prop_add_zero_elim' x <span class="fu">=</span> </a>
+<a class="sourceLine" id="cb71-3" data-line-number="3">  forAll intExpr (\e <span class="ot">-&gt;</span> (x <span class="ot">`Assign`</span> (e <span class="ot">`Plus`</span> <span class="dt">Val</span> (<span class="dt">IntVal</span> <span class="dv">0</span>))) <span class="fu">===</span> (x <span class="ot">`Assign`</span> e))</a></code></pre></div>
+<p>What will be the result of</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb72-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> quickCheck prop_add_zero_elim'</a></code></pre></div>
+<p><strong>A.</strong> PASS</p>
+<p><strong>B.</strong> FAIL</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb73-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> quickCheck prop_add_zero_elim'</a>
+<a class="sourceLine" id="cb73-2" data-line-number="2"><span class="fu">***</span> <span class="dt">Failed</span><span class="fu">!</span> <span class="dt">Falsifiable</span> (after <span class="dv">11</span> tests)<span class="fu">:</span></a>
+<a class="sourceLine" id="cb73-3" data-line-number="3"><span class="dt">Z</span></a>
+<a class="sourceLine" id="cb73-4" data-line-number="4"><span class="dt">G</span></a>
+<a class="sourceLine" id="cb73-5" data-line-number="5">fromList [(<span class="dt">B</span>,<span class="dt">False</span>),(<span class="dt">F</span>,<span class="fu">-</span><span class="dv">4</span>),(<span class="dt">G</span>,<span class="dt">True</span>),(<span class="dt">K</span>,<span class="dv">8</span>),(<span class="dt">M</span>,<span class="dt">True</span>),(<span class="dt">N</span>,<span class="dt">False</span>),(<span class="dt">R</span>,<span class="dv">3</span>),(<span class="dt">T</span>,<span class="dt">False</span>),(<span class="dt">V</span>,<span class="dt">True</span>)]</a></code></pre></div>
+<p>Oops, the counterexample is <code class="sourceCode haskell"><span class="dt">Z</span> <span class="fu">:=</span> <span class="dt">G</span></code> and <code class="sourceCode haskell"><span class="dt">Z</span> <span class="fu">:=</span> <span class="dt">G</span> <span class="fu">+</span> <span class="dv">0</span></code></p>
+<ul>
+<li><em>but</em> now the <em>starting</em> state maps <code class="sourceCode haskell">(<span class="dt">G</span>, <span class="dt">True</span>)</code></li>
+</ul>
+<p>Pesky <code class="sourceCode haskell"><span class="dt">Bool</span></code> sneaked right back in …</p>
+<p><strong>Moral:</strong> Even simple optimizations are <em>really</em> tricky without types!</p>
+<p><strong>Try at home</strong> Can you fix this property so it passes?</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="checking-an-optimization-constant-folding-ish">Checking an Optimization: Constant-Folding-ish</h2>
+<p>Lets try another optimization that doesn’t use any <em>arithmetic</em></p>
+<ul>
+<li>So should not have any problems with <code class="sourceCode haskell"><span class="dt">Int</span></code>-vs-<code class="sourceCode haskell"><span class="dt">Bool</span></code></li>
+</ul>
+<p>Suppose you have two back-to-back assignments</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb74-1" data-line-number="1"><span class="dt">X</span> <span class="fu">:=</span> <span class="dt">E</span>;   <span class="dt">Y</span> <span class="fu">:=</span> <span class="dt">E</span></a></code></pre></div>
+<p>Why <em>recompute</em> <code class="sourceCode haskell"><span class="dt">E</span></code>? Result is already stored in <code class="sourceCode haskell"><span class="dt">X</span></code>! So optimize the above to</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb75-1" data-line-number="1"><span class="dt">X</span> <span class="fu">:=</span> <span class="dt">E</span>;   <span class="dt">Y</span> <span class="fu">:=</span> <span class="dt">X</span></a></code></pre></div>
+<p>We can specify this transformation as the QC property</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb76-1" data-line-number="1"><span class="ot">prop_const_prop ::</span> <span class="dt">Variable</span> <span class="ot">-&gt;</span> <span class="dt">Variable</span> <span class="ot">-&gt;</span> <span class="dt">Expression</span> <span class="ot">-&gt;</span> <span class="dt">Property</span></a>
+<a class="sourceLine" id="cb76-2" data-line-number="2">prop_const_prop x y e <span class="fu">=</span> </a>
+<a class="sourceLine" id="cb76-3" data-line-number="3">  ((x <span class="ot">`Assign`</span> e) <span class="ot">`Sequence`</span> (y <span class="ot">`Assign`</span> e))</a>
+<a class="sourceLine" id="cb76-4" data-line-number="4">  <span class="fu">===</span></a>
+<a class="sourceLine" id="cb76-5" data-line-number="5">  ((x <span class="ot">`Assign`</span> e) <span class="ot">`Sequence`</span> (y <span class="ot">`Assign`</span> <span class="dt">Var</span> x))</a></code></pre></div>
+<p>Mighty QC, do you agree ?</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb77-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> quickCheck prop_const_prop </a>
+<a class="sourceLine" id="cb77-2" data-line-number="2"><span class="fu">*</span><span class="dt">Testing</span><span class="fu">&gt;</span> quickCheck prop_const_prop</a>
+<a class="sourceLine" id="cb77-3" data-line-number="3"><span class="fu">***</span> <span class="dt">Failed</span><span class="fu">!</span> <span class="dt">Falsifiable</span> (after <span class="dv">82</span> tests)<span class="fu">:</span></a>
+<a class="sourceLine" id="cb77-4" data-line-number="4"><span class="dt">D</span></a>
+<a class="sourceLine" id="cb77-5" data-line-number="5"><span class="dt">B</span></a>
+<a class="sourceLine" id="cb77-6" data-line-number="6"><span class="dt">True</span> <span class="fu">+</span> <span class="dt">N</span> <span class="fu">+</span> <span class="dt">L</span> <span class="fu">+</span> <span class="dt">M</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="fu">-</span><span class="dv">45</span> <span class="fu">+</span> <span class="dt">H</span> <span class="fu">+</span> <span class="fu">-</span><span class="dv">9</span> <span class="fu">+</span> <span class="dv">70</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="fu">-</span><span class="dv">68</span> <span class="fu">+</span> <span class="dt">N</span> <span class="fu">+</span> <span class="fu">-</span><span class="dv">29</span> <span class="fu">+</span> <span class="dt">I</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dt">G</span> <span class="fu">+</span> <span class="dt">O</span> <span class="fu">+</span> <span class="dt">P</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dt">Q</span> <span class="fu">+</span> <span class="dt">False</span> <span class="fu">+</span> <span class="dt">False</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dt">X</span> <span class="fu">+</span> <span class="dt">I</span> <span class="fu">+</span> <span class="dt">False</span> <span class="fu">+</span> <span class="dv">81</span> <span class="fu">+</span> <span class="fu">-</span><span class="dv">42</span> <span class="fu">+</span> <span class="dt">False</span> <span class="fu">+</span> <span class="dv">31</span> <span class="fu">+</span> <span class="fu">-</span><span class="dv">13</span> <span class="fu">+</span> <span class="dt">T</span> <span class="fu">+</span> <span class="dv">23</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dt">S</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dt">I</span> <span class="fu">+</span> <span class="dt">M</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dt">True</span> <span class="fu">+</span> <span class="dt">Z</span> <span class="fu">+</span> <span class="dt">H</span> <span class="fu">+</span> <span class="fu">-</span><span class="dv">65</span> <span class="fu">+</span> <span class="dt">G</span> <span class="fu">+</span> <span class="dt">K</span> <span class="fu">+</span> <span class="fu">-</span><span class="dv">22</span> <span class="fu">+</span> <span class="dt">D</span></a>
+<a class="sourceLine" id="cb77-7" data-line-number="7">fromList [(<span class="dt">A</span>,<span class="dt">True</span>),(<span class="dt">B</span>,<span class="fu">-</span><span class="dv">72</span>),(<span class="dt">C</span>,<span class="fu">-</span><span class="dv">19</span>),(<span class="dt">D</span>,<span class="fu">-</span><span class="dv">34</span>),(<span class="dt">E</span>,<span class="dv">50</span>),(<span class="dt">F</span>,<span class="dt">True</span>),(<span class="dt">G</span>,<span class="dt">True</span>),(<span class="dt">H</span>,<span class="fu">-</span><span class="dv">21</span>),(<span class="dt">I</span>,<span class="dv">5</span>),(<span class="dt">J</span>,<span class="dv">3</span>),(<span class="dt">K</span>,<span class="dt">True</span>),(<span class="dt">L</span>,<span class="fu">-</span><span class="dv">20</span>),(<span class="dt">M</span>,<span class="dt">True</span>),(<span class="dt">N</span>,<span class="fu">-</span><span class="dv">10</span>),(<span class="dt">O</span>,<span class="fu">-</span><span class="dv">20</span>),(<span class="dt">P</span>,<span class="dt">False</span>),(<span class="dt">Q</span>,<span class="fu">-</span><span class="dv">10</span>),(<span class="dt">R</span>,<span class="fu">-</span><span class="dv">78</span>),(<span class="dt">S</span>,<span class="dt">True</span>),(<span class="dt">T</span>,<span class="dv">70</span>),(<span class="dt">U</span>,<span class="dt">False</span>),(<span class="dt">V</span>,<span class="fu">-</span><span class="dv">55</span>),(<span class="dt">W</span>,<span class="dt">True</span>),(<span class="dt">X</span>,<span class="dt">True</span>),(<span class="dt">Y</span>,<span class="dt">True</span>),(<span class="dt">Z</span>,<span class="fu">-</span><span class="dv">56</span>)]</a></code></pre></div>
+<p><img src="../static/img/thinking-face.png" /></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="shrinking-tests">Shrinking Tests</h2>
+<p>The property <em>fails</em> … but the <em>counterexample</em> is very long!</p>
+<p><img src="../static/img/crying-face.png" /></p>
+<p>QC has a <strong>test shrinking</strong> mechanism … also in the <code class="sourceCode haskell"><span class="dt">Arbitrary</span></code> class</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb78-1" data-line-number="1"><span class="ot">shrink ::</span> a <span class="ot">-&gt;</span> [a]</a></code></pre></div>
+<p><code class="sourceCode haskell">shrink t</code></p>
+<ul>
+<li>takes as <em>input</em> a <strong>candidate</strong> <code class="sourceCode haskell">t</code> and<br />
+</li>
+<li>returns as <em>output</em> a list of <strong>smaller candidates</strong></li>
+</ul>
+<p>That QC will systematically search with to find a <strong>minimally</strong> failing test!</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb79-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">Arbitrary</span> <span class="dt">Expression</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb79-2" data-line-number="2">  arbitrary <span class="fu">=</span> expr</a>
+<a class="sourceLine" id="cb79-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb79-4" data-line-number="4">  <span class="co">-- shrink :: Expression -&gt; [Expression]</span></a>
+<a class="sourceLine" id="cb79-5" data-line-number="5">  shrink (<span class="dt">Plus</span> e1 e2)  <span class="fu">=</span> [e1, e2]</a>
+<a class="sourceLine" id="cb79-6" data-line-number="6">  shrink (<span class="dt">Minus</span> e1 e2) <span class="fu">=</span> [e1, e2]</a>
+<a class="sourceLine" id="cb79-7" data-line-number="7">  shrink _             <span class="fu">=</span> []</a></code></pre></div>
+<p>We should just keep shrinking each <code class="sourceCode haskell"><span class="dt">Expression</span></code> to its <em>sub</em>-<code class="sourceCode haskell"><span class="dt">Expressions</span></code>.</p>
+<p>```haskell &gt;&gt;&gt; quickCheck prop_const_prop *** Failed! Falsifiable (after 26 tests and 4 shrinks):<br />
+D U A + D fromList [(D,-638),(G,256),(H,False),(K,False),(O,True),(R,True),(S,-81),(T,926)] ~~~~~</p>
+<p>Aha! Consider the two programs</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb80-1" data-line-number="1"><span class="dt">D</span> <span class="fu">:=</span> <span class="dt">A</span> <span class="fu">+</span> <span class="dt">D</span>;   </a>
+<a class="sourceLine" id="cb80-2" data-line-number="2"><span class="dt">U</span> <span class="fu">:=</span> <span class="dt">A</span> <span class="fu">+</span> <span class="dt">D</span></a></code></pre></div>
+<p>and</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb81-1" data-line-number="1"><span class="dt">D</span> <span class="fu">:=</span> <span class="dt">A</span> <span class="fu">+</span> <span class="dt">D</span>; </a>
+<a class="sourceLine" id="cb81-2" data-line-number="2"><span class="dt">U</span> <span class="fu">:=</span> <span class="dt">D</span></a></code></pre></div>
+<p>are they equivalent? Pretty subtle, eh.</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="recap-property-based-testing">Recap: Property-Based Testing</h2>
+<ol type="1">
+<li>Property-based Testing
+<ul>
+<li>Properties are <code class="sourceCode haskell"><span class="dt">Bool</span></code>ean-functions</li>
+<li>Generate inputs, run function, check if result is <code class="sourceCode haskell"><span class="dt">False</span></code></li>
+</ul></li>
+<li>Test Generation
+<ul>
+<li><code class="sourceCode haskell"><span class="dt">Gen</span> a</code> is a monadic <em>generator</em> of <code class="sourceCode haskell">a</code> values</li>
+<li><code class="sourceCode haskell"><span class="dt">Arbitrary</span></code> is a class for types with generators</li>
+</ul></li>
+<li><strong>Case-Study</strong>
+<ul>
+<li>Compiler optimizations are very tricky</li>
+<li>QC-inspired methods have found serious bugs in many compilers &amp; databases &amp; …</li>
+</ul></li>
+</ol>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<h2 id="recap-property-based-testing-1">Recap: Property-Based Testing</h2>
+<p>QuickCheck is awesome!</p>
+<ul>
+<li><p><strong>Simple:</strong> typeclasses + monads</p></li>
+<li><p><strong>Useful</strong>: Can find subtle bugs or inconsistencies in your code.</p></li>
+</ul>
+<p>Lots of literature on QC and techniques it has <a href="https://arxiv.org/pdf/1812.00078.pdf">inspired</a></p>
+<ul>
+<li>Can even use QC to generate <a href="http://www.haskell.org/haskellwiki/QuickCheck_as_a_test_set_generator">test data</a> systems in <em>other</em> languages</li>
+</ul>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
                 <hr>
             </div>
         </div>
