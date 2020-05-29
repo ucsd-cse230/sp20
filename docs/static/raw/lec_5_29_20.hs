@@ -137,7 +137,6 @@ string cs = mapM char cs
 --
 
 
-
 sequ :: [Parser a] -> Parser [a]
 sequ []     = return []
 sequ (p:ps) = do { v <- p; vs <- sequ ps; return (v:vs) }
@@ -180,9 +179,6 @@ orElse p1 p2 = P (\cs ->
 
 (<|>) p1 p2 = orElse p1 p2
 
--- (A) lets go 7 mins
--- (B) lets stop i need to eat (etc.)
-
 
 intOp      :: Parser (Int -> Int -> Int) 
 intOp      = plus <|> minus <|> times <|> divide 
@@ -192,24 +188,123 @@ intOp      = plus <|> minus <|> times <|> divide
     times  = constP "*" (*) 
     divide = constP "/" (div)  
 
-
 digitInt :: Parser Int
 digitInt = do
   c <- digitChar
   return (read [c])
 
+
+
 calc :: Parser Int
 calc = do 
   x  <- int 
   op <- intOp
-  y  <- int 
+  y  <- calc
   return (x `op` y)
 
+
+calc0 ::  Parser Int
+calc0 = binExp <|> int 
+  where
+    binExp :: Parser Int
+    binExp = do
+      x <- int 
+      o <- intOp 
+      y <- calc0 
+      return (x `o` y) 
+
+-- >>> runParser calc0 "10*2+100"
+-- [(1020,"")]
+--
+
+parens :: Parser a -> Parser a
+parens p = do
+  _ <- char '('
+  x <- p
+  _ <- char ')'
+  return x
+
+calc1 :: Parser Int
+calc1 = binExp <|> int 
+  where 
+    binExp = do
+      x <- calc1
+      o <- intOp 
+      y <- int
+      return (x `o` y)
+
+
+oneOrMore :: Parser a -> Parser (a -> a -> a) -> Parser a
+oneOrMore vP oP = do {v1 <- vP; continue v1}
+  where 
+    continue v1 = do { o <- oP; v2 <- vP; continue (v1 `o` v2) }
+               <|> return v1
+
+{- 
+chainl vp op
+
+PARSES
+v1 o v2 o v3 o v4 o v5 
+
+AS
+(((v1 o v2) o v3) o v4) o v5)
+
+10+(2*5)
+
+-}
+
+expr = zum
+zum  = oneOrMore prod addOp
+prod = oneOrMore base mulOp
+base = parens expr <|> int
+
+addOp, mulOp :: Parser (Int -> Int -> Int)
+addOp = constP "+" (+) <|> constP "-" (-)
+mulOp = constP "*" (*) <|> constP "/" div
+
+
+{- 
+
+   ((10 * 20) * 30) + (40 * 50) + ((60 * 70) * 80)
+     (prod * 30) + prod + prod * 80
+     (prod + prod) + prod
+     sum + prod
+     sum 
+
+
+
+
+ -}
+
+
+-- >>> runParser calc1 "((10*2)+100)"
+-- [(120,"")]
+--
+
+
+
+
 {-
+
+runParser (manyP digitChar)   STR 
+runParser (m0 <|> m1)         STR 
+runParser (return [] <|> m1)  STR 
+runParser (return [])         STR 
+[([], STR)] 
+
+
+
+
+
+
+
 calc = digitInt >>= \x -> 
         intOp >>= \o ->
           digitInt >>= \y ->
             return (o x y)
+
+
+
 -}
 
 -- >>> runParser calc "881-25+94"
@@ -224,12 +319,24 @@ int = do
   s <- manyP digitChar
   return (read s)
 
--- "3918"
+-- "1981cat"
+-- (manyP digitChar) "cat"
+-- [('1' : '9' : '8' : '1' : [] , "cat")]
 manyP :: Parser a -> Parser [a]
-manyP p = orElse p1 p0 
+manyP p = m1 `orElse` m0  
   where
-    p1  = do { v <- p; vs <- manyP p; return (v:vs) }
-    p0  = return []
+    m1  = do { v <- p; vs <- manyP p; return (v:vs) }
+    m0  = return []
+
+
+-- >>> runParser (manyP digitChar) "123124DOG"
+-- [("123124","DOG")]
+--
+
+-- \s -> []           FAILURE
+-- \s -> [([], s)]    return []
+
+
 
 -- "456"
 

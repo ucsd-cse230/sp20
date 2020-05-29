@@ -40,8 +40,8 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/18*     | ""		                       |                           | [pdf][11-state-C]    | [code][lec_5_18] |
 | *5/20*     | ""			                   |                           | [pdf][11-state-C]    | [code][lec_5_20] |
 | *5/22*     | Parser Combinators              | [html][12-parsers]        | [pdf][12-parsers-A]  | [code][lec_5_22] |
-| *5/27*     | ""                              |                           |                      |                  | 
-| *5/29*     | ""                              |                           |                      |                  | 
+| *5/27*     | ""                              |                           |                      | [code][lec_5_27] | 
+| *5/29*     | ""                              |                           | [pdf][12-parsers-B]  | [code][lec_5_29] | 
 |            | Transformers                    | [html][13-transformers]   |                      |                  | 
 |            | Property-based Testing          | [html][14-testing]        |                      |                  | 
 |            | List Monad                      | [html][10-list]           |                      |                  |
@@ -105,7 +105,10 @@ Liquid    = 3
 [lec_5_20]: static/raw/lec_5_20_20.hs
 
 [12-parsers-A]: static/raw/12-parsers-A.pdf
+[12-parsers-B]: static/raw/12-parsers-B.pdf
 [lec_5_22]: static/raw/lec_5_22_20.hs
+[lec_5_27]: static/raw/lec_5_27_20.hs
+[lec_5_29]: static/raw/lec_5_29_20.hs
 
 [05-higher-order]: lectures/05-higher-order.html 
 [06-poly-data]: lectures/06-poly-data.html    
