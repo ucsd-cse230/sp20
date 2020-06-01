@@ -42,11 +42,12 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/22*     | Parser Combinators              | [html][12-parsers]        | [pdf][12-parsers-A]  | [code][lec_5_22] |
 | *5/27*     | ""                              |                           |                      | [code][lec_5_27] | 
 | *5/29*     | ""                              |                           | [pdf][12-parsers-B]  | [code][lec_5_29] | 
-|            | Transformers                    | [html][13-transformers]   |                      |                  | 
+| *6/1*      | Exceptions                      | [html][13-transformers]   | [pdf][13-trans-A]    | [code][lec_6_1]  | 
+|            | Monad Transformers              | [html][13-transformers]   |                      |                  | 
 |            | Property-based Testing          | [html][14-testing]        |                      |                  | 
-|            | List Monad                      | [html][10-list]           |                      |                  |
 
 <!--
+|            | List Monad                      | [html][10-list]           |                      |                  |
 |            | Concurrency                     |                           |                      |                  |
 |            | Refinement Types                |                           |                      |                  |          
 |            | Proofs as Programs              |                           |                      |                  | 
@@ -106,9 +107,12 @@ Liquid    = 3
 
 [12-parsers-A]: static/raw/12-parsers-A.pdf
 [12-parsers-B]: static/raw/12-parsers-B.pdf
+[13-trans-A]: static/raw/13-transformers-A.pdf
+[13-trans-B]: static/raw/13-transformers-A.pdf
 [lec_5_22]: static/raw/lec_5_22_20.hs
 [lec_5_27]: static/raw/lec_5_27_20.hs
 [lec_5_29]: static/raw/lec_5_29_20.hs
+[lec_6_1]: static/raw/lec_6_1_20.hs
 
 [05-higher-order]: lectures/05-higher-order.html 
 [06-poly-data]: lectures/06-poly-data.html    
@@ -181,10 +185,5 @@ Liquid    = 3
 [lec12]: slides/lec-parallel.markdown.slides.html
 [cod12]: https://github.com/ranjitjhala/par-tutorial
 -->
-
-
-
-
-
 
 
