@@ -513,6 +513,20 @@ What if I want *Exceptions* **and** *Global State* ?
 <br>
 <br>
 <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## Profiling with the ST Monad
 
@@ -545,6 +559,34 @@ count = do
   put (n+1)
 ```
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 ## A Profiling Evaluator
 
 We can use `count` to write a *profiling* evaluator 
@@ -574,6 +616,12 @@ Div (Number 10) (Plus (Number 5) (Number 5))
 "value: 1, count: 2"
 ``` 
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>

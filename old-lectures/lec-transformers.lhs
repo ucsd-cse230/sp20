@@ -262,12 +262,6 @@ Now, we can write a profiling evaluator
 >                       tickST
 >                       return (n `div` m)
 
-<!--                         if m == 0 
-                         then throw "AAARRCHGGG!!" 
-                         else do {tickST; return (n `div` m)}
-
-  -->
-
 and by judiciously making the above an instance of `Show`
 
 > instance Show a => Show (ST a) where

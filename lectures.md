@@ -113,6 +113,8 @@ Liquid    = 3
 [lec_5_27]: static/raw/lec_5_27_20.hs
 [lec_5_29]: static/raw/lec_5_29_20.hs
 [lec_6_1]: static/raw/lec_6_1_20.hs
+[lec_6_3_a]: static/raw/lec_6_3_20_a.hs
+[lec_6_3_b]: static/raw/lec_6_3_20_b.hs
 
 [05-higher-order]: lectures/05-higher-order.html 
 [06-poly-data]: lectures/06-poly-data.html    

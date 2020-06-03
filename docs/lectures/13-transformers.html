@@ -459,7 +459,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="mixing-monads">Mixing Monads</h2>
 <p>What if I want <em>Exceptions</em> <strong>and</strong> <em>Global State</em> ?</p>
-<p><br> <br> <br> <br> <br> <br> <br> <br></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="profiling-with-the-st-monad">Profiling with the ST Monad</h2>
 <p>Lets implement a <em>profiling</em> monad that counts the number of operations</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="co">-- A State-Transformer with a &quot;global&quot; `Int` counter </span></a>
@@ -479,6 +479,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb23-2" data-line-number="2">count <span class="fu">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb23-3" data-line-number="3">  n <span class="ot">&lt;-</span> get</a>
 <a class="sourceLine" id="cb23-4" data-line-number="4">  put (n<span class="fu">+</span><span class="dv">1</span>)</a></code></pre></div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="a-profiling-evaluator">A Profiling Evaluator</h2>
 <p>We can use <code class="sourceCode haskell">count</code> to write a <em>profiling</em> evaluator</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="ot">evalProf ::</span> <span class="dt">Expr</span> <span class="ot">-&gt;</span> <span class="dt">Profile</span> <span class="dt">Int</span> </a>
@@ -499,7 +500,7 @@ if (window.navigator.appName == "Microsoft Internet Explorer") {
 <a class="sourceLine" id="cb25-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb25-4" data-line-number="4"><span class="fu">&gt;&gt;&gt;</span> runProfile (evalProf e1)</a>
 <a class="sourceLine" id="cb25-5" data-line-number="5"><span class="st">&quot;value: 1, count: 2&quot;</span></a></code></pre></div>
-<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 <h2 id="but-what-about-divide-by-zero">But what about Divide-by-Zero?</h2>
 <p>Bad things happen…</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="fu">&gt;&gt;&gt;</span> e2</a>
