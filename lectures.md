@@ -43,8 +43,10 @@ The lectures will be recorded and available on [CANVAS](https://canvas.ucsd.edu/
 | *5/27*     | ""                              |                           |                      | [code][lec_5_27] | 
 | *5/29*     | ""                              |                           | [pdf][12-parsers-B]  | [code][lec_5_29] | 
 | *6/1*      | Exceptions                      | [html][13-transformers]   | [pdf][13-trans-A]    | [code][lec_6_1]  | 
-|            | Monad Transformers              | [html][13-transformers]   |                      |                  | 
-|            | Property-based Testing          | [html][14-testing]        |                      |                  | 
+| *6/3*      | Monad Transformers              | [html][13-transformers]   | [pdf][13-trans-B]    | [code][lec_6_3]  | 
+| *6/5*      | Property-based Testing          | [html][14-testing]        |                      |                  | 
+
+
 
 <!--
 |            | List Monad                      | [html][10-list]           |                      |                  |
@@ -113,8 +115,8 @@ Liquid    = 3
 [lec_5_27]: static/raw/lec_5_27_20.hs
 [lec_5_29]: static/raw/lec_5_29_20.hs
 [lec_6_1]: static/raw/lec_6_1_20.hs
-[lec_6_3_a]: static/raw/lec_6_3_20_a.hs
-[lec_6_3_b]: static/raw/lec_6_3_20_b.hs
+[lec_6_3]: static/raw/lec_6_3_20.hs
+[lec_6_5]: static/raw/lec_6_5_20.hs
 
 [05-higher-order]: lectures/05-higher-order.html 
 [06-poly-data]: lectures/06-poly-data.html    
