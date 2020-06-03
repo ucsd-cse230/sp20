@@ -110,7 +110,7 @@ Liquid    = 3
 [12-parsers-A]: static/raw/12-parsers-A.pdf
 [12-parsers-B]: static/raw/12-parsers-B.pdf
 [13-trans-A]: static/raw/13-transformers-A.pdf
-[13-trans-B]: static/raw/13-transformers-A.pdf
+[13-trans-B]: static/raw/13-transformers-B.pdf
 [lec_5_22]: static/raw/lec_5_22_20.hs
 [lec_5_27]: static/raw/lec_5_27_20.hs
 [lec_5_29]: static/raw/lec_5_29_20.hs
