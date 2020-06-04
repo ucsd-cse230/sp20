@@ -125,6 +125,50 @@ posPair = do
 -- [(29,71),(48,74),(89,53),(73,93),(0,40),(71,35),(23,69),(93,49),(59,58),(27,32),(88,45)]
 --
 
+
+-- Gen a
+-- choose :: (Int, Int) -> Gen Int
+-- choose (lo, hi)
+
+gen_0_10 :: Gen Int
+gen_0_10 = choose (0, 10)
+
+gen_string :: Gen String
+gen_string = arbitrary
+
+-- >>> sample' gen_string 
+-- ["","E~","`p","\SUB\141090","+\a\DC2","<Ps{Bp\51890\1083467","",":f\992651\958198\769921\297364|b\832419H\EOT\US","~iD\51186\tqM:","\502537\727673","z\288782.\SOHk\n|\DEL\625295\DEL\FST"]
+--
+
+genBal :: Int -> Int -> Int -> Gen (BST Int String)
+genBal 0 lo hi = 
+  return Leaf
+genBal n lo hi = do
+  key   <- choose (lo, hi)
+  val   <- arbitrary
+  left  <- genBal (n-1) lo (key - 1)
+  right <- genBal (n-1) (key + 1) hi
+  return (Node key val left right)
+
+data BST k v = Node k v (BST k v) (BST k v) | Leaf
+  deriving (Show)
+
+-- >>> sample' (genBal 3 0 1)
+-- [Node 1 "" (Node 0 "" (Node 0 "" Leaf Leaf) (Node 1 "" Leaf Leaf)) (Node 2 "" (Node 2 "" Leaf Leaf) (Node 2 "" Leaf Leaf)),Node 0 "-\202175" (Node 0 "\SYN" (Node (-1) "\369825" Leaf Leaf) (Node 0 "" Leaf Leaf)) (Node 1 "\DLEp" (Node 0 "Nj" Leaf Leaf) (Node 1 "j" Leaf Leaf)),Node 1 "\769031" (Node 0 "\\\SI\vP" (Node 0 "\DEL\905926L" Leaf Leaf) (Node 0 "\DC3" Leaf Leaf)) (Node 1 "4\SUB" (Node 0 "\18707 \271608" Leaf Leaf) (Node 2 "_" Leaf Leaf)),Node 0 "@\179693" (Node 0 "\237548" (Node 0 "f\by" Leaf Leaf) (Node 0 "\SO" Leaf Leaf)) (Node 1 "\DEL\DLE" (Node 1 ":" Leaf Leaf) (Node 2 "\SIZn\187608" Leaf Leaf)),Node 0 "\811791" (Node (-1) "6\150786c" (Node 0 "%\GSCR" Leaf Leaf) (Node 0 "\833204'\417964\455947ur\1026027" Leaf Leaf)) (Node 1 "zG\f\87417%\659926W" (Node 0 "5!122&hp" Leaf Leaf) (Node 2 "" Leaf Leaf)),Node 1 "\NAK\CAN7Q3W" (Node 0 "5l0hN;" (Node (-1) "Z>" Leaf Leaf) (Node 1 "\202584\538948" Leaf Leaf)) (Node 1 "\649717P\754639\807427\60643" (Node 2 "F^\NUL$\456882\1055169 nJ$" Leaf Leaf) (Node 2 "\1024964]Bm\CAN\SOH" Leaf Leaf)),Node 1 "" (Node 0 "" (Node (-1) ")qcP*\43642JI-`\ETX" Leaf Leaf) (Node 1 "$\f" Leaf Leaf)) (Node 1 "g#\EMi9s\DC4G+Jz" (Node 0 "\185769@" Leaf Leaf) (Node 2 "\296258" Leaf Leaf)),Node 1 "\226406\a4" (Node 0 "(V\45110>g\a\367145*I\b" (Node 0 "C\GS" Leaf Leaf) (Node 1 "ZTb\799779^BD\148988\ETXW" Leaf Leaf)) (Node 1 ":\b" (Node 0 "sm\483386\ENQ6" Leaf Leaf) (Node 1 "BW6=\SUBX\108947;aDR" Leaf Leaf)),Node 1 "5\204491\SI\1003307A\101697|b\bd\f" (Node 0 "\768985\FS\509931b\1029399\382231L;\97655" (Node (-1) "{8Q\698958\166969^\355968Y6Z\rz\FS" Leaf Leaf) (Node 0 "\SOH34_;\"\142171\DC2\795849\b\1078092\893096," Leaf Leaf)) (Node 2 "\187463\DC4)\676354vH\EOT\f\675712\382164\571519{" (Node 2 "\702592S`|\274328\&3(" Leaf Leaf) (Node 2 "\815926',nU\NAKx\833704\180474\ENQA0U-\SYNJ" Leaf Leaf)),Node 0 "(^F'\EOT\161639(\SI|/h\352771\1081084/kic" (Node (-1) "\EOTz<\DC210\DC2" (Node 0 "\ESC\648005\&9\763800\1023640PU0}" Leaf Leaf) (Node (-1) "J" Leaf Leaf)) (Node 1 "UNc\1044756\350931\1005936V<;\ESC" (Node 1 "\rc!_-\229557\f\293409" Leaf Leaf) (Node 1 "\n\936201)\21430VE\572767f" Leaf Leaf)),Node 0 "\263811\423058\601454W\ETXL)wI\871942J;" (Node (-1) "L\983067\USu7\160661 " (Node (-1) "L\SOH\ETXI\967090\&7\n`\31197\769729]|;z" Leaf Leaf) (Node (-1) "\1055109\DC3<\747492KC1$\v\ETB4\r\NUL\742352\1042269\1088005" Leaf Leaf)) (Node 1 "q" (Node 0 "\580129\n@>\735351a\FS\NUL" Leaf Leaf) (Node 2 "\141509`!Qn" Leaf Leaf))]
+--
+-- >>> sample' (choose (0, 0-5))
+-- [0,0,0,0,0,0,0,0,0,0,0]
+--
+
+-- >>> sample' gen_0_10
+-- [9,9,8,8,10,7,2,3,9,0,8]
+--
+
+
+
+
+
+
 oneOf :: [Gen a] -> Gen a
 oneOf gs = do
   g <- elements gs
