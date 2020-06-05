@@ -3,34 +3,85 @@
 {-# LANGUAGE FlexibleInstances #-} 
 {-# LANGUAGE TypeSynonymInstances #-}
 
-module Lec_6_5_20 where 
+module Testing where 
 
 import Test.QuickCheck hiding ((===))
 import Control.Monad
 import Data.List
 import qualified Data.Map as M 
 import Control.Monad.State hiding (when)
-import Control.Applicative ((<$>))
+
+-- >>> incr 5
+-- 6
+--
 
 incr :: Int -> Int
 incr x = x + 1
 
+
+
+
+
+
+
+
+
+
+
+
 prop_revapp :: [Int] -> [Int] -> Bool
-prop_revapp xs ys = reverse (xs ++ ys) == reverse xs ++ reverse ys
+prop_revapp xs ys = 
+  reverse (xs ++ ys) == reverse xs ++ reverse ys
+-- rev ([0] ++ [1]) ==> rev ([0,1]) ==> [1,0]
+-- rev [0] ++ rev [1] ==> [0] ++ [1] ==> [0, 1]
+
 
 -- >>> quickCheck prop_revapp
--- *** Failed! Falsifiable (after 6 tests and 9 shrinks):
+-- *** Failed! Falsifiable (after 5 tests and 4 shrinks):
 -- [0]
 -- [1]
 --
-prop_revapp' :: [Int] -> [Int] -> Bool
-prop_revapp' xs ys = reverse (xs ++ ys) == reverse ys ++ reverse xs
 
--- >>> quickCheckN 500 prop_revapp'
--- +++ OK, passed 500 tests.
+-- >>> prop_revapp [0] [1]
+-- False
 --
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+prop_revapp' :: [Int] -> [Int] -> Bool
+prop_revapp' xs ys = 
+  reverse (xs ++ ys) == reverse ys ++ reverse xs
+
+
+-- >>> quickCheck prop_revapp' 
+-- +++ OK, passed 100 tests.
+--
+
+
+
+
+
+-- >>> quickCheckN 500 prop_revapp'
+
 quickCheckN n = quickCheckWith (stdArgs { maxSuccess = n } )
+
+
+
+
+
+
 
 
 qsort        :: (Ord a) => [a] -> [a]
@@ -38,50 +89,147 @@ qsort []     = []
 qsort (x:xs) = qsort ls ++ [x] ++ qsort rs
   where 
     ls       = [y | y <- xs, y < x]  -- elems in xs < x 
-    rs       = [z | z <- xs, z > x]  -- elems in xs > x
+    rs       = [z | z <- xs, x < z]  -- elems in xs > x
 
 ls :: [Int]
 ls = [1,3..19] ++ [2,4..20]
 
 -- >>> ls
 -- [1,3,5,7,9,11,13,15,17,19,2,4,6,8,10,12,14,16,18,20]
+--
+
+
 -- >>> qsort ls
 -- [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+--
+
+
+
+
+
+
+
+
 
 isOrdered :: (Ord a) => [a] -> Bool
-isOrdered (x:y:zs) = x <= y && isOrdered (y:zs)
-isOrdered _        = True
+isOrdered (x1:x2:xs) = x1 <= x2 && isOrdered (x2:xs)
+isOrdered _          = True
 
 prop_qsort_isOrdered :: [Int] -> Bool
 prop_qsort_isOrdered xs = isOrdered (qsort xs)
 
--- >>> quickCheckN 1000 prop_qsort_isOrdered 
--- +++ OK, passed 1000 tests.
+-- >>> quickCheckN 10000 prop_qsort_isOrdered 
+-- +++ OK, passed 10000 tests.
+--
+
+-- >>> head [3,1,2,41,2,41,15]
+-- 3
 --
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 prop_qsort_min :: [Int] -> Bool
-prop_qsort_min xs = head (qsort xs) == minimum xs
+prop_qsort_min xs = 
+  head (qsort xs) == minimum xs
 
 -- >>> quickCheck prop_qsort_min
 -- *** Failed! Exception: 'Prelude.head: empty list' (after 1 test):
 -- []
 --
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 prop_qsort_nn_min    :: [Int] -> Property
 prop_qsort_nn_min xs =
   not (null xs) ==> head (qsort xs) == minimum xs
-
+  
 -- >>> quickCheck prop_qsort_nn_min
 -- +++ OK, passed 100 tests.
 --
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 prop_qsort_sort    :: [Int] -> Bool
 prop_qsort_sort xs =  qsort xs == sort xs
 
 -- >>> quickCheck prop_qsort_sort
--- *** Failed! Falsifiable (after 6 tests and 3 shrinks):
--- [-3,-3]
+-- *** Failed! Falsifiable (after 7 tests and 2 shrinks):
+-- [3,3]
+--
+
+-- >>> qsort [3, 3]  
+-- [3]
+--
+
+-- >>> noDuplicates [1,2,1]
+-- False
+--
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 noDuplicates ::(Eq a) => [a] -> Bool
 noDuplicates (x:xs) = not (x `elem` xs) && noDuplicates xs
@@ -94,26 +242,84 @@ prop_qsort_distinct xs = noDuplicates (qsort xs)
 -- +++ OK, passed 100 tests.
 --
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 prop_qsort_distinct_sort :: [Int] -> Property 
-prop_qsort_distinct_sort xs = (noDuplicates xs) ==> (qsort xs == sort xs)
+prop_qsort_distinct_sort xs = 
+  (noDuplicates xs) ==> (qsort xs == sort xs)
 
--- >>> quickCheck prop_qsort_distinct_sort
--- +++ OK, passed 10000 tests.
---
--- >>> quickCheck prop_qsort_sort
--- *** Failed! Falsifiable (after 6 tests and 2 shrinks):
--- [5,5]
--- >>> quickCheck prop_qsort_sort
--- *** Failed! Falsifiable (after 4 tests and 1 shrink):
--- [1,1]
+-- >>> quickCheckN 1000 prop_qsort_sort
+-- *** Failed! Falsifiable (after 9 tests and 2 shrinks):
+-- [4,4]
 --
 
 
--- >>> sample' (choose (0, 5))
--- [4,2,5,3,2,2,2,3,0,0,0]
+-- >>> :t choose
+-- choose :: (Int, Int) -> Gen Int 
+-- >>> :t sample'
+-- sample' :: Gen a -> IO [a]
+
+
+
+
+
+
+
+
+
+
+
+
+-- >>> sample' pos 
+-- [3,1,4,2,7,5,2,10,4,6,1]
+
+pos :: Gen Int
+pos = choose (0, 10)
+
+-- xs !! i 
+elems :: [a] -> Gen a
+elems xs = do 
+  i <- choose (0, length xs - 1)
+  return (xs !! i)
+
+posPr = do
+  x <- pos
+  y <- pos
+  return (x, y)
+
+-- >>> :t (!!)
+-- (!!) :: [a] -> Int -> a
 --
 
-pos = choose (0, 100)
+-- >>> sample' posPr
+-- [(4,7),(10,10),(10,3),(8,8),(9,0),(0,5),(3,2),(1,2),(6,4),(7,1),(0,9)]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 posPair = do
   x1 <- pos
@@ -121,35 +327,8 @@ posPair = do
   return (x1, x2)
 
 -- >>> sample' posPair
--- [(29,71),(48,74),(89,53),(73,93),(0,40),(71,35),(23,69),(93,49),(59,58),(27,32),(88,45)]
---
 
 
--- Gen a
--- choose :: (Int, Int) -> Gen Int
--- choose (lo, hi)
-
-gen_0_10 :: Gen Int
-gen_0_10 = choose (0, 10)
-
-gen_string :: Gen String
-gen_string = arbitrary
-
--- >>> sample' gen_string 
--- ["","E~","`p","\SUB\141090","+\a\DC2","<Ps{Bp\51890\1083467","",":f\992651\958198\769921\297364|b\832419H\EOT\US","~iD\51186\tqM:","\502537\727673","z\288782.\SOHk\n|\DEL\625295\DEL\FST"]
---
-
-
--- >>> sample' (genBal 3 0 1)
--- [Node 1 "" (Node 0 "" (Node 0 "" Leaf Leaf) (Node 1 "" Leaf Leaf)) (Node 2 "" (Node 2 "" Leaf Leaf) (Node 2 "" Leaf Leaf)),Node 0 "-\202175" (Node 0 "\SYN" (Node (-1) "\369825" Leaf Leaf) (Node 0 "" Leaf Leaf)) (Node 1 "\DLEp" (Node 0 "Nj" Leaf Leaf) (Node 1 "j" Leaf Leaf)),Node 1 "\769031" (Node 0 "\\\SI\vP" (Node 0 "\DEL\905926L" Leaf Leaf) (Node 0 "\DC3" Leaf Leaf)) (Node 1 "4\SUB" (Node 0 "\18707 \271608" Leaf Leaf) (Node 2 "_" Leaf Leaf)),Node 0 "@\179693" (Node 0 "\237548" (Node 0 "f\by" Leaf Leaf) (Node 0 "\SO" Leaf Leaf)) (Node 1 "\DEL\DLE" (Node 1 ":" Leaf Leaf) (Node 2 "\SIZn\187608" Leaf Leaf)),Node 0 "\811791" (Node (-1) "6\150786c" (Node 0 "%\GSCR" Leaf Leaf) (Node 0 "\833204'\417964\455947ur\1026027" Leaf Leaf)) (Node 1 "zG\f\87417%\659926W" (Node 0 "5!122&hp" Leaf Leaf) (Node 2 "" Leaf Leaf)),Node 1 "\NAK\CAN7Q3W" (Node 0 "5l0hN;" (Node (-1) "Z>" Leaf Leaf) (Node 1 "\202584\538948" Leaf Leaf)) (Node 1 "\649717P\754639\807427\60643" (Node 2 "F^\NUL$\456882\1055169 nJ$" Leaf Leaf) (Node 2 "\1024964]Bm\CAN\SOH" Leaf Leaf)),Node 1 "" (Node 0 "" (Node (-1) ")qcP*\43642JI-`\ETX" Leaf Leaf) (Node 1 "$\f" Leaf Leaf)) (Node 1 "g#\EMi9s\DC4G+Jz" (Node 0 "\185769@" Leaf Leaf) (Node 2 "\296258" Leaf Leaf)),Node 1 "\226406\a4" (Node 0 "(V\45110>g\a\367145*I\b" (Node 0 "C\GS" Leaf Leaf) (Node 1 "ZTb\799779^BD\148988\ETXW" Leaf Leaf)) (Node 1 ":\b" (Node 0 "sm\483386\ENQ6" Leaf Leaf) (Node 1 "BW6=\SUBX\108947;aDR" Leaf Leaf)),Node 1 "5\204491\SI\1003307A\101697|b\bd\f" (Node 0 "\768985\FS\509931b\1029399\382231L;\97655" (Node (-1) "{8Q\698958\166969^\355968Y6Z\rz\FS" Leaf Leaf) (Node 0 "\SOH34_;\"\142171\DC2\795849\b\1078092\893096," Leaf Leaf)) (Node 2 "\187463\DC4)\676354vH\EOT\f\675712\382164\571519{" (Node 2 "\702592S`|\274328\&3(" Leaf Leaf) (Node 2 "\815926',nU\NAKx\833704\180474\ENQA0U-\SYNJ" Leaf Leaf)),Node 0 "(^F'\EOT\161639(\SI|/h\352771\1081084/kic" (Node (-1) "\EOTz<\DC210\DC2" (Node 0 "\ESC\648005\&9\763800\1023640PU0}" Leaf Leaf) (Node (-1) "J" Leaf Leaf)) (Node 1 "UNc\1044756\350931\1005936V<;\ESC" (Node 1 "\rc!_-\229557\f\293409" Leaf Leaf) (Node 1 "\n\936201)\21430VE\572767f" Leaf Leaf)),Node 0 "\263811\423058\601454W\ETXL)wI\871942J;" (Node (-1) "L\983067\USu7\160661 " (Node (-1) "L\SOH\ETXI\967090\&7\n`\31197\769729]|;z" Leaf Leaf) (Node (-1) "\1055109\DC3<\747492KC1$\v\ETB4\r\NUL\742352\1042269\1088005" Leaf Leaf)) (Node 1 "q" (Node 0 "\580129\n@>\735351a\FS\NUL" Leaf Leaf) (Node 2 "\141509`!Qn" Leaf Leaf))]
---
--- >>> sample' (choose (0, 0-5))
--- [-1,0,0,-2,-1,-3,-4,-3,-5,-4,-1]
---
-
--- >>> sample' gen_0_10
--- [9,9,8,8,10,7,2,3,9,0,8]
---
 
 
 
@@ -163,27 +342,56 @@ oneOf gs = do
   return x
 
 -- >>> sample' (oneOf [choose (0,2), choose (10,12)])
--- [2,2,1,1,12,10,2,2,11,0,11]
---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 randomThings :: (Arbitrary a) => IO [a]
 randomThings = sample' arbitrary
 
--- >>> randomThings :: IO [[Int]]
--- [[],[],[-4,-1],[5,1,0,3,4,3],[0,8,2,3,8,4,3],[-6,-1,8,1,-5,-10,7,2],[-10,11,-6,-6,-12],[5,13,-8,-14,0,-1,-14,-9,10,-10,12,0,14,-4],[-5,8,-9,-12],[-8,-3,-2,12,7,-1,6,3,17,-14,12],[]]
+-- >>> randomThings :: IO [Int]
+-- [0,2,4,1,-8,-7,-2,6,6,1,-2]
 --
 -- >>> randomThings :: IO [Bool]
--- [True,True,False,True,False,True,True,True,True,True,True]
+-- [False,False,True,True,True,False,True,False,False,False,False]
 --
 
 -- >>> randomThings :: IO [String]
--- ["","\a","\f","\779257W\SUBA","\84573","D\ACK\365059S","9W\554735G","g\SYN~W\62120\&4&[","\NULsc\18427fy(","Q`TI \n/TH","\461027\ESCZ`u\783094\&4B\SOHT\424692"]
+-- ["","","W=","\126284\f7","","ir\b\980235m","b\"\FS7#>r\205817z","p_\644248\987639\EOTj\EM\ESCke4\371871\ESC>","{^@\DEL",")E","'\n\133081u\r"]
 --
 
 
 -- >>> randomThings :: IO [(Int, Bool)] 
 -- [(0,True),(1,True),(0,True),(6,False),(-5,True),(4,False),(-12,False),(-8,False),(5,False),(-9,False),(-7,False)]
 --
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 data Variable 
   = V String 
@@ -219,18 +427,13 @@ instance Arbitrary Variable where
 --
 
 instance Arbitrary Value where
-  arbitrary = oneOf [ do {n <- arbitrary; return (IntVal n) }
-                    , do {b <- arbitrary; return (BoolVal b)} 
-                    ]
+  arbitrary = oneOf 
+    [ do {n <- arbitrary; return (IntVal n) }
+    , do {b <- arbitrary; return (BoolVal b)} 
+    ]
 
 instance Arbitrary Expression where
   arbitrary = expr
-
-  -- shrink :: Expression -> [Expression]
-  shrink (Plus e1 e2)  = [e1, e2]
-  shrink (Minus e1 e2) = [e1, e2]
-  shrink _             = []
-
 
 expr :: Gen Expression
 expr     = oneof [baseE, binE] 
@@ -287,9 +490,12 @@ prop_sub_zero_elim :: Variable -> Expression -> Property
 prop_sub_zero_elim x e =
   (x `Assign` (e `Minus` Val (IntVal 0))) === (x `Assign` e)
 
+-- B := TRUE 
+-- B := TRUE + 0  
+
 -- >>> quickCheck prop_add_zero_elim
 -- *** Failed! Falsifiable (after 1 test):
--- W
+-- B
 -- True
 -- fromList []
 --
@@ -305,6 +511,30 @@ st0 = M.fromList []
 -- >>> execute st0 p2
 -- fromList [(W,0)]
 --
+
+
+
+-- >>> :i Applicative
+-- class Functor f => Applicative (f :: * -> *) where
+--   pure :: a -> f a
+--   (<*>) :: f (a -> b) -> f a -> f b
+
+
+-- >>> (\x -> x + 10) <$> [1..10] 
+-- [11,12,13,14,15,16,17,18,19,20]
+--
+
+-- instance Applicative (Either e) -- Defined in ‘Data.Either’
+-- instance [safe] (Functor m, Monad m) => Applicative (StateT s m)
+--   -- Defined in ‘transformers-0.5.5.0:Control.Monad.Trans.State.Lazy’
+-- instance [safe] Applicative Gen -- Defined in ‘Test.QuickCheck.Gen’
+-- instance Applicative [] -- Defined in ‘GHC.Base’
+-- instance Applicative Maybe -- Defined in ‘GHC.Base’
+-- instance Applicative IO -- Defined in ‘GHC.Base’
+-- instance Applicative ((->) a) -- Defined in ‘GHC.Base’
+-- instance Monoid a => Applicative ((,) a) -- Defined in ‘GHC.Base’
+--
+
 
 exprI :: Gen Expression
 exprI = oneof [baseI, binE] 
@@ -328,11 +558,6 @@ prop_add_zero_elim' x =
 
 
 -- >>> quickCheck prop_add_zero_elim'
--- *** Failed! Falsifiable (after 11 tests):
--- Z
--- G
--- fromList [(B,False),(F,-4),(G,True),(K,8),(M,True),(N,False),(R,3),(T,False),(V,True)]
---
 
 
 prop_const_prop :: Variable -> Variable -> Expression -> Property
@@ -346,12 +571,48 @@ prop_const_prop x y e =
 
 
 
+
+
+
+
 -------------------------------------------------------------------------------------------
 -- HINT FOR HW
 -------------------------------------------------------------------------------------------
 
-data BST k v = Node k v (BST k v) (BST k v) | Leaf
+
+
+data BST k v 
+  = Node k v (BST k v) (BST k v) 
+  | Leaf
   deriving (Show)
+
+
+genBST :: Int -> Int -> Gen (BST Int String)
+
+genBST _ 0 = 
+  return Leaf
+
+genBST lo h = do
+  l <- genBST lo (h-1)
+  let lo' = maxKey l
+  k <- choose (lo', lo' + 10)
+  r <- genBST (lo' + 11) (h-1)
+  v <- arbitrary
+  return (Node k v l r)
+
+maxKey :: BST Int a -> Int
+maxKey = error "fill this in"
+
+-- >>> sample' (genBST 3)
+-- [Node 0 "" (Node 0 "" (Node 0 "" Leaf Leaf) (Node 0 "" Leaf Leaf)) (Node 0 "" (Node 0 "" Leaf Leaf) (Node 0 "" Leaf Leaf)),Node 0 "\274834" (Node 2 "'" (Node (-2) "nW" Leaf Leaf) (Node (-1) "\62507\EM" Leaf Leaf)) (Node 1 "" (Node (-2) "^\374899" Leaf Leaf) (Node 2 "5" Leaf Leaf)),Node 2 "a\590219\SO" (Node (-1) "\444168\&7" (Node 2 "\\\RS\1106722\CAN" Leaf Leaf) (Node 4 "" Leaf Leaf)) (Node (-1) "" (Node (-1) "" Leaf Leaf) (Node 0 "" Leaf Leaf)),Node 5 "\1062981\ETB\437131I@c" (Node 1 "d\133939>" (Node 4 "Uc\635778)\218651\106777" Leaf Leaf) (Node 6 "Q5\ETB" Leaf Leaf)) (Node 2 "*9" (Node 4 "\107985" Leaf Leaf) (Node (-6) "JGh" Leaf Leaf)),Node 6 "\EM:N\GS,\790863\142233" (Node (-6) "E[\r" (Node 8 "n\STX\1017783*T/" Leaf Leaf) (Node 2 "0\DC2b:|tA" Leaf Leaf)) (Node (-3) "\ENQZ+m" (Node (-4) "XEa\SUB\DLE)\564673" Leaf Leaf) (Node 2 "o1\NAK\r\136958\849695I>" Leaf Leaf)),Node (-5) "\471985K\rB\191348\EMZW" (Node 7 "t\US@[X7~" (Node 2 ",\SYN2g\DC2\475153\351146\&7jL" Leaf Leaf) (Node 10 "\68993K\SYN\GSz\CAN\RSF\\k" Leaf Leaf)) (Node 1 "#}+\514269\&5" (Node 8 "Pj\902881\727307\SI\215773\711909\955857?" Leaf Leaf) (Node (-3) ")m\1020007\SI\ACK" Leaf Leaf)),Node (-7) "" (Node (-2) "'!M\759215\778838\619394J0" (Node (-10) "B5\1078238_\ESC!" Leaf Leaf) (Node 5 "6" Leaf Leaf)) (Node 7 "4Jc\SOHV\DLE" (Node 0 "qJ\530817EAw\239564Sa\507201h1" Leaf Leaf) (Node 7 ">ZX\SUBC\183141" Leaf Leaf)),Node (-8) "\49444" (Node 3 "\DEL\tFK\953920\a\960301\ETXE\765654\98879\&8\423231Y" (Node 4 "&L/\t)y\SYN\DC1\905023&\NUL" Leaf Leaf) (Node 8 "\471718\DC1Mh\SI_O\405238" Leaf Leaf)) (Node 3 "`\DEL;" (Node (-12) "\45260\SOHT\374131" Leaf Leaf) (Node 12 "/\991698|\357702cO\480823\EOT\684912E5w:\798568" Leaf Leaf)),Node 0 "t5f\SO\797788C;\237869/\"!" (Node 13 "\629259" (Node 11 "(\SUB\v\93969" Leaf Leaf) (Node 10 "\SO" Leaf Leaf)) (Node (-10) "_^\SI\161183\&7^-!\589359\ETXY\GS\886557" (Node 6 "" Leaf Leaf) (Node (-9) "\SOH;qeC" Leaf Leaf)),Node (-2) "\v\360020 \ESC\66175\&2W~\887060l" (Node 8 "U\711822-" (Node 11 "\f'\SIk\38198\507079\708045.\SI" Leaf Leaf) (Node 2 "Z\1076051\DC1ccbs\799450N\"|JO" Leaf Leaf)) (Node (-3) "" (Node 12 "P\545112\US\406679\116661D\113391n/b^\842399\615486" Leaf Leaf) (Node 8 "0\a\312891\782336cE]mz\142393\r\87913" Leaf Leaf)),Node (-3) "\694150" (Node (-9) "\863183x=1v#\162221\SOH\DC2L" (Node (-9) "]\SO%\a9fNBI\182820.\335657\975749\285406[sFA\CANy" Leaf Leaf) (Node (-18) "\SOH\1016680\1047755j.\CAN\DLE\ESC" Leaf Leaf)) (Node (-17) "=R\CAN\86043\"\61476\294881\173364f\902302n" (Node (-16) "!&H#8w" Leaf Leaf) (Node 19 "9" Leaf Leaf))]
+--
+
+
+
+
+
+
+
 
 
 genBal :: Int -> Int -> Int -> Gen (BST Int String)
