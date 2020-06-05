@@ -176,7 +176,7 @@ Is the property true?
 
 Why specify type as `[Int] -> [Int] -> Bool`? 
 
-* Why not write `[Int] -> [Int] -> Bool`? 
+* Why not write `[a] -> [a] -> Bool`? 
 
 
 <br>
@@ -613,6 +613,24 @@ prop_qsort_distinct_sort xs =
 --
 ```
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 ## Plan
 
 1. **Property-based Testing**
@@ -849,11 +867,28 @@ posPair :: Gen (Int, Int)
 <br>
 <br>
 
-## QUIZ 
 
-`Gen`erator is a Monad! (you can [see details here][12])
+## `Gen`erator is a Monad! 
+
+- You can [see details here][12]
 
 - This will let us *combine* generators (like combining parsers...)
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## QUIZ 
 
 Which of the below implements `posPair :: Gen (Int, Int)` ?
 
@@ -1057,27 +1092,20 @@ Using the `WHILE` language from your HW assignment.
 Recall the definition of `Variable` and `Value`
 
 ```haskell
-data Variable 
-  = V String 
+data Variable = V String 
 
-data Value 
-  = IntVal Int
-  | BoolVal Bool
+data Value = IntVal Int | BoolVal Bool
 ```
 
 which we used to define `Expression`
 
 ```haskell
-data Expression 
-  = Var   Variable
-  | Val   Value
-  | Plus  Expression Expression
-  | Minus Expression Expression
+data Expression = Var   Variable | Val   Value
+                | Plus  Expression Expression
+                | Minus Expression Expression
 ```
 
 and `Statement`
-
-
 
 ```haskell
 data Statement
@@ -1157,6 +1185,7 @@ Lets write a *program generator*
 <br>
 <br>
 
+<!--
 ## QUIZ
 
 But first, what is the type of
@@ -1202,6 +1231,7 @@ What other *operator* / *function* has the type
 
 ???
 
+--> 
 
 ### Generating Variables
 
@@ -1212,12 +1242,14 @@ instance Arbitrary Variable where
     return (V [x])
 ```
 
+<!--
 We can rewrite the above to
 
 ```haskell
 instance Arbitrary Variable where
   arbitrary = (\x -> V [x]) <$> elements ['A'..'Z'] 
 ```
+-->
 
 and we get
 
@@ -1237,8 +1269,9 @@ and we get
 
 ```haskell
 instance Arbitrary Value where
-  arbitrary = oneOf [ IntVal  <$> arbitrary 
-                    , BoolVal <$> arbitrary ]
+  arbitrary = oneOf [ do {n <- arbitrary; return (IntVal n) }
+                    , do {b <- arbitrary; return (BoolVal b)} 
+                    ]
 ```
 
 and we get
@@ -1263,12 +1296,16 @@ and we get
 instance Arbitrary Expression where
   arbitrary = expr
 
-expr :: Gen Expression
-expr     = oneof [base, bin] 
-  where 
-    base = oneOf [ Var <$> arbitrary, Val <$> arbitrary ]
-    bin  = do {o <- op; e1 <- expr; e2 <- expr; return (o e1 e2)} 
-    op   = elements [Plus, Minus]
+expr, binE, baseE :: Gen Expression
+expr     = oneof [baseE, binE] 
+
+binE  = do { o  <- elements [Plus, Minus];
+             e1 <- expr; 
+             e2 <- expr 
+             return (o e1 e2) }
+
+baseE = oneOf [ do {x <- arbitrary; return (Var x) }
+              , do {v <- arbitrary; return (Val v)} ]
 ```
 
 which gives us
@@ -1291,7 +1328,7 @@ QC already has an way to automatically generate `Map`s
 
 ```haskell
 instance (Ord k, Arbitrary k, Arbitrary v) =>  Arbitrary (M.Map k v) where
-  arbitrary = M.fromList <$> arbitrary
+  arbitrary = do {kvs <- arbitrary; return (M.fromList kvs) }
 ```
 
 So for free we get a generator for `WState`
@@ -1489,12 +1526,16 @@ Problem was expressions like `True`
 Lets *restrict* to **only integer-valued expressions**
 
 ```haskell
-intExpr :: Gen Expression
-intExpr     = oneof [base, bin] 
-  where 
-    base = oneOf [ Var <$> arbitrary, Val . IntVal <$> arbitrary ]
-    bin  = do {o <- op; e1 <- expr; e2 <- expr; return (o e1 e2)} 
-    op   = elements [Plus, Minus]
+exprI, baseI, binI :: Gen Expression
+exprI = oneof [baseI, binE] 
+
+baseI = oneOf [ do {x <- arbitrary; return (Var x) }
+              , do {n <- arbitrary; return (Val (IntVal n)) } 
+              ]
+binI  = do { o  <- elements [Plus, Minus];
+             e1 <- exprI;
+             e2 <- exprI;
+             return (o e1 e2) }
 ```
 
 Now we can restrict the property to

@@ -140,24 +140,12 @@ gen_string = arbitrary
 -- ["","E~","`p","\SUB\141090","+\a\DC2","<Ps{Bp\51890\1083467","",":f\992651\958198\769921\297364|b\832419H\EOT\US","~iD\51186\tqM:","\502537\727673","z\288782.\SOHk\n|\DEL\625295\DEL\FST"]
 --
 
-genBal :: Int -> Int -> Int -> Gen (BST Int String)
-genBal 0 lo hi = 
-  return Leaf
-genBal n lo hi = do
-  key   <- choose (lo, hi)
-  val   <- arbitrary
-  left  <- genBal (n-1) lo (key - 1)
-  right <- genBal (n-1) (key + 1) hi
-  return (Node key val left right)
-
-data BST k v = Node k v (BST k v) (BST k v) | Leaf
-  deriving (Show)
 
 -- >>> sample' (genBal 3 0 1)
 -- [Node 1 "" (Node 0 "" (Node 0 "" Leaf Leaf) (Node 1 "" Leaf Leaf)) (Node 2 "" (Node 2 "" Leaf Leaf) (Node 2 "" Leaf Leaf)),Node 0 "-\202175" (Node 0 "\SYN" (Node (-1) "\369825" Leaf Leaf) (Node 0 "" Leaf Leaf)) (Node 1 "\DLEp" (Node 0 "Nj" Leaf Leaf) (Node 1 "j" Leaf Leaf)),Node 1 "\769031" (Node 0 "\\\SI\vP" (Node 0 "\DEL\905926L" Leaf Leaf) (Node 0 "\DC3" Leaf Leaf)) (Node 1 "4\SUB" (Node 0 "\18707 \271608" Leaf Leaf) (Node 2 "_" Leaf Leaf)),Node 0 "@\179693" (Node 0 "\237548" (Node 0 "f\by" Leaf Leaf) (Node 0 "\SO" Leaf Leaf)) (Node 1 "\DEL\DLE" (Node 1 ":" Leaf Leaf) (Node 2 "\SIZn\187608" Leaf Leaf)),Node 0 "\811791" (Node (-1) "6\150786c" (Node 0 "%\GSCR" Leaf Leaf) (Node 0 "\833204'\417964\455947ur\1026027" Leaf Leaf)) (Node 1 "zG\f\87417%\659926W" (Node 0 "5!122&hp" Leaf Leaf) (Node 2 "" Leaf Leaf)),Node 1 "\NAK\CAN7Q3W" (Node 0 "5l0hN;" (Node (-1) "Z>" Leaf Leaf) (Node 1 "\202584\538948" Leaf Leaf)) (Node 1 "\649717P\754639\807427\60643" (Node 2 "F^\NUL$\456882\1055169 nJ$" Leaf Leaf) (Node 2 "\1024964]Bm\CAN\SOH" Leaf Leaf)),Node 1 "" (Node 0 "" (Node (-1) ")qcP*\43642JI-`\ETX" Leaf Leaf) (Node 1 "$\f" Leaf Leaf)) (Node 1 "g#\EMi9s\DC4G+Jz" (Node 0 "\185769@" Leaf Leaf) (Node 2 "\296258" Leaf Leaf)),Node 1 "\226406\a4" (Node 0 "(V\45110>g\a\367145*I\b" (Node 0 "C\GS" Leaf Leaf) (Node 1 "ZTb\799779^BD\148988\ETXW" Leaf Leaf)) (Node 1 ":\b" (Node 0 "sm\483386\ENQ6" Leaf Leaf) (Node 1 "BW6=\SUBX\108947;aDR" Leaf Leaf)),Node 1 "5\204491\SI\1003307A\101697|b\bd\f" (Node 0 "\768985\FS\509931b\1029399\382231L;\97655" (Node (-1) "{8Q\698958\166969^\355968Y6Z\rz\FS" Leaf Leaf) (Node 0 "\SOH34_;\"\142171\DC2\795849\b\1078092\893096," Leaf Leaf)) (Node 2 "\187463\DC4)\676354vH\EOT\f\675712\382164\571519{" (Node 2 "\702592S`|\274328\&3(" Leaf Leaf) (Node 2 "\815926',nU\NAKx\833704\180474\ENQA0U-\SYNJ" Leaf Leaf)),Node 0 "(^F'\EOT\161639(\SI|/h\352771\1081084/kic" (Node (-1) "\EOTz<\DC210\DC2" (Node 0 "\ESC\648005\&9\763800\1023640PU0}" Leaf Leaf) (Node (-1) "J" Leaf Leaf)) (Node 1 "UNc\1044756\350931\1005936V<;\ESC" (Node 1 "\rc!_-\229557\f\293409" Leaf Leaf) (Node 1 "\n\936201)\21430VE\572767f" Leaf Leaf)),Node 0 "\263811\423058\601454W\ETXL)wI\871942J;" (Node (-1) "L\983067\USu7\160661 " (Node (-1) "L\SOH\ETXI\967090\&7\n`\31197\769729]|;z" Leaf Leaf) (Node (-1) "\1055109\DC3<\747492KC1$\v\ETB4\r\NUL\742352\1042269\1088005" Leaf Leaf)) (Node 1 "q" (Node 0 "\580129\n@>\735351a\FS\NUL" Leaf Leaf) (Node 2 "\141509`!Qn" Leaf Leaf))]
 --
 -- >>> sample' (choose (0, 0-5))
--- [0,0,0,0,0,0,0,0,0,0,0]
+-- [-1,0,0,-2,-1,-3,-4,-3,-5,-4,-1]
 --
 
 -- >>> sample' gen_0_10
@@ -232,26 +220,35 @@ instance Arbitrary Variable where
 --
 
 instance Arbitrary Value where
-  arbitrary = oneOf 
-    [ IntVal <$> arbitrary
-    , BoolVal <$> arbitrary
-    ]
+  arbitrary = oneOf [ do {n <- arbitrary; return (IntVal n) }
+                    , do {b <- arbitrary; return (BoolVal b)} 
+                    ]
 
 instance Arbitrary Expression where
   arbitrary = expr
+
   -- shrink :: Expression -> [Expression]
   shrink (Plus e1 e2)  = [e1, e2]
   shrink (Minus e1 e2) = [e1, e2]
   shrink _             = []
 
 
-
 expr :: Gen Expression
-expr     = oneof [base, bin] 
-  where 
-    base = oneOf [ Var <$> arbitrary, Val <$> arbitrary ]
-    bin  = do {o <- op; e1 <- expr; e2 <- expr; return (o e1 e2)} 
-    op   = elements [Plus, Minus]
+expr     = oneof [baseE, binE] 
+
+binE :: Gen Expression
+binE  = do 
+  o  <- elements [Plus, Minus]
+  e1 <- expr
+  e2 <- expr 
+  return (o e1 e2)
+
+baseE :: Gen Expression
+baseE = oneOf 
+  [ do {x <- arbitrary; return (Var x) }
+  , do {v <- arbitrary; return (Val v)} 
+  ]
+
 
 -- >>> randomThings :: IO [WState]
 -- [fromList [],fromList [(V "P",IntVal 0)],fromList [(V "M",IntVal 0),(V "Z",IntVal 1)],fromList [(V "E",BoolVal False),(V "J",BoolVal False),(V "X",IntVal 6)],fromList [(V "J",IntVal (-8)),(V "U",IntVal 3),(V "Z",BoolVal True)],fromList [(V "A",BoolVal False),(V "I",BoolVal False),(V "J",BoolVal False)],fromList [(V "H",BoolVal True),(V "J",IntVal (-9)),(V "K",IntVal (-12)),(V "L",BoolVal True),(V "U",BoolVal False),(V "V",IntVal (-4)),(V "W",IntVal (-9))],fromList [(V "A",BoolVal True),(V "C",BoolVal False),(V "E",IntVal 1),(V "K",BoolVal False),(V "N",IntVal (-7)),(V "P",BoolVal True),(V "R",IntVal (-2)),(V "T",BoolVal True),(V "V",IntVal (-1)),(V "Z",BoolVal True)],fromList [(V "A",BoolVal True),(V "M",BoolVal True),(V "O",BoolVal True),(V "S",IntVal 14),(V "W",IntVal 3)],fromList [(V "D",BoolVal True),(V "E",IntVal (-5)),(V "F",BoolVal True),(V "L",BoolVal False),(V "M",IntVal (-13)),(V "T",BoolVal True),(V "V",IntVal (-3)),(V "Z",BoolVal True)],fromList [(V "D",IntVal 13),(V "F",IntVal 16),(V "I",IntVal (-14)),(V "M",IntVal 11),(V "O",BoolVal True),(V "P",BoolVal False),(V "Q",BoolVal False),(V "R",BoolVal False),(V "S",BoolVal False),(V "U",BoolVal True),(V "Y",IntVal 15)]]
@@ -310,16 +307,25 @@ st0 = M.fromList []
 -- fromList [(W,0)]
 --
 
-intExpr :: Gen Expression
-intExpr     = oneof [base, bin] 
-  where 
-    base = oneOf [ Var <$> arbitrary, Val . IntVal <$> arbitrary ]
-    bin  = do {o <- op; e1 <- expr; e2 <- expr; return (o e1 e2)} 
-    op   = elements [Plus, Minus]
+exprI :: Gen Expression
+exprI = oneof [baseI, binE] 
+
+baseI :: Gen Expression
+baseI = oneOf 
+  [ do {x <- arbitrary; return (Var x) }
+  , do {n <- arbitrary; return (Val (IntVal n)) } 
+  ]
+
+binI :: Gen Expression
+binI  = do 
+  o  <- elements [Plus, Minus]
+  e1 <- exprI
+  e2 <- exprI 
+  return (o e1 e2)
 
 prop_add_zero_elim'   :: Variable -> Property
 prop_add_zero_elim' x = 
-  forAll intExpr (\e -> (x `Assign` (e `Plus` Val (IntVal 0))) === (x `Assign` e))
+  forAll exprI (\e -> (x `Assign` (e `Plus` Val (IntVal 0))) === (x `Assign` e))
 
 
 -- >>> quickCheck prop_add_zero_elim'
@@ -328,8 +334,6 @@ prop_add_zero_elim' x =
 -- G
 -- fromList [(B,False),(F,-4),(G,True),(K,8),(M,True),(N,False),(R,3),(T,False),(V,True)]
 --
-
--- HEREHEREHEREHEREHERE
 
 
 prop_const_prop :: Variable -> Variable -> Expression -> Property
@@ -343,8 +347,34 @@ prop_const_prop x y e =
 
 
 
+-------------------------------------------------------------------------------------------
+-- HINT FOR HW
+-------------------------------------------------------------------------------------------
+
+data BST k v = Node k v (BST k v) (BST k v) | Leaf
+  deriving (Show)
 
 
+genBal :: Int -> Int -> Int -> Gen (BST Int String)
+genBal 0 lo hi = 
+  return Leaf
+genBal n lo hi = do
+  key   <- choose (lo, hi)
+  val   <- arbitrary
+  left  <- genBal (n-1) lo (key - 1)
+  right <- genBal (n-1) (key + 1) hi
+  return (Node key val left right)
+
+
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
 
 
 evalE :: Expression -> State WState Value
