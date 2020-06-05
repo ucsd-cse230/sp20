@@ -3,7 +3,7 @@
 {-# LANGUAGE FlexibleInstances #-} 
 {-# LANGUAGE TypeSynonymInstances #-}
 
-module Testing where 
+module Lec_6_5_20 where 
 
 import Test.QuickCheck hiding ((===))
 import Control.Monad

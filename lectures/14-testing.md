@@ -4,11 +4,23 @@ date: 2020-05-28
 headerImg: books.jpg
 ---
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
 ## Property-based Testing
 
-Lets look at [QuickCheck][1]
+        Typeclasses + Monads = Automatic Testing
 
-        Typeclasses + Monads + "cleverness" = Automatic Testing
+Lets look at [QuickCheck][1]
 
 - Developed by [Koen Claessen][0] and [John Hughes][11] in 2000
 
